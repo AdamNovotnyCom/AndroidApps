@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.adamnovotny.myappportfolio.MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/app_title"
+            android:textAppearance="@android:style/TextAppearance.Large" />
+
+        <Button
+            android:id="@+id/button_popular_movies"
+            style="@style/buttonMainActivity"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounder_corners"
+            android:gravity="center"
+            android:onClick="launchAppOnclick"
+            android:text="POPULAR MOVIES"
+            android:textAppearance="@android:style/TextAppearance.Medium"/>
+
+        <Button
+            android:id="@+id/button_stock_hawk"
+            style="@style/buttonMainActivity"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounder_corners"
+            android:gravity="center"
+            android:onClick="launchAppOnclick"
+            android:text="STOCK HAWK"
+            android:textAppearance="@android:style/TextAppearance.Medium"/>
+
+        <Button
+            android:id="@+id/button_build_it_bigger"
+            style="@style/buttonMainActivity"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounder_corners"
+            android:gravity="center"
+            android:onClick="launchAppOnclick"
+            android:text="BUILD IT BIGGER"
+            android:textAppearance="@android:style/TextAppearance.Medium"/>
+
+        <Button
+            android:id="@+id/button_make_your_app_material"
+            style="@style/buttonMainActivity"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounder_corners"
+            android:gravity="center"
+            android:onClick="launchAppOnclick"
+            android:text="MAKE YOUR APP MATERIAL"
+            android:textAppearance="@android:style/TextAppearance.Medium"/>
+
+        <Button
+            android:id="@+id/button_go_ubiquitous"
+            style="@style/buttonMainActivity"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounder_corners"
+            android:gravity="center"
+            android:onClick="launchAppOnclick"
+            android:text="GO UBIQUITOUS"
+            android:textAppearance="@android:style/TextAppearance.Medium"/>
+
+        <Button
+            android:id="@+id/button_capstone"
+            style="@style/buttonMainActivity"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounder_corners"
+            android:gravity="center"
+            android:onClick="launchAppOnclick"
+            android:text="CAPSTONE"
+            android:textAppearance="@android:style/TextAppearance.Medium"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
