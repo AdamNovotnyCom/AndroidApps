@@ -30,7 +30,8 @@
             android:background="@drawable/rounder_corners"
             android:gravity="center"
             android:onClick="launchAppOnclick"
-            android:text="POPULAR MOVIES"
+            android:text="Popular Movies"
+            android:textAllCaps="true"
             android:textAppearance="@android:style/TextAppearance.Medium"/>
 
         <Button
@@ -42,7 +43,8 @@
             android:background="@drawable/rounder_corners"
             android:gravity="center"
             android:onClick="launchAppOnclick"
-            android:text="STOCK HAWK"
+            android:text="Stock Hawk"
+            android:textAllCaps="true"
             android:textAppearance="@android:style/TextAppearance.Medium"/>
 
         <Button
@@ -54,7 +56,8 @@
             android:background="@drawable/rounder_corners"
             android:gravity="center"
             android:onClick="launchAppOnclick"
-            android:text="BUILD IT BIGGER"
+            android:text="Build It Bigger"
+            android:textAllCaps="true"
             android:textAppearance="@android:style/TextAppearance.Medium"/>
 
         <Button
@@ -66,7 +69,8 @@
             android:background="@drawable/rounder_corners"
             android:gravity="center"
             android:onClick="launchAppOnclick"
-            android:text="MAKE YOUR APP MATERIAL"
+            android:text="Make Your App Material"
+            android:textAllCaps="true"
             android:textAppearance="@android:style/TextAppearance.Medium"/>
 
         <Button
@@ -78,7 +82,8 @@
             android:background="@drawable/rounder_corners"
             android:gravity="center"
             android:onClick="launchAppOnclick"
-            android:text="GO UBIQUITOUS"
+            android:text="Go Ubiquitous"
+            android:textAllCaps="true"
             android:textAppearance="@android:style/TextAppearance.Medium"/>
 
         <Button
@@ -90,7 +95,8 @@
             android:background="@drawable/rounder_corners"
             android:gravity="center"
             android:onClick="launchAppOnclick"
-            android:text="CAPSTONE"
+            android:text="Capstone"
+            android:textAllCaps="true"
             android:textAppearance="@android:style/TextAppearance.Medium"/>
 
     </LinearLayout>
