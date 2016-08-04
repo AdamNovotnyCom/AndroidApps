@@ -38,7 +38,6 @@ public class MovieListFragment extends Fragment {
         moviesGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // start-media code could go in fragment or adapter
                 Log.i("MovieListFragment", "Clicked: " + position);
             }
         });
@@ -71,7 +70,9 @@ public class MovieListFragment extends Fragment {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            view = inflater.inflate(R.layout.fragment_movie_list_item, null);
+            if (view == null) {
+                view = inflater.inflate(R.layout.fragment_movie_list_item, null);
+            }
             ImageView img = (ImageView) view.findViewById(R.id.fragment_movie_list_item_imageview);
             img.setImageResource(movies[i]);
             return view;
