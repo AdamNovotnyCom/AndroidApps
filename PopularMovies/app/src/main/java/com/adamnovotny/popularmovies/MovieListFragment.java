@@ -15,6 +15,8 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +38,7 @@ public class MovieListFragment extends Fragment {
     MoviesAdapter moviesAdapter;
     int movies[] = {R.drawable.img1, R.drawable.img1, R.drawable.img1,
             R.drawable.img1, R.drawable.img1}; ///////////////////////////// delete after test
-    String testImg;
+    String testImg; //////////////////////////////////////
     ArrayList<MovieParcelable> moviesP = new ArrayList<>();
 
     public MovieListFragment() {
@@ -60,7 +62,7 @@ public class MovieListFragment extends Fragment {
         // Inflate the layout for this fragment, populate content, set onclick
         View view = inflater.inflate(R.layout.fragment_movie_list, container, false);
         moviesGrid = (GridView) view.findViewById(R.id.moviesGridView);
-        moviesAdapter = new MoviesAdapter(getActivity(), movies);
+        moviesAdapter = new MoviesAdapter(getActivity(), moviesP);
         moviesGrid.setAdapter(moviesAdapter);
         moviesGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -85,22 +87,25 @@ public class MovieListFragment extends Fragment {
 
     private void updateMovies() {
         GetMovieData movieDataTask = new GetMovieData();
+        // TODO menu-based sorting
         String[] sortType = {"popularity.desc", "vote_average.desc"};
         movieDataTask.execute(sortType[0]);
     }
 
     class MoviesAdapter extends BaseAdapter {
-        int movies[];
+        ArrayList<MovieParcelable> movies;
+        Context context;
         LayoutInflater inflater;
 
-        public MoviesAdapter(Context context, int[] m) {
+        public MoviesAdapter(Context cont, ArrayList<MovieParcelable> m) {
+            context = cont;
             movies = m;
             inflater = LayoutInflater.from(context);
         }
 
         @Override
         public int getCount() {
-            return movies.length;
+            return movies.size();
         }
 
         @Override
@@ -119,7 +124,9 @@ public class MovieListFragment extends Fragment {
                 view = inflater.inflate(R.layout.fragment_movie_list_item, null);
             }
             ImageView img = (ImageView) view.findViewById(R.id.fragment_movie_list_item_imageview);
-            //img.setImageResource(movies[i]);
+            String baseUrl = "http://image.tmdb.org/t/p/w185/";
+            String imgUrl = movies.get(i).image;
+            Picasso.with(context).load(baseUrl + imgUrl).into(img);
             return view;
         }
     }
@@ -187,13 +194,8 @@ public class MovieListFragment extends Fragment {
         @Override
         protected void onPostExecute(ArrayList<MovieParcelable> movies) {
             moviesP = movies;
-            // TODO update adapter
-            Log.i(LOG_TAG, "Json received");
-            for(int i = 0; i < moviesP.size(); i++) {
-                Log.i("Movie " + i, moviesP.get(i).toString());
-                testImg = moviesP.get(i).image;
-            }
-
+            moviesAdapter = new MoviesAdapter(getActivity(), moviesP);
+            Log.i(LOG_TAG, "JSON data received"); ///////////////////////////////
         }
 
         private ArrayList<MovieParcelable> updateMoviesFromJson(String jsonStr) {
