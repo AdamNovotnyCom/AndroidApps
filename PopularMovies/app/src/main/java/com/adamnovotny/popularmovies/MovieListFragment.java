@@ -36,9 +36,6 @@ import java.util.ArrayList;
 public class MovieListFragment extends Fragment {
     GridView moviesGrid;
     MoviesAdapter moviesAdapter;
-    int movies[] = {R.drawable.img1, R.drawable.img1, R.drawable.img1,
-            R.drawable.img1, R.drawable.img1}; ///////////////////////////// delete after test
-    String testImg; //////////////////////////////////////
     ArrayList<MovieParcelable> moviesP = new ArrayList<>();
 
     public MovieListFragment() {
@@ -60,8 +57,8 @@ public class MovieListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment, populate content, set onclick
-        View view = inflater.inflate(R.layout.fragment_movie_list, container, false);
-        moviesGrid = (GridView) view.findViewById(R.id.moviesGridView);
+        View gridView = inflater.inflate(R.layout.fragment_movie_list, container, false);
+        moviesGrid = (GridView) gridView.findViewById(R.id.moviesGridView);
         moviesAdapter = new MoviesAdapter(getActivity(), moviesP);
         moviesGrid.setAdapter(moviesAdapter);
         moviesGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -70,13 +67,7 @@ public class MovieListFragment extends Fragment {
                 Log.i("MovieListFragment", "Pressed: " + position); /////////////////////////
             }
         });
-        return view;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        updateMovies();
+        return gridView;
     }
 
     @Override
@@ -195,6 +186,7 @@ public class MovieListFragment extends Fragment {
         protected void onPostExecute(ArrayList<MovieParcelable> movies) {
             moviesP = movies;
             moviesAdapter = new MoviesAdapter(getActivity(), moviesP);
+            moviesGrid.setAdapter(moviesAdapter);
             Log.i(LOG_TAG, "JSON data received"); ///////////////////////////////
         }
 
