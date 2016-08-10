@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">Popular Movies</string>
-    <string name="action_sort">Sort</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Preference strings -->
+    <string name="pref_sort_label">Sort movies by</string>
+    <string name="pref_sort_key" translatable="false">sort_type</string>
+    <string name="pref_sort_popularity_label">Popularity</string>
+    <string name="pref_sort_popularity" translatable="false">popularity</string>
+    <string name="pref_sort_vote_label">Vote average</string>
+    <string name="pref_sort_vote" translatable="false">vote</string>
+    <string name="title_activity_settings">Settings</string>
+
 </resources>

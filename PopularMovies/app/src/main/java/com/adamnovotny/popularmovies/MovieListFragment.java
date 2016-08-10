@@ -2,12 +2,18 @@ package com.adamnovotny.popularmovies;
 
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -51,6 +57,25 @@ public class MovieListFragment extends Fragment {
         else {
             moviesP = savedInstanceState.getParcelableArrayList("movies");
         }
+        setHasOptionsMenu(true);
+        setPrefListener();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.movie_list_fragment, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            Intent intent = new Intent(getContext(), MySettingsActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -64,7 +89,9 @@ public class MovieListFragment extends Fragment {
         moviesGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // TODO launch detail activity
                 Log.i("MovieListFragment", "Pressed: " + position); /////////////////////////
+
             }
         });
         return gridView;
@@ -72,15 +99,41 @@ public class MovieListFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelableArrayList("movies", moviesP);
         super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("movies", moviesP);
+    }
+
+    private void setPrefListener() {
+        SharedPreferences.OnSharedPreferenceChangeListener prefListener;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        prefListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+                switch (key) {
+                    case "sort_type":
+                        updateMovies();
+                        break;
+                }
+            }
+        };
+        prefs.registerOnSharedPreferenceChangeListener(prefListener);
     }
 
     private void updateMovies() {
         GetMovieData movieDataTask = new GetMovieData();
-        // TODO menu-based sorting
-        String[] sortType = {"popularity.desc", "vote_average.desc"};
-        movieDataTask.execute(sortType[0]);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String sortType = prefs.getString(getString(R.string.pref_sort_key),
+                getString(R.string.pref_sort_popularity));
+        switch (sortType) {
+            case "Popularity":
+                movieDataTask.execute("popularity.desc");
+                break;
+            case "Vote average":
+                movieDataTask.execute("vote_average.desc");
+                break;
+            default:
+                movieDataTask.execute("popularity.desc");
+                break;
+        }
     }
 
     class MoviesAdapter extends BaseAdapter {
