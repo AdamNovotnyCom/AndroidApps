@@ -57,8 +57,8 @@ public class MovieListFragment extends Fragment {
         else {
             moviesP = savedInstanceState.getParcelableArrayList("movies");
         }
-        setHasOptionsMenu(true);
         setPrefListener();
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -103,11 +103,18 @@ public class MovieListFragment extends Fragment {
         outState.putParcelableArrayList("movies", moviesP);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        //updateMovies();
+    }
+
     private void setPrefListener() {
         SharedPreferences.OnSharedPreferenceChangeListener prefListener;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         prefListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+                Log.i("MovieListFragment", key); ////////////////////////////////////////
                 switch (key) {
                     case "sort_type":
                         updateMovies();
@@ -123,15 +130,16 @@ public class MovieListFragment extends Fragment {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String sortType = prefs.getString(getString(R.string.pref_sort_key),
                 getString(R.string.pref_sort_popularity));
+        String[] urlSortType = {"popularity.desc", "vote_average.desc"};
         switch (sortType) {
             case "Popularity":
-                movieDataTask.execute("popularity.desc");
+                movieDataTask.execute(urlSortType[0]);
                 break;
             case "Vote average":
-                movieDataTask.execute("vote_average.desc");
+                movieDataTask.execute(urlSortType[1]);
                 break;
             default:
-                movieDataTask.execute("popularity.desc");
+                movieDataTask.execute(urlSortType[0]);
                 break;
         }
     }
