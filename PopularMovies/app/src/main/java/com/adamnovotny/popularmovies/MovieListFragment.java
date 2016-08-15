@@ -57,7 +57,6 @@ public class MovieListFragment extends Fragment {
         else {
             moviesP = savedInstanceState.getParcelableArrayList("movies");
         }
-        setPrefListener();
         setHasOptionsMenu(true);
     }
 
@@ -73,6 +72,10 @@ public class MovieListFragment extends Fragment {
         if (id == R.id.action_settings) {
             Intent intent = new Intent(getContext(), MySettingsActivity.class);
             startActivity(intent);
+            return true;
+        }
+        if (id == R.id.action_refresh) {
+            updateMovies();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -101,28 +104,6 @@ public class MovieListFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("movies", moviesP);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        //updateMovies();
-    }
-
-    private void setPrefListener() {
-        SharedPreferences.OnSharedPreferenceChangeListener prefListener;
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        prefListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-            public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-                Log.i("MovieListFragment", key); ////////////////////////////////////////
-                switch (key) {
-                    case "sort_type":
-                        updateMovies();
-                        break;
-                }
-            }
-        };
-        prefs.registerOnSharedPreferenceChangeListener(prefListener);
     }
 
     private void updateMovies() {

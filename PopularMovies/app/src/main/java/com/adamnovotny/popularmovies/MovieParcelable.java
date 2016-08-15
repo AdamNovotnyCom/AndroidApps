@@ -46,7 +46,7 @@ public class MovieParcelable implements Parcelable {
         p.writeString(release);
     }
 
-    public final Parcelable.Creator<MovieParcelable> CREATOR =
+    public static final Parcelable.Creator<MovieParcelable> CREATOR =
             new Parcelable.Creator<MovieParcelable>() {
         @Override
         public MovieParcelable createFromParcel(Parcel parcel) {
