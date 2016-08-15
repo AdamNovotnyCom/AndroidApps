@@ -92,9 +92,13 @@ public class MovieListFragment extends Fragment {
         moviesGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // TODO launch detail activity
-                Log.i("MovieListFragment", "Pressed: " + position); /////////////////////////
-
+                Intent intent = new Intent(getContext(), MovieDetailActivity.class);
+                intent.putExtra("title", moviesP.get(position).title);
+                intent.putExtra("image", moviesP.get(position).image);
+                intent.putExtra("overview", moviesP.get(position).overview);
+                intent.putExtra("vote", moviesP.get(position).vote);
+                intent.putExtra("release", moviesP.get(position).release);
+                startActivity(intent);
             }
         });
         return gridView;
