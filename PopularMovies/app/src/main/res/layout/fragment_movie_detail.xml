@@ -14,7 +14,12 @@
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Title"/>
+            android:background="@color/colorAccent"
+            android:paddingBottom="@dimen/title_horizontal_margin"
+            android:paddingTop="@dimen/title_horizontal_margin"
+            android:paddingLeft="@dimen/title_vertical_margin"
+            android:textColor="@color/white"
+            android:textSize="20sp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -23,8 +28,8 @@
 
             <ImageView
                 android:id="@+id/movie_image"
-                android:layout_height="285dp"
                 android:layout_width="0dp"
+                android:layout_height="285dp"
                 android:layout_weight="1"
                 android:scaleType="centerCrop"/>
 
@@ -37,22 +42,34 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:paddingBottom="@dimen/title_horizontal_margin"
+                    android:paddingTop="@dimen/title_horizontal_margin"
+                    android:paddingLeft="@dimen/title_vertical_margin"
+                    android:textSize="16sp"
+                    android:textColor="@color/colorAccent"
                     android:text="Release date: "/>
 
                 <TextView
                     android:id="@+id/release"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    android:paddingLeft="@dimen/title_horizontal_margin"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:paddingBottom="@dimen/title_horizontal_margin"
+                    android:paddingTop="@dimen/title_horizontal_margin"
+                    android:paddingLeft="@dimen/title_vertical_margin"
+                    android:textSize="16sp"
+                    android:textColor="@color/colorAccent"
                     android:text="Vote: "/>
 
                 <TextView
                     android:id="@+id/vote"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    android:paddingLeft="@dimen/title_horizontal_margin"/>
 
             </LinearLayout>
 
@@ -62,7 +79,9 @@
             android:id="@+id/overview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Overview"/>
+            android:paddingTop="@dimen/title_horizontal_margin"
+            android:paddingLeft="@dimen/subtitle_horizontal_margin"
+            android:paddingRight="@dimen/subtitle_horizontal_margin"/>
 
     </LinearLayout>
 

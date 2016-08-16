@@ -1,6 +1,6 @@
 /* Author: Adam Novotny
- * Attribution: all project classes utilize code examples from
- * Udacity course DEVELOPING ANDROID APPS.
+ * Attribution: all project classes utilize code examples
+ * from Udacity course DEVELOPING ANDROID APPS.
  */
 
 package com.adamnovotny.popularmovies;
