@@ -1,5 +1,8 @@
-package com.adamnovotny.popularmovies;
+/**
+ * Copyright (C) 2016 Adam Novotny
+ */
 
+package com.adamnovotny.popularmovies;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,7 +16,8 @@ import com.squareup.picasso.Picasso;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * View only class showing movie details
+ * by updating appropriate layout views
  */
 public class MovieDetailFragment extends Fragment {
     private String title;

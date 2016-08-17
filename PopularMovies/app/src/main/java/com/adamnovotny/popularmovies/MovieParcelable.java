@@ -1,3 +1,7 @@
+/**
+ * Copyright (C) 2016 Adam Novotny
+ */
+
 package com.adamnovotny.popularmovies;
 
 import android.os.Parcel;

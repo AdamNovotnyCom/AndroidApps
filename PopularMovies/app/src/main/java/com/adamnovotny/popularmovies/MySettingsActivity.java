@@ -1,3 +1,7 @@
+/**
+ * Copyright (C) 2016 Adam Novotny
+ */
+
 package com.adamnovotny.popularmovies;
 
 import android.os.Bundle;
@@ -7,12 +11,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 
 /**
- * A {@link PreferenceActivity} that presents a set of application settings.
- * <p>
- * See <a href="http://developer.android.com/design/patterns/settings.html">
- * Android Design: Settings</a> for design guidelines and the <a
- * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
- * API Guide</a> for more information on developing a Settings UI.
+ * Generates settings views and keeps user input in sync with summary data
  */
 public class MySettingsActivity extends PreferenceActivity
         implements Preference.OnPreferenceChangeListener {
@@ -29,9 +28,7 @@ public class MySettingsActivity extends PreferenceActivity
     }
 
     /**
-     * Attaches a listener so the summary is always updated with the preference value.
-     * Also fires the listener once, to initialize the summary (so it shows up before the value
-     * is changed.)
+     * Attaches a listener to the summary
      */
     private void bindPreferenceSummaryToValue(Preference preference) {
         // Set the listener to watch for value changes.

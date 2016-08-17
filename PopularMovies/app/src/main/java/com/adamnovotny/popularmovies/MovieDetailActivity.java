@@ -1,8 +1,13 @@
+/**
+ * Copyright (C) 2016 Adam Novotny
+ */
+
 package com.adamnovotny.popularmovies;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+
 
 public class MovieDetailActivity extends AppCompatActivity {
 

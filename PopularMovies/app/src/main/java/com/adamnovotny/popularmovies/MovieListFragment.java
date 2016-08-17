@@ -1,9 +1,14 @@
-package com.adamnovotny.popularmovies;
+/**
+ * Copyright (C) 2016 Adam Novotny
+ */
 
+package com.adamnovotny.popularmovies;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,6 +25,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -37,12 +43,13 @@ import java.util.ArrayList;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * Loads movies data from api source and presents
+ * posters in a grid format
  */
 public class MovieListFragment extends Fragment {
-    GridView moviesGrid;
-    MoviesAdapter moviesAdapter;
-    ArrayList<MovieParcelable> moviesP = new ArrayList<>();
+    private GridView moviesGrid;
+    private MoviesAdapter moviesAdapter;
+    private ArrayList<MovieParcelable> moviesP = new ArrayList<>();
 
     public MovieListFragment() {
         // Required empty public constructor
@@ -104,31 +111,64 @@ public class MovieListFragment extends Fragment {
         return gridView;
     }
 
+    /**
+     *
+     * @param outState is generated when app is closed.
+     *                 Movies data is restored using savedInstanceState in onCreate()
+     */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("movies", moviesP);
     }
 
+    /**
+     * Updates movies data using a inner AsyncTask class GetMovieData.
+     */
     private void updateMovies() {
-        GetMovieData movieDataTask = new GetMovieData();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String sortType = prefs.getString(getString(R.string.pref_sort_key),
-                getString(R.string.pref_sort_popularity));
-        String[] urlSortType = {"popularity.desc", "vote_average.desc"};
-        switch (sortType) {
-            case "Popularity":
-                movieDataTask.execute(urlSortType[0]);
-                break;
-            case "Vote average":
-                movieDataTask.execute(urlSortType[1]);
-                break;
-            default:
-                movieDataTask.execute(urlSortType[0]);
-                break;
+        if (checkNetwork()) {
+            GetMovieData movieDataTask = new GetMovieData();
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String sortType = prefs.getString(getString(R.string.pref_sort_key),
+                    getString(R.string.pref_sort_popularity));
+            String[] urlSortType = {"popularity.desc", "vote_average.desc"};
+            switch (sortType) {
+                case "Popularity":
+                    movieDataTask.execute(urlSortType[0]);
+                    break;
+                case "Vote average":
+                    movieDataTask.execute(urlSortType[1]);
+                    break;
+                default:
+                    movieDataTask.execute(urlSortType[0]);
+                    break;
+            }
+        }
+        else {
+            Toast toast = Toast.makeText(
+                    getContext(), "Check you internet connection", Toast.LENGTH_SHORT);
+            toast.show();
         }
     }
 
+    /**
+     * @return true if network connection succeeds, false otherwise
+     */
+    private boolean checkNetwork() {
+        ConnectivityManager cm = (ConnectivityManager)
+                getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo == null) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    /**
+     * Attached to GridView showing posters of movies
+     */
     class MoviesAdapter extends BaseAdapter {
         ArrayList<MovieParcelable> movies;
         Context context;
@@ -168,6 +208,9 @@ public class MovieListFragment extends Fragment {
         }
     }
 
+    /**
+     *
+     */
     private class GetMovieData extends AsyncTask<String, Void, ArrayList<MovieParcelable>> {
         private final String LOG_TAG = GetMovieData.class.getSimpleName();
 
@@ -177,6 +220,7 @@ public class MovieListFragment extends Fragment {
                 return null;
             }
 
+            // Attribution: network code based on Udacity course DEVELOPING ANDROID APPS
             // Connection objects declared outside try block to be closed in finally
             HttpURLConnection urlConn = null;
             BufferedReader reader = null;
@@ -233,9 +277,14 @@ public class MovieListFragment extends Fragment {
             moviesP = movies;
             moviesAdapter = new MoviesAdapter(getActivity(), moviesP);
             moviesGrid.setAdapter(moviesAdapter);
-            Log.i(LOG_TAG, "JSON data received"); ///////////////////////////////
         }
 
+        /**
+         *
+         * @param jsonStr contains movie data in json format
+         * @return formatted ArrayList where each item represents
+         * a MovieParcelable object.
+         */
         private ArrayList<MovieParcelable> updateMoviesFromJson(String jsonStr) {
             ArrayList<MovieParcelable> movies = new ArrayList<>();
             try {
