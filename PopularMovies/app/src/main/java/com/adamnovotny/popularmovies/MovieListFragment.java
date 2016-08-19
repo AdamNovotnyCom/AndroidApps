@@ -227,6 +227,7 @@ public class MovieListFragment extends Fragment {
             Picasso.with(context)
                     .load(baseUrl + imgUrl)
                     .resize(screenWidth/2, screenHeight/2)
+                    .centerInside()
                     .into(viewHolder.imgView);
             return view;
         }

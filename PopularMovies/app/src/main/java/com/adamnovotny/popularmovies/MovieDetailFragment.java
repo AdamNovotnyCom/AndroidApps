@@ -33,6 +33,8 @@ public class MovieDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Bundle bdl = getArguments();
+        // TODO use Butter Knife or Data Binding Library to simplify
+        // boilerplate code below as the data expands
         this.title = bdl.getString("title");
         this.image = bdl.getString("image");
         this.overview = bdl.getString("overview");
