@@ -14,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -110,18 +111,6 @@ public class MovieListFragment extends Fragment {
         return gridView;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        if(true) {
-            //updateMovies();
-        }
-        else {
-
-        }
-    }
-
     /**
      *
      * @param outState is generated when app is closed.
@@ -199,6 +188,7 @@ public class MovieListFragment extends Fragment {
         ArrayList<MovieParcelable> movies;
         Context context;
         LayoutInflater inflater;
+        ViewHolder viewHolder;
 
         public MoviesAdapter(Context cont, ArrayList<MovieParcelable> m) {
             context = cont;
@@ -225,12 +215,27 @@ public class MovieListFragment extends Fragment {
         public View getView(int i, View view, ViewGroup viewGroup) {
             if (view == null) {
                 view = inflater.inflate(R.layout.fragment_movie_list_item, null);
+                viewHolder = new ViewHolder(view);
+                view.setTag(viewHolder);
             }
-            ImageView img = (ImageView) view.findViewById(R.id.fragment_movie_list_item_imageview);
+            ViewHolder viewHolder = (ViewHolder) view.getTag();
             String baseUrl = "http://image.tmdb.org/t/p/w185/";
             String imgUrl = movies.get(i).image;
-            Picasso.with(context).load(baseUrl + imgUrl).into(img);
+            DisplayMetrics dispMetrics = context.getResources().getDisplayMetrics();
+            int screenWidth = dispMetrics.widthPixels;
+            int screenHeight = dispMetrics.heightPixels;
+            Picasso.with(context)
+                    .load(baseUrl + imgUrl)
+                    .resize(screenWidth/2, screenHeight/2)
+                    .into(viewHolder.imgView);
             return view;
+        }
+
+        public class ViewHolder {
+            public final ImageView imgView;
+            public ViewHolder(View view) {
+                imgView = (ImageView) view.findViewById(R.id.fragment_movie_list_item_imageview);
+            }
         }
     }
 
