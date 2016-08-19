@@ -60,5 +60,4 @@ public class MySettingsActivity extends PreferenceActivity
         }
         return true;
     }
-
 }

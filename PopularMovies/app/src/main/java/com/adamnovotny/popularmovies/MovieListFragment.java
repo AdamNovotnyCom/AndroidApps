@@ -50,6 +50,8 @@ public class MovieListFragment extends Fragment {
     private GridView moviesGrid;
     private MoviesAdapter moviesAdapter;
     private ArrayList<MovieParcelable> moviesP = new ArrayList<>();
+    private SharedPreferences.OnSharedPreferenceChangeListener prefListener; // required...
+    // defined as a class field due to garbage collection of listener
 
     public MovieListFragment() {
         // Required empty public constructor
@@ -65,6 +67,7 @@ public class MovieListFragment extends Fragment {
             moviesP = savedInstanceState.getParcelableArrayList("movies");
         }
         setHasOptionsMenu(true);
+        setPreferenceListener();
     }
 
     @Override
@@ -112,7 +115,7 @@ public class MovieListFragment extends Fragment {
         super.onStart();
 
         if(true) {
-            updateMovies();
+            //updateMovies();
         }
         else {
 
@@ -128,6 +131,21 @@ public class MovieListFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("movies", moviesP);
+    }
+
+    /**
+     * Update movie data only when preferences change
+     */
+    private void setPreferenceListener() {
+            prefListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+                @Override
+                public void onSharedPreferenceChanged(SharedPreferences sharedPrefs, String key) {
+                    updateMovies();
+                    }
+            };
+            SharedPreferences prefs = PreferenceManager
+                    .getDefaultSharedPreferences(getActivity());
+            prefs.registerOnSharedPreferenceChangeListener(prefListener);
     }
 
     /**
