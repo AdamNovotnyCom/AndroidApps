@@ -6,6 +6,7 @@ package com.adamnovotny.popularmovies;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
 
@@ -29,5 +30,9 @@ public class MovieDetailActivity extends AppCompatActivity {
                     .add(R.id.containerDetail, frag)
                     .commit();
         }
+
+        // Enable the Up button
+        ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
     }
 }
