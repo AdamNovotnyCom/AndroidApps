@@ -81,10 +81,6 @@ public class MovieListFragment extends Fragment {
             startActivity(intent);
             return true;
         }
-        if (id == R.id.action_refresh) {
-            updateMovies();
-            return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -109,6 +105,18 @@ public class MovieListFragment extends Fragment {
             }
         });
         return gridView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if(true) {
+            updateMovies();
+        }
+        else {
+
+        }
     }
 
     /**
@@ -209,7 +217,7 @@ public class MovieListFragment extends Fragment {
     }
 
     /**
-     *
+     * Get json format movie data from third party API using a non-blocking thread
      */
     private class GetMovieData extends AsyncTask<String, Void, ArrayList<MovieParcelable>> {
         private final String LOG_TAG = GetMovieData.class.getSimpleName();
@@ -275,6 +283,7 @@ public class MovieListFragment extends Fragment {
             moviesP = movies;
             moviesAdapter = new MoviesAdapter(getActivity(), moviesP);
             moviesGrid.setAdapter(moviesAdapter);
+            Log.i("GetMovieData", "Movie API data received");
         }
 
         /**
