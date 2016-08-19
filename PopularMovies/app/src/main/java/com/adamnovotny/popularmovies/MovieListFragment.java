@@ -131,7 +131,7 @@ public class MovieListFragment extends Fragment {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
             String sortType = prefs.getString(getString(R.string.pref_sort_key),
                     getString(R.string.pref_sort_popularity));
-            String[] urlSortType = {"popularity.desc", "vote_average.desc"};
+            String[] urlSortType = {"popular", "top_rated"};
             switch (sortType) {
                 case "Popularity":
                     movieDataTask.execute(urlSortType[0]);
@@ -226,11 +226,9 @@ public class MovieListFragment extends Fragment {
             BufferedReader reader = null;
             String urlConnResult;
             try {
-                final String BASE_URL = "http://api.themoviedb.org/3/discover/movie?";
-                final String PARAM_SORT = "sort_by";
+                final String BASE_URL = "http://api.themoviedb.org/3/movie/";
                 final String PARAM_KEY = "api_key";
-                Uri builtUri = Uri.parse(BASE_URL).buildUpon()
-                        .appendQueryParameter(PARAM_SORT, params[0])
+                Uri builtUri = Uri.parse(BASE_URL + params[0]).buildUpon()
                         .appendQueryParameter(PARAM_KEY, AppKeys.themoviedb)
                         .build();
                 URL url = new URL(builtUri.toString());
