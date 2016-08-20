@@ -5,7 +5,7 @@
 
     <ImageView
         android:id="@+id/fragment_movie_list_item_imageview"
-        android:layout_height="wrap_content"
+        android:layout_height="285dp"
         android:layout_width="match_parent"
         android:scaleType="centerCrop"/>
 

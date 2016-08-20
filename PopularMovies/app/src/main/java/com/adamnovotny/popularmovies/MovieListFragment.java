@@ -52,7 +52,7 @@ public class MovieListFragment extends Fragment {
     private MoviesAdapter moviesAdapter;
     private ArrayList<MovieParcelable> moviesP = new ArrayList<>();
     private SharedPreferences.OnSharedPreferenceChangeListener prefListener; // required...
-    // defined as a class field due to garbage collection of listener
+    private boolean mRefreshFlag = true; // true: need refresh, false: no refresh
 
     public MovieListFragment() {
         // Required empty public constructor
@@ -62,10 +62,11 @@ public class MovieListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         if(savedInstanceState == null || !savedInstanceState.containsKey("movies")) {
-            updateMovies();
+            // nothing needed - mRefreshFlag already set
         }
         else {
             moviesP = savedInstanceState.getParcelableArrayList("movies");
+            mRefreshFlag = savedInstanceState.getBoolean("dataRefresh");
         }
         setHasOptionsMenu(true);
         setPreferenceListener();
@@ -111,6 +112,22 @@ public class MovieListFragment extends Fragment {
         return gridView;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mRefreshFlag) {
+            if (updateMovies()) {
+                Log.i("MovieListFragment", "Before:");
+                if (mRefreshFlag)
+                    Log.i("MovieListFragment", "mRefreshTrue");
+                mRefreshFlag = false;
+                Log.i("MovieListFragment", "After:");
+                if (mRefreshFlag)
+                    Log.i("MovieListFragment", "mRefreshFalse");
+            }
+        }
+    }
+
     /**
      *
      * @param outState is generated when app is closed.
@@ -120,6 +137,7 @@ public class MovieListFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("movies", moviesP);
+        outState.putBoolean("dataRefresh", mRefreshFlag);
     }
 
     /**
@@ -129,7 +147,7 @@ public class MovieListFragment extends Fragment {
             prefListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
                 @Override
                 public void onSharedPreferenceChanged(SharedPreferences sharedPrefs, String key) {
-                    updateMovies();
+                    mRefreshFlag = true;
                     }
             };
             SharedPreferences prefs = PreferenceManager
@@ -140,7 +158,7 @@ public class MovieListFragment extends Fragment {
     /**
      * Updates movies data using a inner AsyncTask class GetMovieData.
      */
-    private void updateMovies() {
+    private boolean updateMovies() {
         if (checkNetwork()) {
             GetMovieData movieDataTask = new GetMovieData();
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -158,11 +176,13 @@ public class MovieListFragment extends Fragment {
                     movieDataTask.execute(urlSortType[0]);
                     break;
             }
+            return true;
         }
         else {
             Toast toast = Toast.makeText(
                     getContext(), "Check you internet connection", Toast.LENGTH_SHORT);
             toast.show();
+            return false;
         }
     }
 
@@ -170,9 +190,9 @@ public class MovieListFragment extends Fragment {
      * @return true if network connection succeeds, false otherwise
      */
     private boolean checkNetwork() {
-        ConnectivityManager cm = (ConnectivityManager)
+        ConnectivityManager connManager = (ConnectivityManager)
                 getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        NetworkInfo netInfo = connManager.getActiveNetworkInfo();
         if (netInfo == null) {
             return false;
         }
@@ -223,10 +243,11 @@ public class MovieListFragment extends Fragment {
             String imgUrl = movies.get(i).image;
             DisplayMetrics dispMetrics = context.getResources().getDisplayMetrics();
             int screenWidth = dispMetrics.widthPixels;
-            int screenHeight = dispMetrics.heightPixels;
+            int targetWidth = screenWidth / 2;
+            int origPicRatio = 278 / 185;
             Picasso.with(context)
                     .load(baseUrl + imgUrl)
-                    .resize(screenWidth/2, screenHeight/2)
+                    .resize(targetWidth, targetWidth * origPicRatio)
                     .centerInside()
                     .into(viewHolder.imgView);
             return view;
