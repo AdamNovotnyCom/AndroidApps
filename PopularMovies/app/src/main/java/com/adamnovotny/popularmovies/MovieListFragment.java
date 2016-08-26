@@ -133,7 +133,7 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
      */
     private boolean updateMovies() {
         if (checkNetwork()) {
-            GetMovieData movieDataTask = new GetMovieData(this);
+            GetMovieData movieDataTask = new GetMovieData(this, getContext());
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
             String sortType = prefs.getString(getString(R.string.pref_sort_key),
                     getString(R.string.pref_sort_popularity));
@@ -175,7 +175,7 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
     }
 
     /**
-     * 
+     * Implemented from Interface in order to get callback from AsyncTask
      * @param movies update data returned from GetMovieData AsyncTask
      */
     public void onTaskCompleted(ArrayList<MovieParcelable> movies) {

@@ -1,8 +1,10 @@
 package com.adamnovotny.popularmovies;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,9 +24,11 @@ import java.util.ArrayList;
 public class GetMovieData extends AsyncTask<String, Void, ArrayList<MovieParcelable>> {
     private final String LOG_TAG = GetMovieData.class.getSimpleName();
     private GetMovieDataInterface listener;
+    private Context context;
 
-    public GetMovieData(GetMovieDataInterface list) {
+    public GetMovieData(GetMovieDataInterface list, Context cont) {
         listener = list;
+        context = cont;
     }
 
     @Override
@@ -85,6 +89,11 @@ public class GetMovieData extends AsyncTask<String, Void, ArrayList<MovieParcela
 
     @Override
     protected void onPostExecute(ArrayList<MovieParcelable> movies) {
+        if (movies == null) {
+            Toast toast = Toast.makeText(
+                    context, "Check you internet connection", Toast.LENGTH_SHORT);
+            toast.show();
+        }
         listener.onTaskCompleted(movies);
         Log.i("GetMovieData", "Movie API data received");
     }
