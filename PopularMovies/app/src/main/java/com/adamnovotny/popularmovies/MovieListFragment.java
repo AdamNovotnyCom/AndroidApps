@@ -109,13 +109,7 @@ public class MovieListFragment extends Fragment {
         super.onStart();
         if (mRefreshFlag) {
             if (updateMovies()) {
-                Log.i("MovieListFragment", "Before:");
-                if (mRefreshFlag)
-                    Log.i("MovieListFragment", "mRefreshTrue");
                 mRefreshFlag = false;
-                Log.i("MovieListFragment", "After:");
-                if (mRefreshFlag)
-                    Log.i("MovieListFragment", "mRefreshFalse");
             }
         }
     }
