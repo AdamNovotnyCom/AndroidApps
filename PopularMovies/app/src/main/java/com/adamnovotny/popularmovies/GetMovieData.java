@@ -106,22 +106,28 @@ public class GetMovieData extends AsyncTask<String, Void, ArrayList<MovieParcela
      */
     private ArrayList<MovieParcelable> updateMoviesFromJson(String jsonStr) {
         ArrayList<MovieParcelable> movies = new ArrayList<>();
-        try {
-            JSONObject moviesJson = new JSONObject(jsonStr);
-            JSONArray moviesArray = moviesJson.getJSONArray("results");
-            for(int i = 0; i < moviesArray.length(); i++) {
-                JSONObject movieObj = moviesArray.getJSONObject(i);
-                MovieParcelable movie = new MovieParcelable(
-                        movieObj.getString("title"),
-                        movieObj.getString("poster_path"),
-                        movieObj.getString("overview"),
-                        movieObj.getString("vote_average"),
-                        movieObj.getString("release_date"));
-                movies.add(movie);
-            }
+        if (jsonStr == null) {
+            Toast toast = Toast.makeText(
+                    context, "Check you internet connection", Toast.LENGTH_SHORT);
+            toast.show();
         }
-        catch (JSONException e) {
-            Log.e(LOG_TAG, "JSON exception: ", e);
+        else {
+            try {
+                JSONObject moviesJson = new JSONObject(jsonStr);
+                JSONArray moviesArray = moviesJson.getJSONArray("results");
+                for (int i = 0; i < moviesArray.length(); i++) {
+                    JSONObject movieObj = moviesArray.getJSONObject(i);
+                    MovieParcelable movie = new MovieParcelable(
+                            movieObj.getString("title"),
+                            movieObj.getString("poster_path"),
+                            movieObj.getString("overview"),
+                            movieObj.getString("vote_average"),
+                            movieObj.getString("release_date"));
+                    movies.add(movie);
+                }
+            } catch (JSONException e) {
+                Log.e(LOG_TAG, "JSON exception: ", e);
+            }
         }
         return movies;
     }
