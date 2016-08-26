@@ -9,12 +9,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,16 +22,6 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 
 
@@ -42,7 +29,7 @@ import java.util.ArrayList;
  * Loads movies data from api source and presents
  * posters in a grid format
  */
-public class MovieListFragment extends Fragment {
+public class MovieListFragment extends Fragment implements GetMovieDataInterface{
     private GridView moviesGrid;
     private MoviesAdapter moviesAdapter;
     private ArrayList<MovieParcelable> moviesP = new ArrayList<>();
@@ -146,7 +133,7 @@ public class MovieListFragment extends Fragment {
      */
     private boolean updateMovies() {
         if (checkNetwork()) {
-            GetMovieData movieDataTask = new GetMovieData();
+            GetMovieData movieDataTask = new GetMovieData(this);
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
             String sortType = prefs.getString(getString(R.string.pref_sort_key),
                     getString(R.string.pref_sort_popularity));
@@ -187,103 +174,13 @@ public class MovieListFragment extends Fragment {
         }
     }
 
-    // TODO move to separate file
     /**
-     * Get json format movie data from third party API using a non-blocking thread
+     * 
+     * @param movies update data returned from GetMovieData AsyncTask
      */
-    public class GetMovieData extends AsyncTask<String, Void, ArrayList<MovieParcelable>> {
-        private final String LOG_TAG = GetMovieData.class.getSimpleName();
-
-        @Override
-        protected ArrayList<MovieParcelable> doInBackground(String... params) {
-            if (params.length == 0) { // error
-                return null;
-            }
-
-            // Attribution: network code based on Udacity course DEVELOPING ANDROID APPS
-            // Connection objects declared outside try block to be closed in finally
-            HttpURLConnection urlConn = null;
-            BufferedReader reader = null;
-            String urlConnResult;
-            try {
-                final String BASE_URL = "http://api.themoviedb.org/3/movie/";
-                final String PARAM_KEY = "api_key";
-                Uri builtUri = Uri.parse(BASE_URL + params[0]).buildUpon()
-                        .appendQueryParameter(PARAM_KEY, AppKeys.themoviedb)
-                        .build();
-                URL url = new URL(builtUri.toString());
-                urlConn = (HttpURLConnection) url.openConnection();
-                urlConn.setRequestMethod("GET");
-                urlConn.connect();
-                InputStream inputStream = urlConn.getInputStream();
-                // read input
-                StringBuffer buffer = new StringBuffer();
-                if (inputStream == null) {
-                    return null;
-                }
-                reader = new BufferedReader(new InputStreamReader(inputStream));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    buffer.append(line + "\n");
-                }
-                if (buffer.length() == 0) {
-                    return null;
-                }
-                urlConnResult = buffer.toString();
-            }
-            catch (IOException e) {
-                Log.e(LOG_TAG, "Error ", e);
-                return null;
-            }
-            finally {
-                if (urlConn != null) {
-                    urlConn.disconnect();
-                }
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (final IOException e) {
-                        Log.e(LOG_TAG, "Error closing stream", e);
-                    }
-                }
-            }
-            return updateMoviesFromJson(urlConnResult);
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<MovieParcelable> movies) {
-            moviesP = movies;
-            moviesAdapter = new MoviesAdapter(getActivity(), moviesP);
-            moviesGrid.setAdapter(moviesAdapter);
-            Log.i("GetMovieData", "Movie API data received");
-        }
-
-        /**
-         *
-         * @param jsonStr contains movie data in json format
-         * @return formatted ArrayList where each item represents
-         * a MovieParcelable object.
-         */
-        private ArrayList<MovieParcelable> updateMoviesFromJson(String jsonStr) {
-            ArrayList<MovieParcelable> movies = new ArrayList<>();
-            try {
-                JSONObject moviesJson = new JSONObject(jsonStr);
-                JSONArray moviesArray = moviesJson.getJSONArray("results");
-                for(int i = 0; i < moviesArray.length(); i++) {
-                    JSONObject movieObj = moviesArray.getJSONObject(i);
-                    MovieParcelable movie = new MovieParcelable(
-                            movieObj.getString("title"),
-                            movieObj.getString("poster_path"),
-                            movieObj.getString("overview"),
-                            movieObj.getString("vote_average"),
-                            movieObj.getString("release_date"));
-                    movies.add(movie);
-                }
-            }
-            catch (JSONException e) {
-                Log.e(LOG_TAG, "JSON exception: ", e);
-            }
-            return movies;
-        }
+    public void onTaskCompleted(ArrayList<MovieParcelable> movies) {
+        moviesP = movies;
+        moviesAdapter = new MoviesAdapter(getActivity(), moviesP);
+        moviesGrid.setAdapter(moviesAdapter);
     }
 }
