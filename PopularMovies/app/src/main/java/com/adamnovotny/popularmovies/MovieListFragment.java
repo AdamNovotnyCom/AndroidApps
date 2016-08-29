@@ -30,10 +30,10 @@ import java.util.ArrayList;
  * posters in a grid format
  */
 public class MovieListFragment extends Fragment implements GetMovieDataInterface{
-    private GridView moviesGrid;
-    private MoviesAdapter moviesAdapter;
-    private ArrayList<MovieParcelable> moviesP = new ArrayList<>();
-    private SharedPreferences.OnSharedPreferenceChangeListener prefListener; // required...
+    private GridView mMoviesGrid;
+    private MoviesAdapter mMoviesAdapter;
+    private ArrayList<MovieParcelable> mMoviesP = new ArrayList<>();
+    private SharedPreferences.OnSharedPreferenceChangeListener mPrefListener; // required...
     private boolean mRefreshFlag = true; // true: need refresh, false: no refresh
 
     public MovieListFragment() {
@@ -44,7 +44,7 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         if(savedInstanceState != null && savedInstanceState.containsKey("movies")) {
-            moviesP = savedInstanceState.getParcelableArrayList("movies");
+            mMoviesP = savedInstanceState.getParcelableArrayList("movies");
             mRefreshFlag = savedInstanceState.getBoolean("dataRefresh");
         }
         setHasOptionsMenu(true);
@@ -73,18 +73,18 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment, populate content, set onclick
         View gridView = inflater.inflate(R.layout.fragment_movie_list, container, false);
-        moviesGrid = (GridView) gridView.findViewById(R.id.moviesGridView);
-        moviesAdapter = new MoviesAdapter(getActivity(), moviesP);
-        moviesGrid.setAdapter(moviesAdapter);
-        moviesGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mMoviesGrid = (GridView) gridView.findViewById(R.id.moviesGridView);
+        mMoviesAdapter = new MoviesAdapter(getActivity(), mMoviesP);
+        mMoviesGrid.setAdapter(mMoviesAdapter);
+        mMoviesGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getContext(), MovieDetailActivity.class);
-                intent.putExtra("title", moviesP.get(position).title);
-                intent.putExtra("image", moviesP.get(position).image);
-                intent.putExtra("overview", moviesP.get(position).overview);
-                intent.putExtra("vote", moviesP.get(position).vote);
-                intent.putExtra("release", moviesP.get(position).release);
+                intent.putExtra("title", mMoviesP.get(position).title);
+                intent.putExtra("image", mMoviesP.get(position).image);
+                intent.putExtra("overview", mMoviesP.get(position).overview);
+                intent.putExtra("vote", mMoviesP.get(position).vote);
+                intent.putExtra("release", mMoviesP.get(position).release);
                 startActivity(intent);
             }
         });
@@ -109,7 +109,7 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList("movies", moviesP);
+        outState.putParcelableArrayList("movies", mMoviesP);
         outState.putBoolean("dataRefresh", mRefreshFlag);
     }
 
@@ -117,7 +117,7 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
      * Update movie data only when preferences change
      */
     private void setPreferenceListener() {
-            prefListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            mPrefListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
                 @Override
                 public void onSharedPreferenceChanged(SharedPreferences sharedPrefs, String key) {
                     mRefreshFlag = true;
@@ -125,11 +125,12 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
             };
             SharedPreferences prefs = PreferenceManager
                     .getDefaultSharedPreferences(getActivity());
-            prefs.registerOnSharedPreferenceChangeListener(prefListener);
+            prefs.registerOnSharedPreferenceChangeListener(mPrefListener);
     }
 
     /**
      * Updates movies data using a inner AsyncTask class GetMovieData.
+     * TODO: update from AsyncTask to Retrofit by Square
      */
     private boolean updateMovies() {
         if (checkNetwork()) {
@@ -179,8 +180,8 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
      * @param movies update data returned from GetMovieData AsyncTask
      */
     public void onTaskCompleted(ArrayList<MovieParcelable> movies) {
-        moviesP = movies;
-        moviesAdapter = new MoviesAdapter(getActivity(), moviesP);
-        moviesGrid.setAdapter(moviesAdapter);
+        mMoviesP = movies;
+        mMoviesAdapter = new MoviesAdapter(getActivity(), mMoviesP);
+        mMoviesGrid.setAdapter(mMoviesAdapter);
     }
 }

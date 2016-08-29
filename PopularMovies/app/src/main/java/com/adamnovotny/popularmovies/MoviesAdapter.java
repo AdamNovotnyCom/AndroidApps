@@ -20,20 +20,20 @@ import java.util.ArrayList;
  * Attached to GridView showing posters of movies
  */
 public class MoviesAdapter extends BaseAdapter {
-    ArrayList<MovieParcelable> movies;
-    Context context;
-    LayoutInflater inflater;
-    ViewHolder viewHolder;
+    ArrayList<MovieParcelable> mMovies;
+    Context mContext;
+    LayoutInflater mInflater;
+    ViewHolder mViewHolder;
 
     public MoviesAdapter(Context cont, ArrayList<MovieParcelable> m) {
-        context = cont;
-        movies = m;
-        inflater = LayoutInflater.from(context);
+        mContext = cont;
+        mMovies = m;
+        mInflater = LayoutInflater.from(mContext);
     }
 
     @Override
     public int getCount() {
-        return movies.size();
+        return mMovies.size();
     }
 
     @Override
@@ -49,18 +49,18 @@ public class MoviesAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = inflater.inflate(R.layout.fragment_movie_list_item, null);
-            viewHolder = new ViewHolder(view);
-            view.setTag(viewHolder);
+            view = mInflater.inflate(R.layout.fragment_movie_list_item, null);
+            mViewHolder = new ViewHolder(view);
+            view.setTag(mViewHolder);
         }
         ViewHolder viewHolder = (ViewHolder) view.getTag();
         String baseUrl = "http://image.tmdb.org/t/p/w185/";
-        String imgUrl = movies.get(i).image;
-        DisplayMetrics dispMetrics = context.getResources().getDisplayMetrics();
+        String imgUrl = mMovies.get(i).image;
+        DisplayMetrics dispMetrics = mContext.getResources().getDisplayMetrics();
         int screenWidth = dispMetrics.widthPixels;
         int targetWidth = screenWidth / 2;
         int origPicRatio = 278 / 185;
-        Picasso.with(context)
+        Picasso.with(mContext)
                 .load(baseUrl + imgUrl)
                 .resize(targetWidth, targetWidth * origPicRatio)
                 .centerInside()
@@ -68,7 +68,7 @@ public class MoviesAdapter extends BaseAdapter {
         return view;
     }
 
-    public class ViewHolder {
+    private class ViewHolder {
         public final ImageView imgView;
         public ViewHolder(View view) {
             imgView = (ImageView) view.findViewById(R.id.fragment_movie_list_item_imageview);
