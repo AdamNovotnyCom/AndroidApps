@@ -130,7 +130,7 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
 
     /**
      * Updates movies data using a inner AsyncTask class GetMovieData.
-     * TODO: update from AsyncTask to Retrofit by Square
+     * TODO: move from AsyncTask to Retrofit by Square
      */
     private boolean updateMovies() {
         if (checkNetwork()) {
@@ -177,7 +177,7 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
 
     /**
      * Implemented from Interface in order to get callback from AsyncTask
-     * @param movies update data returned from GetMovieData AsyncTask
+     * @param movies data returned from GetMovieData AsyncTask
      */
     public void onTaskCompleted(ArrayList<MovieParcelable> movies) {
         mMoviesP = movies;
