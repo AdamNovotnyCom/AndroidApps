@@ -118,6 +118,7 @@ public class GetMovieData extends AsyncTask<String, Void, ArrayList<MovieParcela
                 for (int i = 0; i < moviesArray.length(); i++) {
                     JSONObject movieObj = moviesArray.getJSONObject(i);
                     MovieParcelable movie = new MovieParcelable(
+                            movieObj.getString("id"),
                             movieObj.getString("title"),
                             movieObj.getString("poster_path"),
                             movieObj.getString("overview"),
