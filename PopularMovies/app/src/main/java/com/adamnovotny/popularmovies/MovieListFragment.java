@@ -12,6 +12,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
  * posters in a grid format
  */
 public class MovieListFragment extends Fragment implements GetMovieDataInterface{
+    private final String LOG_TAG = MovieListFragment.class.getSimpleName();
     private GridView mMoviesGrid;
     private MoviesAdapter mMoviesAdapter;
     private ArrayList<MovieParcelable> mMoviesP = new ArrayList<>();
@@ -175,6 +177,20 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
         }
     }
 
+    private void updateVideos() {
+        for (MovieParcelable movie : mMoviesP) {
+            GetVideoAsync videoAsync = new GetVideoAsync(this);
+            videoAsync.execute(movie.id);
+        }
+    }
+
+    private void updateReviews() {
+        for (MovieParcelable movie : mMoviesP) {
+            GetReviewsAsync reviewAsync = new GetReviewsAsync(this);
+            reviewAsync.execute(movie.id);
+        }
+    }
+
     /**
      * Implemented from Interface in order to get callback from AsyncTask
      * @param movies data returned from GetMovieData AsyncTask
@@ -183,5 +199,18 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
         mMoviesP = movies;
         mMoviesAdapter = new MoviesAdapter(getActivity(), mMoviesP);
         mMoviesGrid.setAdapter(mMoviesAdapter);
+        updateVideos();
+        updateReviews();
+    }
+
+    public void onGetVideosCompleted(String id, ArrayList<String> video) {
+        Log.i(LOG_TAG, "VIDEO for movie: " + id);
+        Log.i(LOG_TAG, video.toString());
+        // TODO NEXT add to mMovies videoData
+    }
+
+    public void onGetReviewsCompleted(String id, ArrayList<String> review) {
+        //Log.i(LOG_TAG, "REVIEW for movie: " + id);
+        //Log.i(LOG_TAG, review.toString());
     }
 }

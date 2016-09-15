@@ -118,19 +118,14 @@ public class GetMovieData extends AsyncTask<String, Void, ArrayList<MovieParcela
                 for (int i = 0; i < moviesArray.length(); i++) {
                     JSONObject movieObj = moviesArray.getJSONObject(i);
                     String movieId = movieObj.getString("id");
-                    // TODO get video based on id
-                    GetVideoAsync videoAsync = new GetVideoAsync();
-                    videoAsync.execute(movieId);
-                    // TODO get reviews
-
-
                     MovieParcelable movie = new MovieParcelable(
                             movieId,
                             movieObj.getString("title"),
                             movieObj.getString("poster_path"),
                             movieObj.getString("overview"),
                             movieObj.getString("vote_average"),
-                            movieObj.getString("release_date"));
+                            movieObj.getString("release_date"),
+                            new ArrayList<String>());
                     movies.add(movie);
                 }
             } catch (JSONException e) {

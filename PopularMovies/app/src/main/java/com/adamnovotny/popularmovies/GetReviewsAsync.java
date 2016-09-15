@@ -4,10 +4,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,12 +12,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class GetVideoAsync extends AsyncTask<String, Void, ArrayList<String>> {
+
+public class GetReviewsAsync extends AsyncTask<String, Void, ArrayList<String>> {
     GetMovieDataInterface listener;
     String id;
     private final String LOG_TAG = GetMovieData.class.getSimpleName();
 
-    public GetVideoAsync(GetMovieDataInterface list) {
+    public GetReviewsAsync(GetMovieDataInterface list) {
         listener = list;
     }
 
@@ -38,7 +35,7 @@ public class GetVideoAsync extends AsyncTask<String, Void, ArrayList<String>> {
         String urlConnResult;
         try {
             final String BASE_URL = "http://api.themoviedb.org/3/movie/";
-            final String RESOURCE_TYPE = "/videos";
+            final String RESOURCE_TYPE = "/reviews";
             final String PARAM_KEY = "api_key";
             id = params[0];
             Uri builtUri = Uri.parse(BASE_URL + id + RESOURCE_TYPE).buildUpon()
@@ -63,7 +60,10 @@ public class GetVideoAsync extends AsyncTask<String, Void, ArrayList<String>> {
                 return null;
             }
             urlConnResult = buffer.toString();
-            return collectVideosFromJson(urlConnResult);
+            // TESTING ONLY
+            ArrayList<String> al = new ArrayList<String>();
+            al.add(urlConnResult);
+            return al;
         }
         catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
@@ -83,30 +83,8 @@ public class GetVideoAsync extends AsyncTask<String, Void, ArrayList<String>> {
         }
     }
 
-    private ArrayList<String> collectVideosFromJson(String jsonStr) {
-        ArrayList<String> videos = new ArrayList<>();
-        if (jsonStr == null) {
-            Log.e(LOG_TAG, "No video data");
-        }
-        else {
-            try {
-                JSONObject jsonObj = new JSONObject(jsonStr);
-                JSONArray jsonArray = jsonObj.getJSONArray("results");
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject videoObj = jsonArray.getJSONObject(i);
-                    if (videoObj.getString("type").equals("Trailer")) {
-                        videos.add(videoObj.getString("key"));
-                    }
-                }
-            } catch (JSONException e) {
-                Log.e(LOG_TAG, "JSON exception: ", e);
-            }
-        }
-        return videos;
-    }
-
     @Override
-    protected void onPostExecute(ArrayList<String> videos) {
-        listener.onGetVideosCompleted(id, videos);
+    protected void onPostExecute(ArrayList<String> reviews) {
+        listener.onGetReviewsCompleted(id, reviews);
     }
 }

@@ -7,6 +7,8 @@ package com.adamnovotny.popularmovies;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+
 public class MovieParcelable implements Parcelable {
     String id;
     String title;
@@ -14,19 +16,22 @@ public class MovieParcelable implements Parcelable {
     String overview;
     String vote;
     String release;
+    ArrayList<String> videos;
 
     public MovieParcelable(String pId,
                            String pTitle,
                            String pImage,
                            String pOverview,
                            String pVote,
-                           String pRelease) {
+                           String pRelease,
+                           ArrayList<String> pVideos) {
         id = pId;
         title = pTitle;
         image = pImage;
         overview = pOverview;
         vote = pVote;
         release = pRelease;
+        videos = pVideos;
     }
 
     private MovieParcelable(Parcel in) {
@@ -36,6 +41,7 @@ public class MovieParcelable implements Parcelable {
         overview = in.readString();
         vote = in.readString();
         release = in.readString();
+        videos = (ArrayList<String>) in.readSerializable();
     }
 
     @Override
@@ -56,6 +62,7 @@ public class MovieParcelable implements Parcelable {
         p.writeString(overview);
         p.writeString(vote);
         p.writeString(release);
+        p.writeSerializable(videos);
     }
 
     public static final Parcelable.Creator<MovieParcelable> CREATOR =
