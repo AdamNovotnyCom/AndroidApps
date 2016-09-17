@@ -11,6 +11,9 @@
     <string name="pref_sort_vote" translatable="false">vote</string>
     <string name="title_activity_settings">Settings</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- App text -->
+    <string name="release_date_title">Release date</string>
+    <string name="vote_title">Vote</string>
+    <string name="trailers_title">Trailers</string>
 
 </resources>

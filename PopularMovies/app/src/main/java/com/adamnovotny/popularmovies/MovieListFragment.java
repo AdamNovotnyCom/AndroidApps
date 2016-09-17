@@ -12,7 +12,6 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,6 +23,7 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -35,6 +35,8 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
     private GridView mMoviesGrid;
     private MoviesAdapter mMoviesAdapter;
     private ArrayList<MovieParcelable> mMoviesP = new ArrayList<>();
+    //private ArrayList<ArrayList<String>> mVideos = new ArrayList<ArrayList<String>>();
+    private HashMap<String, ArrayList<String>> mVideos = new HashMap();
     private SharedPreferences.OnSharedPreferenceChangeListener mPrefListener; // required...
     private boolean mRefreshFlag = true; // true: need refresh, false: no refresh
 
@@ -87,6 +89,9 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
                 intent.putExtra("overview", mMoviesP.get(position).overview);
                 intent.putExtra("vote", mMoviesP.get(position).vote);
                 intent.putExtra("release", mMoviesP.get(position).release);
+                intent.putExtra("video",
+                        mVideos.get(mMoviesP.get(position).id));
+                //Log.i(LOG_TAG, mVideos.get(mMoviesP.get(position).id).toString());
                 startActivity(intent);
             }
         });
@@ -178,6 +183,7 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
     }
 
     private void updateVideos() {
+        // Async to get video urls for each movie
         for (MovieParcelable movie : mMoviesP) {
             GetVideoAsync videoAsync = new GetVideoAsync(this);
             videoAsync.execute(movie.id);
@@ -204,9 +210,10 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
     }
 
     public void onGetVideosCompleted(String id, ArrayList<String> video) {
-        Log.i(LOG_TAG, "VIDEO for movie: " + id);
-        Log.i(LOG_TAG, video.toString());
+        //Log.i(LOG_TAG, "VIDEO for movie: " + id);
+        //Log.i(LOG_TAG, video.toString());
         // TODO NEXT add to mMovies videoData
+        mVideos.put(id, video);
     }
 
     public void onGetReviewsCompleted(String id, ArrayList<String> review) {

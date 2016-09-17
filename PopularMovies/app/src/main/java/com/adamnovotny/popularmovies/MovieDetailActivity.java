@@ -23,6 +23,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         bdl.putString("overview", intent.getStringExtra("overview"));
         bdl.putString("vote", intent.getStringExtra("vote"));
         bdl.putString("release", intent.getStringExtra("release"));
+        bdl.putStringArrayList("video", intent.getStringArrayListExtra("video"));
         MovieDetailFragment frag = new MovieDetailFragment();
         frag.setArguments(bdl);
         if (savedInstanceState == null) {

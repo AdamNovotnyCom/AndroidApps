@@ -47,7 +47,7 @@
                     android:paddingLeft="@dimen/title_vertical_margin"
                     android:textSize="16sp"
                     android:textColor="@color/colorAccent"
-                    android:text="Release date: "/>
+                    android:text="@string/release_date_title"/>
 
                 <TextView
                     android:id="@+id/release"
@@ -63,7 +63,7 @@
                     android:paddingLeft="@dimen/title_vertical_margin"
                     android:textSize="16sp"
                     android:textColor="@color/colorAccent"
-                    android:text="Vote: "/>
+                    android:text="@string/vote_title"/>
 
                 <TextView
                     android:id="@+id/vote"
@@ -82,6 +82,25 @@
             android:paddingTop="@dimen/title_horizontal_margin"
             android:paddingLeft="@dimen/subtitle_horizontal_margin"
             android:paddingRight="@dimen/subtitle_horizontal_margin"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/title_horizontal_margin"
+            android:paddingTop="@dimen/title_horizontal_margin"
+            android:paddingLeft="@dimen/title_vertical_margin"
+            android:textSize="16sp"
+            android:textColor="@color/colorAccent"
+            android:text="@string/trailers_title"/>
+
+        <TextView
+            android:id="@+id/trailer_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/title_horizontal_margin"
+            android:drawableLeft="@android:drawable/ic_media_play"
+            android:clickable="true"
+            android:text="Trailer 1"/>
 
     </LinearLayout>
 
