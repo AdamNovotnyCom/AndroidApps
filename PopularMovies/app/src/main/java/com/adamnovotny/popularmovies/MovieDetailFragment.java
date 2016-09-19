@@ -4,10 +4,10 @@
 
 package com.adamnovotny.popularmovies;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +30,10 @@ public class MovieDetailFragment extends Fragment {
     private String overview;
     private String vote;
     private String release;
-    private ArrayList<String> video;
+    private ArrayList<String> videoAL;
+    private RecyclerView videoRecyclerView;
+    private VideoAdapter mVideoAdapter;
+    private RecyclerView reviewRecyclerView;
 
     public MovieDetailFragment() {
     }
@@ -39,14 +42,14 @@ public class MovieDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Bundle bdl = getArguments();
-        // TODO use Butter Knife or Data Binding Library to simplify
         // boilerplate code below as the data expands
         this.title = bdl.getString("title");
         this.image = bdl.getString("image");
         this.overview = bdl.getString("overview");
         this.vote = bdl.getString("vote");
         this.release = bdl.getString("release");
-        this.video = bdl.getStringArrayList("video");
+        this.videoAL = bdl.getStringArrayList("video");
+        //Log.i(LOG_TAG, this.videoAL.toString()); //////////////////// DELETE
         View mainView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
         setViews(mainView);
         return mainView;
@@ -64,16 +67,26 @@ public class MovieDetailFragment extends Fragment {
         vote.setText(this.vote);
         TextView overview = (TextView) mainView.findViewById(R.id.overview);
         overview.setText(this.overview);
-        // TODO fix for multiple trailers
-        TextView t1 = (TextView) mainView.findViewById(R.id.trailer_1);
-        t1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String url = "https://www.youtube.com/watch?v=" + video.get(0);
-                Uri uri = Uri.parse(url);
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-            }
-        });
+
+        // populate video links
+        buildRecyclerVideo(mainView);
+        // populate reviews
+        buildRecyclerReview(mainView);
+    }
+
+    private void buildRecyclerVideo(View mainView) {
+        videoRecyclerView =
+                (RecyclerView) mainView.findViewById(R.id.recycler_movies);
+        mVideoAdapter = new VideoAdapter(this.videoAL, getContext());
+        RecyclerView.LayoutManager mLayoutManager =
+                new LinearLayoutManager(getContext());
+        videoRecyclerView.setLayoutManager(mLayoutManager);
+        videoRecyclerView.setAdapter(mVideoAdapter);
+    }
+
+    private void buildRecyclerReview(View mainView) {
+        reviewRecyclerView =
+                (RecyclerView) mainView.findViewById(R.id.recycler_reviews);
+
     }
 }

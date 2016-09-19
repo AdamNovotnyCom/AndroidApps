@@ -80,21 +80,6 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
         mMoviesGrid = (GridView) gridView.findViewById(R.id.moviesGridView);
         mMoviesAdapter = new MoviesAdapter(getActivity(), mMoviesP);
         mMoviesGrid.setAdapter(mMoviesAdapter);
-        mMoviesGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getContext(), MovieDetailActivity.class);
-                intent.putExtra("title", mMoviesP.get(position).title);
-                intent.putExtra("image", mMoviesP.get(position).image);
-                intent.putExtra("overview", mMoviesP.get(position).overview);
-                intent.putExtra("vote", mMoviesP.get(position).vote);
-                intent.putExtra("release", mMoviesP.get(position).release);
-                intent.putExtra("video",
-                        mVideos.get(mMoviesP.get(position).id));
-                //Log.i(LOG_TAG, mVideos.get(mMoviesP.get(position).id).toString());
-                startActivity(intent);
-            }
-        });
         return gridView;
     }
 
@@ -136,8 +121,7 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
     }
 
     /**
-     * Updates movies data using a inner AsyncTask class GetMovieData.
-     * TODO: move from AsyncTask to Retrofit by Square
+     * Updates movies data using a inner AsyncTask class GetMovieData
      */
     private boolean updateMovies() {
         if (checkNetwork()) {
@@ -210,14 +194,29 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
     }
 
     public void onGetVideosCompleted(String id, ArrayList<String> video) {
-        //Log.i(LOG_TAG, "VIDEO for movie: " + id);
-        //Log.i(LOG_TAG, video.toString());
-        // TODO NEXT add to mMovies videoData
         mVideos.put(id, video);
     }
 
     public void onGetReviewsCompleted(String id, ArrayList<String> review) {
         //Log.i(LOG_TAG, "REVIEW for movie: " + id);
         //Log.i(LOG_TAG, review.toString());
+        updateOnClickListener();
+    }
+
+    private void updateOnClickListener() {
+        mMoviesGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getContext(), MovieDetailActivity.class);
+                intent.putExtra("title", mMoviesP.get(position).title);
+                intent.putExtra("image", mMoviesP.get(position).image);
+                intent.putExtra("overview", mMoviesP.get(position).overview);
+                intent.putExtra("vote", mMoviesP.get(position).vote);
+                intent.putExtra("release", mMoviesP.get(position).release);
+                intent.putExtra("video",
+                        mVideos.get(mMoviesP.get(position).id));
+                startActivity(intent);
+            }
+        });
     }
 }
