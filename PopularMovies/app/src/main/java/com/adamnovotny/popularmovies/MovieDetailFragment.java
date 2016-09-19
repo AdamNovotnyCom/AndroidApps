@@ -31,8 +31,10 @@ public class MovieDetailFragment extends Fragment {
     private String vote;
     private String release;
     private ArrayList<String> videoAL;
+    private ArrayList<String> reviewAL;
     private RecyclerView videoRecyclerView;
     private VideoAdapter mVideoAdapter;
+    private ReviewAdapter mReviewAdapter;
     private RecyclerView reviewRecyclerView;
 
     public MovieDetailFragment() {
@@ -49,7 +51,7 @@ public class MovieDetailFragment extends Fragment {
         this.vote = bdl.getString("vote");
         this.release = bdl.getString("release");
         this.videoAL = bdl.getStringArrayList("video");
-        //Log.i(LOG_TAG, this.videoAL.toString()); //////////////////// DELETE
+        this.reviewAL = bdl.getStringArrayList("review");
         View mainView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
         setViews(mainView);
         return mainView;
@@ -87,6 +89,10 @@ public class MovieDetailFragment extends Fragment {
     private void buildRecyclerReview(View mainView) {
         reviewRecyclerView =
                 (RecyclerView) mainView.findViewById(R.id.recycler_reviews);
-
+        mReviewAdapter = new ReviewAdapter(this.reviewAL, getContext());
+        RecyclerView.LayoutManager mLayoutManager =
+                new LinearLayoutManager(getContext());
+        reviewRecyclerView.setLayoutManager(mLayoutManager);
+        reviewRecyclerView.setAdapter(mReviewAdapter);
     }
 }

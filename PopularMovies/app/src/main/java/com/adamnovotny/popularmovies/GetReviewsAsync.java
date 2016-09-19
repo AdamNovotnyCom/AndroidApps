@@ -4,6 +4,10 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,7 +20,7 @@ import java.util.ArrayList;
 public class GetReviewsAsync extends AsyncTask<String, Void, ArrayList<String>> {
     GetMovieDataInterface listener;
     String id;
-    private final String LOG_TAG = GetMovieData.class.getSimpleName();
+    private final String LOG_TAG = GetReviewsAsync.class.getSimpleName();
 
     public GetReviewsAsync(GetMovieDataInterface list) {
         listener = list;
@@ -60,10 +64,7 @@ public class GetReviewsAsync extends AsyncTask<String, Void, ArrayList<String>> 
                 return null;
             }
             urlConnResult = buffer.toString();
-            // TESTING ONLY
-            ArrayList<String> al = new ArrayList<String>();
-            al.add(urlConnResult);
-            return al;
+            return collectReviewsFromJson(urlConnResult);
         }
         catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
@@ -81,6 +82,32 @@ public class GetReviewsAsync extends AsyncTask<String, Void, ArrayList<String>> 
                 }
             }
         }
+    }
+
+    private ArrayList<String> collectReviewsFromJson(String jsonStr) {
+        ArrayList<String> reviews = new ArrayList<>();
+
+        if (jsonStr == null) {
+            Log.e(LOG_TAG, "No review data");
+        }
+        else {
+            try {
+                JSONObject jsonObj = new JSONObject(jsonStr);
+                JSONArray jsonArray = jsonObj.getJSONArray("results");
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject obj = jsonArray.getJSONObject(i);
+                    String output = "Author: " + obj.getString("author");
+                    output += "\n";
+                    output += "Content: " + obj.getString("content");
+                    output += "\n";
+                    output += "\n";
+                    reviews.add(output);
+                }
+            } catch (JSONException e) {
+                Log.e(LOG_TAG, "JSON exception: ", e);
+            }
+        }
+        return reviews;
     }
 
     @Override

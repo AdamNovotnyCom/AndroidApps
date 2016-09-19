@@ -95,7 +95,7 @@ public class GetMovieData extends AsyncTask<String, Void, ArrayList<MovieParcela
             toast.show();
         }
         listener.onTaskCompleted(movies);
-        Log.i("GetMovieData", "Movie API data received");
+        Log.i(LOG_TAG, "Movie API data received");
     }
 
     /**
@@ -124,8 +124,7 @@ public class GetMovieData extends AsyncTask<String, Void, ArrayList<MovieParcela
                             movieObj.getString("poster_path"),
                             movieObj.getString("overview"),
                             movieObj.getString("vote_average"),
-                            movieObj.getString("release_date"),
-                            new ArrayList<String>());
+                            movieObj.getString("release_date"));
                     movies.add(movie);
                 }
             } catch (JSONException e) {

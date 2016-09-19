@@ -17,21 +17,20 @@ public class MovieParcelable implements Parcelable {
     String vote;
     String release;
     ArrayList<String> videos;
+    ArrayList<String> reviews;
 
     public MovieParcelable(String pId,
                            String pTitle,
                            String pImage,
                            String pOverview,
                            String pVote,
-                           String pRelease,
-                           ArrayList<String> pVideos) {
+                           String pRelease) {
         id = pId;
         title = pTitle;
         image = pImage;
         overview = pOverview;
         vote = pVote;
         release = pRelease;
-        videos = pVideos;
     }
 
     private MovieParcelable(Parcel in) {
@@ -41,7 +40,6 @@ public class MovieParcelable implements Parcelable {
         overview = in.readString();
         vote = in.readString();
         release = in.readString();
-        videos = (ArrayList<String>) in.readSerializable();
     }
 
     @Override
@@ -62,7 +60,6 @@ public class MovieParcelable implements Parcelable {
         p.writeString(overview);
         p.writeString(vote);
         p.writeString(release);
-        p.writeSerializable(videos);
     }
 
     public static final Parcelable.Creator<MovieParcelable> CREATOR =

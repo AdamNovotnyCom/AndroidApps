@@ -12,6 +12,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,8 +36,8 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
     private GridView mMoviesGrid;
     private MoviesAdapter mMoviesAdapter;
     private ArrayList<MovieParcelable> mMoviesP = new ArrayList<>();
-    //private ArrayList<ArrayList<String>> mVideos = new ArrayList<ArrayList<String>>();
     private HashMap<String, ArrayList<String>> mVideos = new HashMap();
+    private HashMap<String, ArrayList<String>> mReviews = new HashMap();
     private SharedPreferences.OnSharedPreferenceChangeListener mPrefListener; // required...
     private boolean mRefreshFlag = true; // true: need refresh, false: no refresh
 
@@ -50,6 +51,10 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
         if(savedInstanceState != null && savedInstanceState.containsKey("movies")) {
             mMoviesP = savedInstanceState.getParcelableArrayList("movies");
             mRefreshFlag = savedInstanceState.getBoolean("dataRefresh");
+            mVideos = (HashMap<String, ArrayList<String>>)
+                    savedInstanceState.getSerializable("videos");
+            mReviews = (HashMap<String, ArrayList<String>>)
+                    savedInstanceState.getSerializable("reviews");
         }
         setHasOptionsMenu(true);
         setPreferenceListener();
@@ -103,6 +108,8 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("movies", mMoviesP);
         outState.putBoolean("dataRefresh", mRefreshFlag);
+        outState.putSerializable("videos", mVideos);
+        outState.putSerializable("videos", mReviews);
     }
 
     /**
@@ -191,22 +198,28 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
         mMoviesGrid.setAdapter(mMoviesAdapter);
         updateVideos();
         updateReviews();
+        updateOnClickListener();
     }
 
+    /**
+     * Listener called when videos async completes
+     */
     public void onGetVideosCompleted(String id, ArrayList<String> video) {
         mVideos.put(id, video);
     }
 
+    /**
+     * Listener called when reviews async completes
+     */
     public void onGetReviewsCompleted(String id, ArrayList<String> review) {
-        //Log.i(LOG_TAG, "REVIEW for movie: " + id);
-        //Log.i(LOG_TAG, review.toString());
-        updateOnClickListener();
+        mReviews.put(id, review);
     }
 
     private void updateOnClickListener() {
         mMoviesGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.i(LOG_TAG, mMoviesP.get(position).id); // DELETE
                 Intent intent = new Intent(getContext(), MovieDetailActivity.class);
                 intent.putExtra("title", mMoviesP.get(position).title);
                 intent.putExtra("image", mMoviesP.get(position).image);
@@ -215,6 +228,8 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
                 intent.putExtra("release", mMoviesP.get(position).release);
                 intent.putExtra("video",
                         mVideos.get(mMoviesP.get(position).id));
+                intent.putExtra("review",
+                        mReviews.get(mMoviesP.get(position).id));
                 startActivity(intent);
             }
         });
