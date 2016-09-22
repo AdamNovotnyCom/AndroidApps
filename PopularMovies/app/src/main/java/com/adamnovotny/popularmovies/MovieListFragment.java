@@ -12,7 +12,6 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -219,7 +218,6 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
         mMoviesGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i(LOG_TAG, mMoviesP.get(position).id); // DELETE
                 Intent intent = new Intent(getContext(), MovieDetailActivity.class);
                 intent.putExtra("title", mMoviesP.get(position).title);
                 intent.putExtra("image", mMoviesP.get(position).image);

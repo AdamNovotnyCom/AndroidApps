@@ -8,12 +8,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.adamnovotny.popularmovies.data.MovieContract;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -74,6 +76,8 @@ public class MovieDetailFragment extends Fragment {
         buildRecyclerVideo(mainView);
         // populate reviews
         buildRecyclerReview(mainView);
+        // hook favorite button to db
+        buildFavoriteDbHook(mainView);
     }
 
     private void buildRecyclerVideo(View mainView) {
@@ -94,5 +98,10 @@ public class MovieDetailFragment extends Fragment {
                 new LinearLayoutManager(getContext());
         reviewRecyclerView.setLayoutManager(mLayoutManager);
         reviewRecyclerView.setAdapter(mReviewAdapter);
+    }
+
+    private void buildFavoriteDbHook(View mainView) {
+        MovieContract mc = new MovieContract();
+        Log.i(LOG_TAG, mc.CONTENT_AUTHORITY);
     }
 }
