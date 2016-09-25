@@ -31,7 +31,7 @@ public class MovieContract {
         // Table name
         public static final String TABLE_NAME = "movie";
 
-        public static final String COLUMN_MOVIE_ID = "favorite";
+        public static final String COLUMN_MOVIE_ID = "favorite_id";
 
         public static Uri buildMovieUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
