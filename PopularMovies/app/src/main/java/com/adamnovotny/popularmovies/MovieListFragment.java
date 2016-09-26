@@ -23,6 +23,8 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.adamnovotny.popularmovies.data.MovieDbHelper;
+
 import java.util.ArrayList;
 
 
@@ -127,7 +129,7 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
             String sortType = prefs.getString(getString(R.string.pref_sort_key),
                     getString(R.string.pref_sort_popularity));
-            String[] urlSortType = {"popular", "top_rated"};
+            String[] urlSortType = {"popular", "top_rated", "favorite"};
             switch (sortType) {
                 case "Popularity":
                     movieDataTask.execute(urlSortType[0]);
@@ -136,7 +138,12 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
                     movieDataTask.execute(urlSortType[1]);
                     break;
                 case "Favorite":
-                    movieDataTask.execute(urlSortType[0]);
+                    MovieDbHelper db = new MovieDbHelper(getContext());
+                    ArrayList<String> out = db.getAllFavorite();
+                    for (int i = 0; i<out.size(); i++) {
+                        GetMovieData movieDataT = new GetMovieData(this, getContext());
+                        movieDataT.execute(urlSortType[2], out.get(i));
+                    }
                     break;
                 default:
                     movieDataTask.execute(urlSortType[0]);
@@ -171,12 +178,21 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
      * Implemented from Interface in order to get callback from AsyncTask
      * @param movies data returned from GetMovieData AsyncTask
      */
-    public void onTaskCompleted(ArrayList<MovieParcelable> movies) {
-        mMoviesP = movies;
-        mMoviesAdapter = new MoviesAdapter(getActivity(), mMoviesP);
-        mMoviesGrid.setAdapter(mMoviesAdapter);
-        Log.i(LOG_TAG, "Movie data received");
-        updateOnClickListener();
+    public void onTaskCompleted(String source, ArrayList<MovieParcelable> movies) {
+        if (source.equals("list")) {
+            mMoviesP = movies;
+            mMoviesAdapter = new MoviesAdapter(getActivity(), mMoviesP);
+            mMoviesGrid.setAdapter(mMoviesAdapter);
+            Log.i(LOG_TAG, "Movie data received");
+            updateOnClickListener();
+        }
+        else if (source.equals("one_movie")) {
+            mMoviesP.add(movies.get(0));
+            mMoviesAdapter = new MoviesAdapter(getActivity(), mMoviesP);
+            mMoviesGrid.setAdapter(mMoviesAdapter);
+            Log.i(LOG_TAG, "One favorite movie received");
+            updateOnClickListener();
+        }
     }
 
     private void updateOnClickListener() {

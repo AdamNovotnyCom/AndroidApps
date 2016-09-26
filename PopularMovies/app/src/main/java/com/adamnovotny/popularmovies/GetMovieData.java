@@ -25,6 +25,7 @@ public class GetMovieData extends AsyncTask<String, Void, ArrayList<MovieParcela
     private final String LOG_TAG = GetMovieData.class.getSimpleName();
     private GetMovieDataInterface listener;
     private Context context;
+    private String searchType;
 
     public GetMovieData(GetMovieDataInterface list, Context cont) {
         listener = list;
@@ -45,9 +46,18 @@ public class GetMovieData extends AsyncTask<String, Void, ArrayList<MovieParcela
         try {
             final String BASE_URL = "http://api.themoviedb.org/3/movie/";
             final String PARAM_KEY = "api_key";
-            Uri builtUri = Uri.parse(BASE_URL + params[0]).buildUpon()
-                    .appendQueryParameter(PARAM_KEY, AppKeys.themoviedb)
-                    .build();
+            searchType = params[0];
+            Uri builtUri = Uri.parse(BASE_URL);
+            if (searchType.equals("popular") || searchType.equals("top_rated")) {
+                builtUri = Uri.parse(BASE_URL + searchType).buildUpon()
+                        .appendQueryParameter(PARAM_KEY, AppKeys.themoviedb)
+                        .build();
+            }
+            else if (searchType.equals("favorite")) {
+                builtUri = Uri.parse(BASE_URL + params[1]).buildUpon()
+                        .appendQueryParameter(PARAM_KEY, AppKeys.themoviedb)
+                        .build();
+            }
             URL url = new URL(builtUri.toString());
             urlConn = (HttpURLConnection) url.openConnection();
             urlConn.setRequestMethod("GET");
@@ -84,7 +94,12 @@ public class GetMovieData extends AsyncTask<String, Void, ArrayList<MovieParcela
                 }
             }
         }
-        return updateMoviesFromJson(urlConnResult);
+        if (searchType.equals("popular") || searchType.equals("top_rated")) {
+            return updateMoviesFromJson(urlConnResult);
+        }
+        else {
+            return updateOneMovieFromJson(urlConnResult);
+        }
     }
 
     @Override
@@ -94,7 +109,13 @@ public class GetMovieData extends AsyncTask<String, Void, ArrayList<MovieParcela
                     context, "Check you internet connection", Toast.LENGTH_SHORT);
             toast.show();
         }
-        listener.onTaskCompleted(movies);
+        if (searchType.equals("popular") || searchType.equals("top_rated")) {
+            listener.onTaskCompleted("list", movies);
+        }
+        else {
+            listener.onTaskCompleted("one_movie", movies);
+        }
+
     }
 
     /**
@@ -126,6 +147,38 @@ public class GetMovieData extends AsyncTask<String, Void, ArrayList<MovieParcela
                             movieObj.getString("release_date"));
                     movies.add(movie);
                 }
+            } catch (JSONException e) {
+                Log.e(LOG_TAG, "JSON exception: ", e);
+            }
+        }
+        return movies;
+    }
+
+    /**
+     *
+     * @param jsonStr
+     * @return formatted ArrayList where the first item represent
+     * a MovieParcelable object.
+     */
+    private ArrayList<MovieParcelable> updateOneMovieFromJson(String jsonStr) {
+        ArrayList<MovieParcelable> movies = new ArrayList<>();
+        if (jsonStr == null) {
+            Toast toast = Toast.makeText(
+                    context, "Check you internet connection", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+        else {
+            try {
+                JSONObject movieObj = new JSONObject(jsonStr);
+                String movieId = movieObj.getString("id");
+                MovieParcelable movie = new MovieParcelable(
+                        movieId,
+                        movieObj.getString("title"),
+                        movieObj.getString("poster_path"),
+                        movieObj.getString("overview"),
+                        movieObj.getString("vote_average"),
+                        movieObj.getString("release_date"));
+                movies.add(movie);
             } catch (JSONException e) {
                 Log.e(LOG_TAG, "JSON exception: ", e);
             }
