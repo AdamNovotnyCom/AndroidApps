@@ -12,6 +12,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,7 +24,6 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 
 /**
@@ -35,8 +35,6 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
     private GridView mMoviesGrid;
     private MoviesAdapter mMoviesAdapter;
     private ArrayList<MovieParcelable> mMoviesP = new ArrayList<>();
-    private HashMap<String, ArrayList<String>> mVideos = new HashMap();
-    private HashMap<String, ArrayList<String>> mReviews = new HashMap();
     private SharedPreferences.OnSharedPreferenceChangeListener mPrefListener; // required...
     private boolean mRefreshFlag = true; // true: need refresh, false: no refresh
 
@@ -50,10 +48,6 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
         if(savedInstanceState != null && savedInstanceState.containsKey("movies")) {
             mMoviesP = savedInstanceState.getParcelableArrayList("movies");
             mRefreshFlag = savedInstanceState.getBoolean("dataRefresh");
-            mVideos = (HashMap<String, ArrayList<String>>)
-                    savedInstanceState.getSerializable("videos");
-            mReviews = (HashMap<String, ArrayList<String>>)
-                    savedInstanceState.getSerializable("reviews");
         }
         setHasOptionsMenu(true);
         setPreferenceListener();
@@ -107,8 +101,6 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("movies", mMoviesP);
         outState.putBoolean("dataRefresh", mRefreshFlag);
-        outState.putSerializable("videos", mVideos);
-        outState.putSerializable("videos", mReviews);
     }
 
     /**
@@ -172,21 +164,6 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
         }
     }
 
-    private void updateVideos() {
-        // Async to get video urls for each movie
-        for (MovieParcelable movie : mMoviesP) {
-            GetVideoAsync videoAsync = new GetVideoAsync(this);
-            videoAsync.execute(movie.id);
-        }
-    }
-
-    private void updateReviews() {
-        for (MovieParcelable movie : mMoviesP) {
-            GetReviewsAsync reviewAsync = new GetReviewsAsync(this);
-            reviewAsync.execute(movie.id);
-        }
-    }
-
     /**
      * Implemented from Interface in order to get callback from AsyncTask
      * @param movies data returned from GetMovieData AsyncTask
@@ -195,23 +172,8 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
         mMoviesP = movies;
         mMoviesAdapter = new MoviesAdapter(getActivity(), mMoviesP);
         mMoviesGrid.setAdapter(mMoviesAdapter);
-        updateVideos();
-        updateReviews();
+        Log.i(LOG_TAG, "Movie data received");
         updateOnClickListener();
-    }
-
-    /**
-     * Listener called when videos async completes
-     */
-    public void onGetVideosCompleted(String id, ArrayList<String> video) {
-        mVideos.put(id, video);
-    }
-
-    /**
-     * Listener called when reviews async completes
-     */
-    public void onGetReviewsCompleted(String id, ArrayList<String> review) {
-        mReviews.put(id, review);
     }
 
     private void updateOnClickListener() {
@@ -225,10 +187,6 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
                 intent.putExtra("overview", mMoviesP.get(position).overview);
                 intent.putExtra("vote", mMoviesP.get(position).vote);
                 intent.putExtra("release", mMoviesP.get(position).release);
-                intent.putExtra("video",
-                        mVideos.get(mMoviesP.get(position).id));
-                intent.putExtra("review",
-                        mReviews.get(mMoviesP.get(position).id));
                 startActivity(intent);
             }
         });

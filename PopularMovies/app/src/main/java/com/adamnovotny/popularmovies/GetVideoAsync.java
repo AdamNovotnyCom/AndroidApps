@@ -17,11 +17,11 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class GetVideoAsync extends AsyncTask<String, Void, ArrayList<String>> {
-    GetMovieDataInterface listener;
+    GetStringDataInterface listener;
     String id;
-    private final String LOG_TAG = GetMovieData.class.getSimpleName();
+    private final String LOG_TAG = GetVideoAsync.class.getSimpleName();
 
-    public GetVideoAsync(GetMovieDataInterface list) {
+    public GetVideoAsync(GetStringDataInterface list) {
         listener = list;
     }
 
@@ -107,6 +107,6 @@ public class GetVideoAsync extends AsyncTask<String, Void, ArrayList<String>> {
 
     @Override
     protected void onPostExecute(ArrayList<String> videos) {
-        listener.onGetVideosCompleted(id, videos);
+        listener.onTaskCompleted(GetVideoAsync.class.getSimpleName(), videos);
     }
 }

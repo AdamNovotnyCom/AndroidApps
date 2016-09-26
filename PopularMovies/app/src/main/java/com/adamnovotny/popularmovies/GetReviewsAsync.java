@@ -18,11 +18,12 @@ import java.util.ArrayList;
 
 
 public class GetReviewsAsync extends AsyncTask<String, Void, ArrayList<String>> {
-    GetMovieDataInterface listener;
+    GetStringDataInterface listener;
+
     String id;
     private final String LOG_TAG = GetReviewsAsync.class.getSimpleName();
 
-    public GetReviewsAsync(GetMovieDataInterface list) {
+    public GetReviewsAsync(GetStringDataInterface list) {
         listener = list;
     }
 
@@ -112,6 +113,7 @@ public class GetReviewsAsync extends AsyncTask<String, Void, ArrayList<String>> 
 
     @Override
     protected void onPostExecute(ArrayList<String> reviews) {
-        listener.onGetReviewsCompleted(id, reviews);
+        listener.onTaskCompleted(GetReviewsAsync.class.getSimpleName(),
+                reviews);
     }
 }

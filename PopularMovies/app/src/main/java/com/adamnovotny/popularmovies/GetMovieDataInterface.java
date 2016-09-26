@@ -7,6 +7,4 @@ import java.util.ArrayList;
  */
 public interface GetMovieDataInterface {
     void onTaskCompleted(ArrayList<MovieParcelable> movies);
-    void onGetVideosCompleted(String id, ArrayList<String> videos);
-    void onGetReviewsCompleted(String id, ArrayList<String> videos);
 }

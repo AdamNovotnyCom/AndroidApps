@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
  * View only class showing movie details
  * by updating appropriate layout views
  */
-public class MovieDetailFragment extends Fragment {
+public class MovieDetailFragment extends Fragment implements GetStringDataInterface {
     private final String LOG_TAG = MovieDetailFragment.class.getSimpleName();
     private String id;
     private String title;
@@ -39,6 +40,7 @@ public class MovieDetailFragment extends Fragment {
     private Context mContext;
     private MovieDbHelper db;
     private boolean isFavorite;
+    View mainView;
     private RecyclerView videoRecyclerView;
     private VideoAdapter mVideoAdapter;
     private ReviewAdapter mReviewAdapter;
@@ -51,25 +53,29 @@ public class MovieDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mContext = getContext();
-        db = new MovieDbHelper(mContext);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+        // get bundle
         Bundle bdl = getArguments();
-        // boilerplate code below as the data expands
         this.id = bdl.getString("id");
         this.title = bdl.getString("title");
         this.image = bdl.getString("image");
         this.overview = bdl.getString("overview");
         this.vote = bdl.getString("vote");
         this.release = bdl.getString("release");
-        this.videoAL = bdl.getStringArrayList("video");
-        this.reviewAL = bdl.getStringArrayList("review");
+        mContext = getContext();
+        db = new MovieDbHelper(mContext);
         isFavorite = db.isFavorite(id);
-        View mainView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
+        // get reviews
+        GetReviewsAsync reviewAsync = new GetReviewsAsync(this);
+        reviewAsync.execute(id);
+        // get videos
+        GetVideoAsync videoAsync = new GetVideoAsync(this);
+        videoAsync.execute(id);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        mainView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
         setViews(mainView);
         return mainView;
     }
@@ -87,10 +93,6 @@ public class MovieDetailFragment extends Fragment {
         TextView overview = (TextView) mainView.findViewById(R.id.overview);
         overview.setText(this.overview);
 
-        // populate video links
-        buildRecyclerVideo(mainView);
-        // populate reviews
-        buildRecyclerReview(mainView);
         // hook favorite button to db
         buildFavoriteDbHook(mainView);
     }
@@ -140,5 +142,23 @@ public class MovieDetailFragment extends Fragment {
                 }
             }
         });
+    }
+
+    /**
+     * Async task listener
+     * @param source is the listener class name
+     * @param data ArrayList<String> of contents
+     */
+    public void onTaskCompleted(String source, ArrayList<String> data) {
+        if (source.equals(GetReviewsAsync.class.getSimpleName())) {
+            reviewAL = data;
+            buildRecyclerReview(mainView);
+            Log.i(LOG_TAG, "Review data received");
+        }
+        else if (source.equals(GetVideoAsync.class.getSimpleName())) {
+            videoAL = data;
+            buildRecyclerVideo(mainView);
+            Log.i(LOG_TAG, "Video data received");
+        }
     }
 }
