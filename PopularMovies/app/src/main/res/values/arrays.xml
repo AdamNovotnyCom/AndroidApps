@@ -3,5 +3,6 @@
     <string-array name="pref_sort_array_options">
         <item>@string/pref_sort_popularity_label</item>
         <item>@string/pref_sort_vote_label</item>
+        <item>@string/pref_sort_favorite_label</item>
     </string-array>
 </resources>

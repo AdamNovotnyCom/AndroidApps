@@ -135,6 +135,9 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
                 case "Vote average":
                     movieDataTask.execute(urlSortType[1]);
                     break;
+                case "Favorite":
+                    movieDataTask.execute(urlSortType[0]);
+                    break;
                 default:
                     movieDataTask.execute(urlSortType[0]);
                     break;

@@ -9,6 +9,8 @@
     <string name="pref_sort_popularity" translatable="false">popularity</string>
     <string name="pref_sort_vote_label">Vote average</string>
     <string name="pref_sort_vote" translatable="false">vote</string>
+    <string name="pref_sort_favorite_label">Favorite</string>
+    <string name="pref_sort_favorite" translatable="false">favorite</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- App text -->

@@ -95,7 +95,6 @@ public class GetMovieData extends AsyncTask<String, Void, ArrayList<MovieParcela
             toast.show();
         }
         listener.onTaskCompleted(movies);
-        Log.i(LOG_TAG, "Movie API data received");
     }
 
     /**
