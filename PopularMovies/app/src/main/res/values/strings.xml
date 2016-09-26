@@ -16,5 +16,7 @@
     <string name="vote_title">Vote</string>
     <string name="trailers_title">Trailers</string>
     <string name="reviews_title">Reviews</string>
+    <string name="set_favorite">Set as favorite</string>
+    <string name="remove_favorite">Remove from favorites</string>
 
 </resources>

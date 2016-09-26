@@ -4,18 +4,19 @@
 
 package com.adamnovotny.popularmovies;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.adamnovotny.popularmovies.data.MovieContract;
+import com.adamnovotny.popularmovies.data.MovieDbHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
  */
 public class MovieDetailFragment extends Fragment {
     private final String LOG_TAG = MovieDetailFragment.class.getSimpleName();
+    private String id;
     private String title;
     private String image;
     private String overview;
@@ -34,12 +36,23 @@ public class MovieDetailFragment extends Fragment {
     private String release;
     private ArrayList<String> videoAL;
     private ArrayList<String> reviewAL;
+    private Context mContext;
+    private MovieDbHelper db;
+    private boolean isFavorite;
     private RecyclerView videoRecyclerView;
     private VideoAdapter mVideoAdapter;
     private ReviewAdapter mReviewAdapter;
     private RecyclerView reviewRecyclerView;
+    private Button privateBtn;
 
     public MovieDetailFragment() {
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mContext = getContext();
+        db = new MovieDbHelper(mContext);
     }
 
     @Override
@@ -47,6 +60,7 @@ public class MovieDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         Bundle bdl = getArguments();
         // boilerplate code below as the data expands
+        this.id = bdl.getString("id");
         this.title = bdl.getString("title");
         this.image = bdl.getString("image");
         this.overview = bdl.getString("overview");
@@ -54,6 +68,7 @@ public class MovieDetailFragment extends Fragment {
         this.release = bdl.getString("release");
         this.videoAL = bdl.getStringArrayList("video");
         this.reviewAL = bdl.getStringArrayList("review");
+        isFavorite = db.isFavorite(id);
         View mainView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
         setViews(mainView);
         return mainView;
@@ -101,7 +116,29 @@ public class MovieDetailFragment extends Fragment {
     }
 
     private void buildFavoriteDbHook(View mainView) {
-        MovieContract mc = new MovieContract();
-        Log.i(LOG_TAG, mc.CONTENT_AUTHORITY);
+        privateBtn =
+                (Button) mainView.findViewById(R.id.favorite_button);
+        String btnText = getResources().getString(R.string.set_favorite);
+        if (isFavorite) {
+            btnText = getResources().getString(R.string.remove_favorite);
+        }
+        privateBtn.setText(btnText);
+        privateBtn.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isFavorite) {
+                    db.removeFavorite(id);
+                    isFavorite = false;
+                    privateBtn.setText(
+                            getResources().getString(R.string.set_favorite));
+                }
+                else {
+                    db.insertFavorite(id);
+                    isFavorite = true;
+                    privateBtn.setText(
+                            getResources().getString(R.string.remove_favorite));
+                }
+            }
+        });
     }
 }

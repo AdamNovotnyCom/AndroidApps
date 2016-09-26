@@ -45,14 +45,6 @@ public class MovieDbHelper extends SQLiteOpenHelper {
     /*
      * CRUD operations. To be replaced by a ContentProvider
      */
-    public long insertFavorite(String id) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, id);
-        long row = db.insert(MovieContract.MovieEntry.TABLE_NAME, null, values);
-        db.close();
-        return row;
-    }
 
     public ArrayList<String> getAllFavorite() {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -76,6 +68,42 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return favorites;
+    }
+
+    public boolean isFavorite(String id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.query(
+                MovieContract.MovieEntry.TABLE_NAME,  // Table to Query
+                null, // all columns
+                MovieContract.MovieEntry.COLUMN_MOVIE_ID + "=?", // Columns for the "where" clause
+                new String[] {id}, // Values for the "where" clause
+                null, // columns to group by
+                null, // columns to filter by row groups
+                null  // sort order
+        );
+        if (cursor.moveToFirst()) {
+            db.close();
+            return true;
+        }
+        else {
+            db.close();
+            return false;
+        }
+    }
+
+    public long insertFavorite(String id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, id);
+        long row = db.insert(MovieContract.MovieEntry.TABLE_NAME, null, values);
+        db.close();
+        return row;
+    }
+
+    public boolean removeFavorite(String id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(MovieContract.MovieEntry.TABLE_NAME,
+                MovieEntry.COLUMN_MOVIE_ID + "=" + id, null) > 0;
     }
 
     public void eraseAllFavorite() {

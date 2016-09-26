@@ -71,4 +71,53 @@ public class MovieDbInstrumentationTest
         db.eraseAllFavorite();
     }
 
+    @Test
+    public void testEmptyDb() {
+        MovieDbHelper db = new MovieDbHelper(mContext);
+        ArrayList<String> out = db.getAllFavorite();
+        assertEquals(out.size(), 0);
+        db.eraseAllFavorite();
+    }
+
+    @Test
+    public void testDbOne() {
+        String[] id = {"12345"};
+        MovieDbHelper db = new MovieDbHelper(mContext);
+        Long row = db.insertFavorite(id[0]);
+        Long notExpected = -1L;
+        assertNotSame(row, notExpected);
+        ArrayList<String> out = db.getAllFavorite();
+        assertEquals(out.size(), 1);
+        db.eraseAllFavorite();
+    }
+
+    @Test
+    public void testDbQueryOne() {
+        String[] id = {"12345"};
+        MovieDbHelper db = new MovieDbHelper(mContext);
+        Long row = db.insertFavorite(id[0]);
+        Long notExpected = -1L;
+        assertNotSame(row, notExpected);
+        boolean exists = db.isFavorite(id[0]);
+        assertEquals(true, exists);
+        exists = db.isFavorite("432");
+        assertEquals(false, exists);
+        db.eraseAllFavorite();
+    }
+
+    @Test
+    public void testDbRemoveOne() {
+        String[] id = {"12345"};
+        MovieDbHelper db = new MovieDbHelper(mContext);
+        Long row = db.insertFavorite(id[0]);
+        Long notExpected = -1L;
+        assertNotSame(row, notExpected);
+        boolean exists = db.isFavorite(id[0]);
+        assertEquals(true, exists);
+        db.removeFavorite(id[0]);
+        exists = db.isFavorite(id[0]);
+        assertEquals(false, exists);
+        db.eraseAllFavorite();
+    }
+
 }

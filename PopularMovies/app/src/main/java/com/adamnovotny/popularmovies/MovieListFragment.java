@@ -219,6 +219,7 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getContext(), MovieDetailActivity.class);
+                intent.putExtra("id", mMoviesP.get(position).id);
                 intent.putExtra("title", mMoviesP.get(position).title);
                 intent.putExtra("image", mMoviesP.get(position).image);
                 intent.putExtra("overview", mMoviesP.get(position).overview);

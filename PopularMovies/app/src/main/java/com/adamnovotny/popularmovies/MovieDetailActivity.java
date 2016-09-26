@@ -18,6 +18,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_detail);
         Intent intent = getIntent();
         Bundle bdl = new Bundle();
+        bdl.putString("id", intent.getStringExtra("id"));
         bdl.putString("title", intent.getStringExtra("title"));
         bdl.putString("image", intent.getStringExtra("image"));
         bdl.putString("overview", intent.getStringExtra("overview"));

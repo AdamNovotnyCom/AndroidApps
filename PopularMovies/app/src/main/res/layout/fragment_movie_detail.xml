@@ -71,6 +71,13 @@
                     android:layout_height="match_parent"
                     android:paddingLeft="@dimen/title_horizontal_margin"/>
 
+                <Button
+                    android:id="@+id/favorite_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/title_horizontal_margin"
+                    android:layout_marginRight="@dimen/title_horizontal_margin"/>
+
             </LinearLayout>
 
         </LinearLayout>
