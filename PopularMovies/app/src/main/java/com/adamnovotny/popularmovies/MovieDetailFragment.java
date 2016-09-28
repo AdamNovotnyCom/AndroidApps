@@ -29,6 +29,7 @@ import java.util.ArrayList;
  */
 public class MovieDetailFragment extends Fragment implements GetStringDataInterface {
     private final String LOG_TAG = MovieDetailFragment.class.getSimpleName();
+    private boolean dataReceived = true;
     private String id;
     private String title;
     private String image;
@@ -55,28 +56,41 @@ public class MovieDetailFragment extends Fragment implements GetStringDataInterf
         super.onCreate(savedInstanceState);
         // get bundle
         Bundle bdl = getArguments();
-        this.id = bdl.getString("id");
-        this.title = bdl.getString("title");
-        this.image = bdl.getString("image");
-        this.overview = bdl.getString("overview");
-        this.vote = bdl.getString("vote");
-        this.release = bdl.getString("release");
-        mContext = getContext();
-        db = new MovieDbHelper(mContext);
-        isFavorite = db.isFavorite(id);
-        // get reviews
-        GetReviewsAsync reviewAsync = new GetReviewsAsync(this);
-        reviewAsync.execute(id);
-        // get videos
-        GetVideoAsync videoAsync = new GetVideoAsync(this);
-        videoAsync.execute(id);
+        if (bdl == null
+
+                ) {
+            dataReceived = false;
+
+        }
+        else {
+            this.id = bdl.getString("id");
+            this.title = bdl.getString("title");
+            this.image = bdl.getString("image");
+            this.overview = bdl.getString("overview");
+            this.vote = bdl.getString("vote");
+            this.release = bdl.getString("release");
+            mContext = getContext();
+            db = new MovieDbHelper(mContext);
+            isFavorite = db.isFavorite(id);
+            // get reviews
+            GetReviewsAsync reviewAsync = new GetReviewsAsync(this);
+            reviewAsync.execute(id);
+            // get videos
+            GetVideoAsync videoAsync = new GetVideoAsync(this);
+            videoAsync.execute(id);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mainView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
-        setViews(mainView);
+        if (dataReceived) {
+            setViews(mainView);
+        }
+        else {
+            placeDummyData();
+        }
         return mainView;
     }
 
@@ -160,5 +174,13 @@ public class MovieDetailFragment extends Fragment implements GetStringDataInterf
             buildRecyclerVideo(mainView);
             Log.i(LOG_TAG, "Video data received");
         }
+    }
+
+    /**
+     * TODO remove just dummy view
+     */
+    private void placeDummyData() {
+        TextView title = (TextView) mainView.findViewById(R.id.title);
+        title.setText("Dummy Title");
     }
 }

@@ -17,16 +17,23 @@ import com.facebook.stetho.Stetho;
  * Attaches Fragments only
  */
 public class MainActivity extends AppCompatActivity {
-
+    boolean twoPane;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Stetho.initializeWithDefaults(this);
         setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.containerMain, new MovieListFragment())
-                    .commit();
+
+        if (findViewById(R.id.fragment_movie_detail) != null) {
+            twoPane = true;
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.fragment_movie_detail, new MovieDetailFragment())
+                        .commit();
+            }
+        }
+        else {
+            twoPane = false;
         }
     }
 
