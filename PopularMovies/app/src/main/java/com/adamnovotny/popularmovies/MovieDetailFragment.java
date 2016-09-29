@@ -56,11 +56,8 @@ public class MovieDetailFragment extends Fragment implements GetStringDataInterf
         super.onCreate(savedInstanceState);
         // get bundle
         Bundle bdl = getArguments();
-        if (bdl == null
-
-                ) {
+        if (bdl == null) {
             dataReceived = false;
-
         }
         else {
             this.id = bdl.getString("id");

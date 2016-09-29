@@ -6,5 +6,6 @@ import java.util.ArrayList;
  * Used for GetMovieData class callbacks
  */
 public interface GetMovieDataInterface {
-    void onTaskCompleted(String source, ArrayList<MovieParcelable> movies);
+    void onTaskCompleted(String source, String status,
+                         ArrayList<MovieParcelable> movies);
 }

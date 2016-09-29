@@ -141,8 +141,13 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
                     MovieDbHelper db = new MovieDbHelper(getContext());
                     ArrayList<String> out = db.getAllFavorite();
                     for (int i = 0; i<out.size(); i++) {
-                        GetMovieData movieDataT = new GetMovieData(this, getContext());
-                        movieDataT.execute(urlSortType[2], out.get(i));
+                        String status = "notFinalItem";
+                        if (i == out.size()-1) {
+                            status = "finalItem";
+                        }
+                        GetMovieData movieDataT = new GetMovieData(
+                                this, getContext());
+                        movieDataT.execute(urlSortType[2], out.get(i), status);
                     }
                     break;
                 default:
@@ -174,27 +179,6 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
         }
     }
 
-    /**
-     * Implemented from Interface in order to get callback from AsyncTask
-     * @param movies data returned from GetMovieData AsyncTask
-     */
-    public void onTaskCompleted(String source, ArrayList<MovieParcelable> movies) {
-        if (source.equals("list")) {
-            mMoviesP = movies;
-            mMoviesAdapter = new MoviesAdapter(getActivity(), mMoviesP);
-            mMoviesGrid.setAdapter(mMoviesAdapter);
-            Log.i(LOG_TAG, "Movie data received");
-            updateOnClickListener();
-        }
-        else if (source.equals("one_movie")) {
-            mMoviesP.add(movies.get(0));
-            mMoviesAdapter = new MoviesAdapter(getActivity(), mMoviesP);
-            mMoviesGrid.setAdapter(mMoviesAdapter);
-            Log.i(LOG_TAG, "One favorite movie received");
-            updateOnClickListener();
-        }
-    }
-
     private void updateOnClickListener() {
         mMoviesGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -209,5 +193,29 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
                 startActivity(intent);
             }
         });
+    }
+
+    /**
+     * Implemented from Interface in order to get callback from AsyncTask
+     * @param movies data returned from GetMovieData AsyncTask
+     */
+    public void onTaskCompleted(String source, String status,
+            ArrayList<MovieParcelable> movies) {
+        if (source.equals("list")) {
+            mMoviesP = movies;
+            mMoviesAdapter = new MoviesAdapter(getActivity(), mMoviesP);
+            mMoviesGrid.setAdapter(mMoviesAdapter);
+            Log.i(LOG_TAG, "Movie data received");
+            updateOnClickListener();
+        }
+        else if (source.equals("one_movie")) {
+            mMoviesP.add(movies.get(0));
+            if (status.equals("finalItem")) {
+                mMoviesAdapter = new MoviesAdapter(getActivity(), mMoviesP);
+                mMoviesGrid.setAdapter(mMoviesAdapter);
+                Log.i(LOG_TAG, "Favorite movies received");
+                updateOnClickListener();
+            }
+        }
     }
 }

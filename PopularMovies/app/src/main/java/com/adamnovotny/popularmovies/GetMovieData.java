@@ -26,6 +26,7 @@ public class GetMovieData extends AsyncTask<String, Void, ArrayList<MovieParcela
     private GetMovieDataInterface listener;
     private Context context;
     private String searchType;
+    private String status = "finalItem";
 
     public GetMovieData(GetMovieDataInterface list, Context cont) {
         listener = list;
@@ -57,6 +58,12 @@ public class GetMovieData extends AsyncTask<String, Void, ArrayList<MovieParcela
                 builtUri = Uri.parse(BASE_URL + params[1]).buildUpon()
                         .appendQueryParameter(PARAM_KEY, AppKeys.themoviedb)
                         .build();
+                if (params[2].equals("finalItem")) {
+                    status = "finalItem";
+                }
+                else {
+                    status = "notFinalItem";
+                }
             }
             URL url = new URL(builtUri.toString());
             urlConn = (HttpURLConnection) url.openConnection();
@@ -110,10 +117,10 @@ public class GetMovieData extends AsyncTask<String, Void, ArrayList<MovieParcela
             toast.show();
         }
         if (searchType.equals("popular") || searchType.equals("top_rated")) {
-            listener.onTaskCompleted("list", movies);
+            listener.onTaskCompleted("list", status, movies);
         }
         else {
-            listener.onTaskCompleted("one_movie", movies);
+            listener.onTaskCompleted("one_movie", status, movies);
         }
 
     }
