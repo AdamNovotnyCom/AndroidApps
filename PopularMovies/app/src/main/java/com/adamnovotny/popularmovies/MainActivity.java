@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-        public void onItemSelected(ArrayList<String> movieDetails) {
+    public void onItemSelected(ArrayList<String> movieDetails, boolean start) {
         if (twoPane) {
             Bundle bdl = new Bundle();
             bdl.putString("id", movieDetails.get(0));
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity
                     .replace(R.id.fragment_movie_detail, frag, "DFTAG")
                     .commit();
         }
-        else {
+        else if (!twoPane && !start) {
             Intent intent = new Intent(this, MovieDetailActivity.class);
             intent.putExtra("id", movieDetails.get(0));
             intent.putExtra("title", movieDetails.get(1));

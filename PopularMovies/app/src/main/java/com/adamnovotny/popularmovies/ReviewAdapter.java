@@ -19,10 +19,12 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.MyViewHold
     private int reviewCount = 0;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
+        public TextView titleTV;
         public TextView reviewTV;
 
         public MyViewHolder(View view) {
             super(view);
+            titleTV = (TextView) view.findViewById(R.id.title);
             reviewTV = (TextView) view.findViewById(R.id.review);
         }
     }
@@ -48,5 +50,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.MyViewHold
     public void onBindViewHolder(MyViewHolder holder, int position) {
         String review = reviewAL.get(position);
         holder.reviewTV.setText(review);
+        holder.titleTV.setText("Review " + (position + 1));
     }
 }

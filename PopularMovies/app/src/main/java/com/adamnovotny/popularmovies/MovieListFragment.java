@@ -45,7 +45,7 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
      * 2-pane layouts
      */
     public interface Callback {
-        public void onItemSelected(ArrayList<String> movieDetails);
+        public void onItemSelected(ArrayList<String> movieDetails, boolean start);
     }
 
     public MovieListFragment() {
@@ -192,12 +192,12 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
         mMoviesGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startMainCallback(position);
+                startMainCallback(position, false);
             }
         });
     }
 
-    public void startMainCallback(int position) {
+    public void startMainCallback(int position, boolean start) {
         ArrayList<String> out = new ArrayList<String>();
         out.add(mMoviesP.get(position).id);
         out.add(mMoviesP.get(position).title);
@@ -205,7 +205,7 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
         out.add(mMoviesP.get(position).overview);
         out.add(mMoviesP.get(position).vote);
         out.add(mMoviesP.get(position).release);
-        ((Callback) getActivity()).onItemSelected(out);
+        ((Callback) getActivity()).onItemSelected(out, start);
     }
 
     /**
@@ -230,6 +230,6 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
                 updateOnClickListener();
             }
         }
-        startMainCallback(0);
+        startMainCallback(0, true);
     }
 }
