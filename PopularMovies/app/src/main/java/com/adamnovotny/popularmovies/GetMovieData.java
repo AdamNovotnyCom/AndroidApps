@@ -116,6 +116,7 @@ public class GetMovieData extends AsyncTask<String, Void, ArrayList<MovieParcela
                     context, "Check you internet connection", Toast.LENGTH_SHORT);
             toast.show();
         }
+
         if (searchType.equals("popular") || searchType.equals("top_rated")) {
             listener.onTaskCompleted("list", status, movies);
         }

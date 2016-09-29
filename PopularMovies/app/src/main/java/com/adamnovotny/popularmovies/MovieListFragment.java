@@ -40,6 +40,14 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
     private SharedPreferences.OnSharedPreferenceChangeListener mPrefListener; // required...
     private boolean mRefreshFlag = true; // true: need refresh, false: no refresh
 
+    /**
+     * Callback used in MainActivity to properly handle 1-pane and
+     * 2-pane layouts
+     */
+    public interface Callback {
+        public void onItemSelected(ArrayList<String> movieDetails);
+    }
+
     public MovieListFragment() {
         // Required empty public constructor
     }
@@ -80,6 +88,7 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
         mMoviesGrid = (GridView) gridView.findViewById(R.id.moviesGridView);
         mMoviesAdapter = new MoviesAdapter(getActivity(), mMoviesP);
         mMoviesGrid.setAdapter(mMoviesAdapter);
+        updateOnClickListener();
         return gridView;
     }
 
@@ -183,16 +192,20 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
         mMoviesGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getContext(), MovieDetailActivity.class);
-                intent.putExtra("id", mMoviesP.get(position).id);
-                intent.putExtra("title", mMoviesP.get(position).title);
-                intent.putExtra("image", mMoviesP.get(position).image);
-                intent.putExtra("overview", mMoviesP.get(position).overview);
-                intent.putExtra("vote", mMoviesP.get(position).vote);
-                intent.putExtra("release", mMoviesP.get(position).release);
-                startActivity(intent);
+                startMainCallback(position);
             }
         });
+    }
+
+    public void startMainCallback(int position) {
+        ArrayList<String> out = new ArrayList<String>();
+        out.add(mMoviesP.get(position).id);
+        out.add(mMoviesP.get(position).title);
+        out.add(mMoviesP.get(position).image);
+        out.add(mMoviesP.get(position).overview);
+        out.add(mMoviesP.get(position).vote);
+        out.add(mMoviesP.get(position).release);
+        ((Callback) getActivity()).onItemSelected(out);
     }
 
     /**
@@ -217,5 +230,6 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
                 updateOnClickListener();
             }
         }
+        //startMainCallback(0);
     }
 }

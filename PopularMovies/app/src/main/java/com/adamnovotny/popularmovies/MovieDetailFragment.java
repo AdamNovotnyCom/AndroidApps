@@ -42,10 +42,14 @@ public class MovieDetailFragment extends Fragment implements GetStringDataInterf
     private MovieDbHelper db;
     private boolean isFavorite;
     View mainView;
+    // videos
     private RecyclerView videoRecyclerView;
     private VideoAdapter mVideoAdapter;
-    private ReviewAdapter mReviewAdapter;
+    private boolean mVideoDataReceived = false;
+    // reviews
     private RecyclerView reviewRecyclerView;
+    private ReviewAdapter mReviewAdapter;
+    private boolean mReviewDataReceived = false;
     private Button privateBtn;
 
     public MovieDetailFragment() {
@@ -58,6 +62,22 @@ public class MovieDetailFragment extends Fragment implements GetStringDataInterf
         Bundle bdl = getArguments();
         if (bdl == null) {
             dataReceived = false;
+        }
+        else if(savedInstanceState != null &&
+                savedInstanceState.containsKey("videos")) {
+            this.id = savedInstanceState.getString("id");
+            this.title = savedInstanceState.getString("title");
+            this.image = savedInstanceState.getString("image");
+            this.overview = savedInstanceState.getString("overview");
+            this.vote = savedInstanceState.getString("vote");
+            this.release = savedInstanceState.getString("release");
+            mContext = getContext();
+            db = new MovieDbHelper(mContext);
+            isFavorite = db.isFavorite(id);
+            videoAL = savedInstanceState.getStringArrayList("videos");
+            reviewAL = savedInstanceState.getStringArrayList("reviews");
+            mVideoDataReceived = true;
+            mReviewDataReceived = true;
         }
         else {
             this.id = bdl.getString("id");
@@ -82,13 +102,31 @@ public class MovieDetailFragment extends Fragment implements GetStringDataInterf
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mainView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
-        if (dataReceived) {
+        if (dataReceived && isAdded()) {
             setViews(mainView);
         }
         else {
             placeDummyData();
         }
         return mainView;
+    }
+
+    /**
+     *
+     * @param outState is generated when fragment is killed.
+     * Ddata is restored using savedInstanceState in onCreate()
+     */
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("id", this.id);
+        outState.putString("title", this.title);
+        outState.putString("image", this.image);
+        outState.putString("overview", this.overview);
+        outState.putString("vote", this.vote);
+        outState.putString("release", this.release);
+        outState.putStringArrayList("videos", videoAL);
+        outState.putStringArrayList("reviews", reviewAL);
     }
 
     private void setViews(View mainView) {
@@ -106,6 +144,14 @@ public class MovieDetailFragment extends Fragment implements GetStringDataInterf
 
         // hook favorite button to db
         buildFavoriteDbHook(mainView);
+        // add videos
+        if (mVideoDataReceived) {
+            buildRecyclerVideo(mainView);
+        }
+        // add reviews
+        if (mReviewDataReceived) {
+            buildRecyclerReview(mainView);
+        }
     }
 
     private void buildRecyclerVideo(View mainView) {
@@ -163,21 +209,32 @@ public class MovieDetailFragment extends Fragment implements GetStringDataInterf
     public void onTaskCompleted(String source, ArrayList<String> data) {
         if (source.equals(GetReviewsAsync.class.getSimpleName())) {
             reviewAL = data;
-            buildRecyclerReview(mainView);
+            mReviewDataReceived = true;
             Log.i(LOG_TAG, "Review data received");
         }
         else if (source.equals(GetVideoAsync.class.getSimpleName())) {
             videoAL = data;
-            buildRecyclerVideo(mainView);
+            mVideoDataReceived = true;
             Log.i(LOG_TAG, "Video data received");
+        }
+        if (mVideoDataReceived && mReviewDataReceived) {
+            setViews(mainView);
         }
     }
 
     /**
-     * TODO remove just dummy view
+     * Dummy data visible until user selects a movie
      */
     private void placeDummyData() {
+        String warningText = "No movie selected";
         TextView title = (TextView) mainView.findViewById(R.id.title);
-        title.setText("Dummy Title");
+        title.setText(warningText);
+        TextView release = (TextView) mainView.findViewById(R.id.release);
+        release.setText(warningText);
+        TextView vote = (TextView) mainView.findViewById(R.id.vote);
+        vote.setText(warningText);
+        privateBtn =
+                (Button) mainView.findViewById(R.id.favorite_button);
+        privateBtn.setText(warningText);
     }
 }
