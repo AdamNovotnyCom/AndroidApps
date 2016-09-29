@@ -64,7 +64,7 @@ public class MovieDetailFragment extends Fragment implements GetStringDataInterf
             dataReceived = false;
         }
         else if(savedInstanceState != null &&
-                savedInstanceState.containsKey("videos")) {
+                savedInstanceState.containsKey("videos")) { // case screen rotated
             this.id = savedInstanceState.getString("id");
             this.title = savedInstanceState.getString("title");
             this.image = savedInstanceState.getString("image");
@@ -79,7 +79,7 @@ public class MovieDetailFragment extends Fragment implements GetStringDataInterf
             mVideoDataReceived = true;
             mReviewDataReceived = true;
         }
-        else {
+        else { // case new launch
             this.id = bdl.getString("id");
             this.title = bdl.getString("title");
             this.image = bdl.getString("image");
@@ -102,7 +102,7 @@ public class MovieDetailFragment extends Fragment implements GetStringDataInterf
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mainView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
-        if (dataReceived && isAdded()) {
+        if (dataReceived) {
             setViews(mainView);
         }
         else {
@@ -217,7 +217,7 @@ public class MovieDetailFragment extends Fragment implements GetStringDataInterf
             mVideoDataReceived = true;
             Log.i(LOG_TAG, "Video data received");
         }
-        if (mVideoDataReceived && mReviewDataReceived) {
+        if (mVideoDataReceived && mReviewDataReceived && isAdded()) {
             setViews(mainView);
         }
     }

@@ -230,6 +230,6 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
                 updateOnClickListener();
             }
         }
-        //startMainCallback(0);
+        startMainCallback(0);
     }
 }
