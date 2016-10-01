@@ -34,11 +34,18 @@ public class ProviderTest
         // for your test to run with AndroidJUnitRunner.
         injectInstrumentation(InstrumentationRegistry.getInstrumentation());
         this.mContext = getActivity();
+        // delete
+        ContentResolver resolver = mContext.getContentResolver();
+        int rows = resolver.delete(MovieContract.MovieEntry.CONTENT_URI, null, null);
     }
 
     @After
     public void tearDown() throws Exception {
         super.tearDown();
+        // delete
+        ContentResolver resolver = getActivity().getContentResolver();
+        int rows = resolver.delete(MovieContract.MovieEntry.CONTENT_URI, null, null);
+        assertTrue(rows >= 0);
     }
 
     @Test
@@ -54,10 +61,6 @@ public class ProviderTest
         String auth = uri.getAuthority();
         assertEquals("content", protocol);
         assertEquals(auth, MovieContract.CONTENT_AUTHORITY);
-        // delete
-        String delStr = MovieContract.MovieEntry.COLUMN_MOVIE_ID + "=" + testId;
-        int rows = resolver.delete(MovieContract.MovieEntry.CONTENT_URI, delStr, null);
-        assertTrue(rows >= 1);
     }
 
     @Test
@@ -76,10 +79,6 @@ public class ProviderTest
         int favoriteIdCol = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_ID);
         cursor.moveToFirst();
         assertEquals(testId, cursor.getString(favoriteIdCol));
-        // delete
-        String delStr = MovieContract.MovieEntry.COLUMN_MOVIE_ID + "=" + testId;
-        int rows = resolver.delete(MovieContract.MovieEntry.CONTENT_URI, delStr, null);
-        assertTrue(rows >= 1);
     }
 
     @Test
@@ -97,10 +96,6 @@ public class ProviderTest
         String selection = MovieContract.MovieEntry.COLUMN_MOVIE_ID + "=" + testId;
         int rows = resolver.update(
                 MovieContract.MovieEntry.CONTENT_URI, values, selection, null);
-        assertTrue(rows >= 1);
-        // delete
-        String delStr = MovieContract.MovieEntry.COLUMN_MOVIE_ID + "=" + testId2;
-        rows = resolver.delete(MovieContract.MovieEntry.CONTENT_URI, delStr, null);
         assertTrue(rows >= 1);
     }
 }

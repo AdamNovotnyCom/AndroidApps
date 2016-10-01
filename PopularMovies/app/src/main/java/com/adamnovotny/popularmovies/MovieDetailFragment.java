@@ -4,7 +4,11 @@
 
 package com.adamnovotny.popularmovies;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +21,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.adamnovotny.popularmovies.data.MovieContract;
 import com.adamnovotny.popularmovies.data.MovieDbHelper;
 import com.squareup.picasso.Picasso;
 
@@ -73,7 +78,7 @@ public class MovieDetailFragment extends Fragment implements GetStringDataInterf
             this.release = savedInstanceState.getString("release");
             mContext = getContext();
             db = new MovieDbHelper(mContext);
-            isFavorite = db.isFavorite(id);
+            isFavorite = isFavorite(mContext, this.id);
             videoAL = savedInstanceState.getStringArrayList("videos");
             reviewAL = savedInstanceState.getStringArrayList("reviews");
             mVideoDataReceived = true;
@@ -88,7 +93,7 @@ public class MovieDetailFragment extends Fragment implements GetStringDataInterf
             this.release = bdl.getString("release");
             mContext = getContext();
             db = new MovieDbHelper(mContext);
-            isFavorite = db.isFavorite(id);
+            isFavorite = isFavorite(mContext, this.id);
             // get reviews
             GetReviewsAsync reviewAsync = new GetReviewsAsync(this);
             reviewAsync.execute(id);
@@ -186,19 +191,51 @@ public class MovieDetailFragment extends Fragment implements GetStringDataInterf
             @Override
             public void onClick(View v) {
                 if (isFavorite) {
-                    db.removeFavorite(id);
+                    ContentResolver resolver = mContext.getContentResolver();
+                    String delStr = MovieContract.MovieEntry.COLUMN_MOVIE_ID + "=" + id;
+                    int rows = resolver.delete(MovieContract.MovieEntry.CONTENT_URI, delStr, null);
                     isFavorite = false;
                     privateBtn.setText(
                             getResources().getString(R.string.set_favorite));
                 }
                 else {
-                    db.insertFavorite(id);
+                    ContentResolver resolver = mContext.getContentResolver();
+                    ContentValues values = new ContentValues();
+                    values.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, id);
+                    Uri uri = resolver.insert(MovieContract.MovieEntry.CONTENT_URI, values);
                     isFavorite = true;
                     privateBtn.setText(
                             getResources().getString(R.string.remove_favorite));
                 }
             }
         });
+    }
+
+    /**
+     * Dummy data visible until user selects a movie
+     */
+    private void placeDummyData() {
+        String warningText = "No movie selected";
+        TextView title = (TextView) mainView.findViewById(R.id.title);
+        title.setText(warningText);
+        TextView release = (TextView) mainView.findViewById(R.id.release);
+        release.setText(warningText);
+        TextView vote = (TextView) mainView.findViewById(R.id.vote);
+        vote.setText(warningText);
+        privateBtn =
+                (Button) mainView.findViewById(R.id.favorite_button);
+        privateBtn.setText(warningText);
+    }
+
+    public static boolean isFavorite(Context context, String id) {
+        String selection = MovieContract.MovieEntry.COLUMN_MOVIE_ID + "=" + id;
+        ContentResolver resolver = context.getContentResolver();
+        Cursor cursor = resolver.query(
+                MovieContract.MovieEntry.CONTENT_URI, null, selection, null, null);
+        if (cursor.getCount() > 0) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -220,21 +257,5 @@ public class MovieDetailFragment extends Fragment implements GetStringDataInterf
         if (mVideoDataReceived && mReviewDataReceived && isAdded()) {
             setViews(mainView);
         }
-    }
-
-    /**
-     * Dummy data visible until user selects a movie
-     */
-    private void placeDummyData() {
-        String warningText = "No movie selected";
-        TextView title = (TextView) mainView.findViewById(R.id.title);
-        title.setText(warningText);
-        TextView release = (TextView) mainView.findViewById(R.id.release);
-        release.setText(warningText);
-        TextView vote = (TextView) mainView.findViewById(R.id.vote);
-        vote.setText(warningText);
-        privateBtn =
-                (Button) mainView.findViewById(R.id.favorite_button);
-        privateBtn.setText(warningText);
     }
 }

@@ -4,9 +4,11 @@
 
 package com.adamnovotny.popularmovies;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -23,7 +25,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.adamnovotny.popularmovies.data.MovieDbHelper;
+import com.adamnovotny.popularmovies.data.MovieContract;
 
 import java.util.ArrayList;
 
@@ -147,8 +149,7 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
                     movieDataTask.execute(urlSortType[1]);
                     break;
                 case "Favorite":
-                    MovieDbHelper db = new MovieDbHelper(getContext());
-                    ArrayList<String> out = db.getAllFavorite();
+                    ArrayList<String> out = getAllFavorites();
                     for (int i = 0; i<out.size(); i++) {
                         String status = "notFinalItem";
                         if (i == out.size()-1) {
@@ -195,6 +196,24 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
                 startMainCallback(position, false);
             }
         });
+    }
+
+    private ArrayList<String> getAllFavorites() {
+        ArrayList<String> favoritesAL = new ArrayList<>();
+        ContentResolver resolver = getContext().getContentResolver();
+        Cursor cursor = resolver.query(MovieContract.MovieEntry.CONTENT_URI,
+                null, null, null, null);
+        int count = cursor.getCount();
+        if (count >= 1) {
+            cursor.moveToFirst();
+            int favoriteIdCol = cursor.getColumnIndex(
+                    MovieContract.MovieEntry.COLUMN_MOVIE_ID);
+            favoritesAL.add(cursor.getString(favoriteIdCol));
+            while (cursor.moveToNext()) {
+                favoritesAL.add(cursor.getString(favoriteIdCol));
+            }
+        }
+        return favoritesAL;
     }
 
     public void startMainCallback(int position, boolean start) {
