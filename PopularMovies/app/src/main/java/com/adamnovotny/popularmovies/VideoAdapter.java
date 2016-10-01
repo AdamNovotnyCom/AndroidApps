@@ -1,3 +1,7 @@
+/**
+ * Copyright (C) 2016 Adam Novotny
+ */
+
 package com.adamnovotny.popularmovies;
 
 import android.content.Context;
@@ -12,7 +16,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 /**
- * TOOO comments
+ * Adapter populating reviews in MovieDetailFragment
  */
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.MyViewHolder> {
     private final String LOG_TAG = VideoAdapter.class.getSimpleName();

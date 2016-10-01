@@ -6,7 +6,10 @@
 
 package com.adamnovotny.popularmovies;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -23,6 +26,7 @@ public class MainActivity extends AppCompatActivity
         implements MovieListFragment.Callback{
     // variables
     private final String LOG_TAG = MainActivity.class.getSimpleName();
+    // differentiate between phone (twoPane=false) vs tables (twoPane=true)
     boolean twoPane;
 
     @Override
@@ -31,6 +35,7 @@ public class MainActivity extends AppCompatActivity
         Stetho.initializeWithDefaults(this);
         setContentView(R.layout.activity_main);
 
+        // checks if tables fragment exists
         if (findViewById(R.id.fragment_movie_detail) != null) {
             twoPane = true;
             if (savedInstanceState == null) {
@@ -51,6 +56,26 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    /**
+     * @return true if network connection succeeds, false otherwise
+     */
+    public static boolean checkNetwork(Context context) {
+        ConnectivityManager connManager = (ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = connManager.getActiveNetworkInfo();
+        if (netInfo == null) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    /**
+     * Callback for user click on an item in MovieListFragment
+     * @param movieDetails containts details for 1 movie user clicked on
+     * @param start flag if the app is launched for the first time
+     */
     @Override
     public void onItemSelected(ArrayList<String> movieDetails, boolean start) {
         if (twoPane) {

@@ -5,12 +5,9 @@
 package com.adamnovotny.popularmovies;
 
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -135,7 +132,7 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
      * Updates movies data using a inner AsyncTask class GetMovieData
      */
     private boolean updateMovies() {
-        if (checkNetwork()) {
+        if (MainActivity.checkNetwork(getContext())) {
             GetMovieData movieDataTask = new GetMovieData(this, getContext());
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
             String sortType = prefs.getString(getString(R.string.pref_sort_key),
@@ -175,20 +172,8 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
     }
 
     /**
-     * @return true if network connection succeeds, false otherwise
+     * Set listener grid showing movies
      */
-    private boolean checkNetwork() {
-        ConnectivityManager connManager = (ConnectivityManager)
-                getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = connManager.getActiveNetworkInfo();
-        if (netInfo == null) {
-            return false;
-        }
-        else {
-            return true;
-        }
-    }
-
     private void updateOnClickListener() {
         mMoviesGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -198,6 +183,10 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
         });
     }
 
+    /**
+     * Helper method that collects all favorite movies from database
+     * @return list of string id's of favorite movies
+     */
     private ArrayList<String> getAllFavorites() {
         ArrayList<String> favoritesAL = new ArrayList<>();
         ContentResolver resolver = getContext().getContentResolver();
@@ -216,6 +205,11 @@ public class MovieListFragment extends Fragment implements GetMovieDataInterface
         return favoritesAL;
     }
 
+    /**
+     * Launched callback to MainActivity after user clicks on item
+     * @param position of movie
+     * @param start flag to signify that the activity is launched for the first time
+     */
     public void startMainCallback(int position, boolean start) {
         ArrayList<String> out = new ArrayList<String>();
         out.add(mMoviesP.get(position).id);

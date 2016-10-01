@@ -35,6 +35,9 @@ import java.util.ArrayList;
 public class MovieDetailFragment extends Fragment implements GetStringDataInterface {
     private final String LOG_TAG = MovieDetailFragment.class.getSimpleName();
     private boolean dataReceived = true;
+    private Context mContext;
+    private MovieDbHelper db;
+    private boolean isFavorite;
     private String id;
     private String title;
     private String image;
@@ -43,9 +46,6 @@ public class MovieDetailFragment extends Fragment implements GetStringDataInterf
     private String release;
     private ArrayList<String> videoAL;
     private ArrayList<String> reviewAL;
-    private Context mContext;
-    private MovieDbHelper db;
-    private boolean isFavorite;
     View mainView;
     // videos
     private RecyclerView videoRecyclerView;
@@ -68,8 +68,9 @@ public class MovieDetailFragment extends Fragment implements GetStringDataInterf
         if (bdl == null) {
             dataReceived = false;
         }
+        // if screen is rotated, get data from instance
         else if(savedInstanceState != null &&
-                savedInstanceState.containsKey("videos")) { // case screen rotated
+                savedInstanceState.containsKey("videos")) {
             this.id = savedInstanceState.getString("id");
             this.title = savedInstanceState.getString("title");
             this.image = savedInstanceState.getString("image");
@@ -84,7 +85,8 @@ public class MovieDetailFragment extends Fragment implements GetStringDataInterf
             mVideoDataReceived = true;
             mReviewDataReceived = true;
         }
-        else { // case new launch
+        // case new launch
+        else {
             this.id = bdl.getString("id");
             this.title = bdl.getString("title");
             this.image = bdl.getString("image");
@@ -111,6 +113,7 @@ public class MovieDetailFragment extends Fragment implements GetStringDataInterf
             setViews(mainView);
         }
         else {
+            // in case of network issue, use dummy data in fragment
             placeDummyData();
         }
         return mainView;
@@ -134,6 +137,7 @@ public class MovieDetailFragment extends Fragment implements GetStringDataInterf
         outState.putStringArrayList("reviews", reviewAL);
     }
 
+    // Updates all screen views
     private void setViews(View mainView) {
         TextView title = (TextView) mainView.findViewById(R.id.title);
         title.setText(this.title);
@@ -159,6 +163,7 @@ public class MovieDetailFragment extends Fragment implements GetStringDataInterf
         }
     }
 
+    // Set up for RecyclerView containing videos
     private void buildRecyclerVideo(View mainView) {
         videoRecyclerView =
                 (RecyclerView) mainView.findViewById(R.id.recycler_movies);
@@ -169,6 +174,7 @@ public class MovieDetailFragment extends Fragment implements GetStringDataInterf
         videoRecyclerView.setAdapter(mVideoAdapter);
     }
 
+    // Set up for RecyclerView containing reviews
     private void buildRecyclerReview(View mainView) {
         reviewRecyclerView =
                 (RecyclerView) mainView.findViewById(R.id.recycler_reviews);
@@ -179,6 +185,7 @@ public class MovieDetailFragment extends Fragment implements GetStringDataInterf
         reviewRecyclerView.setAdapter(mReviewAdapter);
     }
 
+    // Set up for Favorite button
     private void buildFavoriteDbHook(View mainView) {
         privateBtn =
                 (Button) mainView.findViewById(R.id.favorite_button);
@@ -227,6 +234,12 @@ public class MovieDetailFragment extends Fragment implements GetStringDataInterf
         privateBtn.setText(warningText);
     }
 
+    /**
+     * Helper method to determine if a movie with id is favorite
+     * @param context
+     * @param id movie
+     * @return true if the movie favorite
+     */
     public static boolean isFavorite(Context context, String id) {
         String selection = MovieContract.MovieEntry.COLUMN_MOVIE_ID + "=" + id;
         ContentResolver resolver = context.getContentResolver();

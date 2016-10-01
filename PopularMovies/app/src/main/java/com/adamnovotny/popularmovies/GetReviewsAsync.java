@@ -1,3 +1,7 @@
+/**
+ * Copyright (C) 2016 Adam Novotny, Udacity code snippets
+ */
+
 package com.adamnovotny.popularmovies;
 
 import android.net.Uri;
@@ -85,6 +89,7 @@ public class GetReviewsAsync extends AsyncTask<String, Void, ArrayList<String>> 
         }
     }
 
+    // format json String to appropriate output
     private ArrayList<String> collectReviewsFromJson(String jsonStr) {
         ArrayList<String> reviews = new ArrayList<>();
 

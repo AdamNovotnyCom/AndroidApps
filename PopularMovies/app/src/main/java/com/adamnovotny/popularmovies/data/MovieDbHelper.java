@@ -1,3 +1,7 @@
+/**
+ * Copyright (C) 2016 Adam Novotny, Udacity code snippets
+ */
+
 package com.adamnovotny.popularmovies.data;
 
 import android.content.Context;
