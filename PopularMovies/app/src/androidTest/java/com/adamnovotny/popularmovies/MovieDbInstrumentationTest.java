@@ -119,5 +119,4 @@ public class MovieDbInstrumentationTest
         assertEquals(false, exists);
         db.eraseAllFavorite();
     }
-
 }
