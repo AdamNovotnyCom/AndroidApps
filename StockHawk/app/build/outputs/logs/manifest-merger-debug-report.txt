@@ -1,0 +1,166 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:2:1-45:12
+	package
+		ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:3:5-48
+		INJECTED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml
+	android:versionName
+		INJECTED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:2:11-69
+	android:versionCode
+		INJECTED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml
+uses-permission#android.permission.INTERNET
+ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:5:5-67
+MERGED from [com.google.android.gms:play-services-gcm:8.4.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-gcm/8.4.0/AndroidManifest.xml:22:5-67
+MERGED from [com.google.android.gms:play-services-measurement:8.4.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/AndroidManifest.xml:21:5-67
+	android:name
+		ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:5:22-64
+uses-permission#com.google.android.c2dm.permission.RECEIVE
+ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:6:5-82
+MERGED from [com.google.android.gms:play-services-gcm:8.4.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-gcm/8.4.0/AndroidManifest.xml:21:5-82
+	android:name
+		ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:6:22-79
+uses-permission#android.permission.WAKE_LOCK
+ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:7:5-68
+MERGED from [com.google.android.gms:play-services-measurement:8.4.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/AndroidManifest.xml:24:5-67
+	android:name
+		ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:7:22-65
+permission#com.google.android.gcm.demo.permission.C2D_MESSAGE
+ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:9:5-11:47
+	android:protectionLevel
+		ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:11:9-44
+	android:name
+		ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:10:9-74
+uses-permission#com.google.android.gcm.demo.permission.C2D_MESSAGE
+ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:13:5-14:77
+	android:name
+		ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:14:9-74
+application
+ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:16:5-43:19
+MERGED from [com.google.android.gms:play-services-gcm:8.4.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-gcm/8.4.0/AndroidManifest.xml:24:5-20
+MERGED from [com.google.android.gms:play-services-basement:8.4.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.4.0/AndroidManifest.xml:20:5-24:19
+MERGED from [com.android.support:support-v4:23.2.1] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.2.1/AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.gms:play-services-measurement:8.4.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/AndroidManifest.xml:26:5-46:19
+MERGED from [net.simonvt.schematic:schematic:0.6.3] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/net.simonvt.schematic/schematic/0.6.3/AndroidManifest.xml:11:5-20
+MERGED from [com.melnykov:floatingactionbutton:1.2.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.melnykov/floatingactionbutton/1.2.0/AndroidManifest.xml:12:5-20
+MERGED from [com.android.support:design:23.1.1] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.android.support/design/23.1.1/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:appcompat-v7:23.2.1] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.2.1/AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:animated-vector-drawable:23.2.1] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.2.1/AndroidManifest.xml:7:5-20
+MERGED from [com.android.support:support-vector-drawable:23.2.1] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.2.1/AndroidManifest.xml:7:5-20
+MERGED from [com.github.afollestad.material-dialogs:core:0.8.5.7] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.github.afollestad.material-dialogs/core/0.8.5.7/AndroidManifest.xml:13:5-20
+	android:label
+		ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:19:9-41
+	android:allowBackup
+		ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:17:9-35
+	android:icon
+		ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:18:9-43
+	android:theme
+		ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:20:9-40
+activity#com.sam_chordas.android.stockhawk.ui.MyStocksActivity
+ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:22:9-30:20
+	android:label
+		ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:24:13-45
+	android:name
+		ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:23:13-81
+intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
+ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:25:13-29:29
+action#android.intent.action.MAIN
+ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:26:17-69
+	android:name
+		ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:26:25-66
+category#android.intent.category.LAUNCHER
+ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:28:17-77
+	android:name
+		ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:28:27-74
+service#com.sam_chordas.android.stockhawk.service.StockTaskService
+ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:31:9-37:19
+	android:exported
+		ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:33:13-36
+	android:permission
+		ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:32:13-93
+	android:name
+		ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:31:18-91
+intent-filter#com.google.android.gms.gcm.ACTION_TASK_READY
+ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:34:13-36:29
+action#com.google.android.gms.gcm.ACTION_TASK_READY
+ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:35:17-86
+	android:name
+		ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:35:25-84
+service#com.sam_chordas.android.stockhawk.service.StockIntentService
+ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:38:9-96
+	android:name
+		ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:38:18-93
+provider#com.sam_chordas.android.stockhawk.data.generated.QuoteProvider
+ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:39:9-42:39
+	android:authorities
+		ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:40:13-87
+	android:exported
+		ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:42:13-37
+	android:name
+		ADDED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml:41:13-90
+uses-sdk
+INJECTED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
+MERGED from [com.google.android.gms:play-services-gcm:8.4.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-gcm/8.4.0/AndroidManifest.xml:18:5-42
+MERGED from [com.google.android.gms:play-services-base:8.4.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/AndroidManifest.xml:18:5-42
+MERGED from [com.google.android.gms:play-services-basement:8.4.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.4.0/AndroidManifest.xml:18:5-42
+MERGED from [com.android.support:support-v4:23.2.1] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.2.1/AndroidManifest.xml:20:5-43
+MERGED from [com.google.android.gms:play-services-measurement:8.4.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/AndroidManifest.xml:18:5-42
+MERGED from [net.simonvt.schematic:schematic:0.6.3] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/net.simonvt.schematic/schematic/0.6.3/AndroidManifest.xml:7:5-9:41
+MERGED from [com.melnykov:floatingactionbutton:1.2.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.melnykov/floatingactionbutton/1.2.0/AndroidManifest.xml:8:5-10:41
+MERGED from [com.android.support:recyclerview-v7:23.2.1] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.2.1/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:design:23.1.1] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.android.support/design/23.1.1/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:appcompat-v7:23.2.1] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.2.1/AndroidManifest.xml:21:5-23:78
+MERGED from [com.android.support:animated-vector-drawable:23.2.1] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.2.1/AndroidManifest.xml:5:5-44
+MERGED from [com.android.support:support-vector-drawable:23.2.1] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.2.1/AndroidManifest.xml:5:5-43
+MERGED from [com.github.afollestad.material-dialogs:core:0.8.5.7] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.github.afollestad.material-dialogs/core/0.8.5.7/AndroidManifest.xml:8:5-11:75
+MERGED from [me.zhanghai.android.materialprogressbar:library:1.1.5] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/me.zhanghai.android.materialprogressbar/library/1.1.5/AndroidManifest.xml:12:5-14:41
+	tools:overrideLibrary
+		ADDED from [com.android.support:appcompat-v7:23.2.1] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.2.1/AndroidManifest.xml:23:9-75
+	android:targetSdkVersion
+		INJECTED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/AndroidManifest.xml
+meta-data#com.google.android.gms.version
+ADDED from [com.google.android.gms:play-services-basement:8.4.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.4.0/AndroidManifest.xml:21:9-23:69
+	android:value
+		ADDED from [com.google.android.gms:play-services-basement:8.4.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.4.0/AndroidManifest.xml:23:13-66
+	android:name
+		ADDED from [com.google.android.gms:play-services-basement:8.4.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.4.0/AndroidManifest.xml:22:13-58
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from [com.google.android.gms:play-services-measurement:8.4.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/AndroidManifest.xml:22:5-79
+	android:name
+		ADDED from [com.google.android.gms:play-services-measurement:8.4.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/AndroidManifest.xml:22:22-76
+provider#com.google.android.gms.measurement.AppMeasurementContentProvider
+ADDED from [com.google.android.gms:play-services-measurement:8.4.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/AndroidManifest.xml:28:7-31:37
+	android:authorities
+		ADDED from [com.google.android.gms:play-services-measurement:8.4.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/AndroidManifest.xml:29:11-76
+	android:exported
+		ADDED from [com.google.android.gms:play-services-measurement:8.4.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/AndroidManifest.xml:31:11-35
+	android:name
+		ADDED from [com.google.android.gms:play-services-measurement:8.4.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/AndroidManifest.xml:30:11-90
+receiver#com.google.android.gms.measurement.AppMeasurementReceiver
+ADDED from [com.google.android.gms:play-services-measurement:8.4.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/AndroidManifest.xml:33:7-39:18
+	android:enabled
+		ADDED from [com.google.android.gms:play-services-measurement:8.4.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/AndroidManifest.xml:35:11-33
+	android:name
+		ADDED from [com.google.android.gms:play-services-measurement:8.4.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/AndroidManifest.xml:34:11-83
+intent-filter#com.google.android.gms.measurement.UPLOAD
+ADDED from [com.google.android.gms:play-services-measurement:8.4.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/AndroidManifest.xml:36:9-38:25
+action#com.google.android.gms.measurement.UPLOAD
+ADDED from [com.google.android.gms:play-services-measurement:8.4.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/AndroidManifest.xml:37:11-77
+	android:name
+		ADDED from [com.google.android.gms:play-services-measurement:8.4.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/AndroidManifest.xml:37:19-75
+service#com.google.android.gms.measurement.AppMeasurementService
+ADDED from [com.google.android.gms:play-services-measurement:8.4.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/AndroidManifest.xml:41:7-44:37
+	android:enabled
+		ADDED from [com.google.android.gms:play-services-measurement:8.4.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/AndroidManifest.xml:43:11-33
+	android:exported
+		ADDED from [com.google.android.gms:play-services-measurement:8.4.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/AndroidManifest.xml:44:11-35
+	android:name
+		ADDED from [com.google.android.gms:play-services-measurement:8.4.0] /Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/AndroidManifest.xml:42:11-82

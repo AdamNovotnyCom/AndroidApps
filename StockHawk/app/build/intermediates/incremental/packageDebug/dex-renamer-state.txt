@@ -1,0 +1,7 @@
+#Sat Oct 08 17:39:13 CEST 2016
+base.0=/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_08d228601c7a568e59520b636d3abaac4b873388
+renamed.1=classes2.dex
+renamed.0=classes.dex
+file.1=/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_d7bd770a99deee6c27f56f252ecd47d1142f06e3/classes.dex
+base.1=/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_d7bd770a99deee6c27f56f252ecd47d1142f06e3
+file.0=/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_08d228601c7a568e59520b636d3abaac4b873388/classes.dex

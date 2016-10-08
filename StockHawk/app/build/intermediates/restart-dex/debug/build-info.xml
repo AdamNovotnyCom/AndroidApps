@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<instant-run
+    api-level="23"
+    density="xxhdpi"
+    format="8"
+    plugin-version="2.2.0"
+    timestamp="139856628055742"
+    token="3370603175156974331"
+    verifier="FULL_BUILD_REQUESTED" >
+
+    <task
+        name="javac"
+        duration="2379" />
+    <task
+        name="instant-run-dex"
+        duration="0" />
+    <task
+        name="instant-run-transform"
+        duration="938" />
+    <task
+        name="verifier"
+        duration="210" />
+
+    <artifact
+        location="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/outputs/apk/app-debug.apk"
+        type="MAIN" />
+
+    <build
+        timestamp="139856628055742"
+        verifier="FULL_BUILD_REQUESTED" >
+        <artifact
+            location="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/outputs/apk/app-debug.apk"
+            type="MAIN" />
+    </build>
+
+</instant-run>

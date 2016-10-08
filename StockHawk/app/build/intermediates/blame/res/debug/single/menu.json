@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/res/merged/debug/menu/my_stocks.xml",
+        "source": "/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/res/menu/my_stocks.xml"
+    },
+    {
+        "merged": "/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/res/merged/debug/menu/global.xml",
+        "source": "/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/src/main/res/menu/global.xml"
+    }
+]
