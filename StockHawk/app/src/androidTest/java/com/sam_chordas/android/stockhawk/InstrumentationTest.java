@@ -1,8 +1,14 @@
 package com.sam_chordas.android.stockhawk;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.database.Cursor;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.ActivityInstrumentationTestCase2;
+
+import com.sam_chordas.android.stockhawk.data.QuoteColumns;
+import com.sam_chordas.android.stockhawk.data.QuoteProvider;
+import com.sam_chordas.android.stockhawk.ui.MyStocksActivity;
 
 import org.junit.After;
 import org.junit.Before;
@@ -15,12 +21,13 @@ public class InstrumentationTest extends ActivityInstrumentationTestCase2 {
     String LOG_TAG = getClass().getSimpleName();
 
     public InstrumentationTest() {
-        super(MainActivity.class);
+        super(MyStocksActivity.class);
     }
 
     @Before
     public void setUp() throws Exception {
         super.setUp();
+        mContext = getActivity();
     }
 
     @After
@@ -29,7 +36,17 @@ public class InstrumentationTest extends ActivityInstrumentationTestCase2 {
     }
 
     @Test
-    public void testInsertProvider() {
-
+    public void testInsert() {
+        ContentResolver resolver = getActivity().getContentResolver();
+        // TODO insert
+        Cursor c = resolver.query(
+                QuoteProvider.Quotes.CONTENT_URI,
+                new String[] { QuoteColumns.SYMBOL },
+                QuoteColumns.SYMBOL + "= ?",
+                new String[] { "fb" },
+                null);
+        assertEquals(true, c.getCount() > 0);
     }
+
+
 }

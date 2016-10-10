@@ -36,5 +36,7 @@ dependencies {
     transitive = true
   }
   androidTestCompile 'junit:junit:4.12'
-  //androidTestCompile 'com.android.support.test:runner:0.5'
+  androidTestCompile('com.android.support.test:runner:0.5') {
+    exclude group: 'com.android.support'
+  }
 }

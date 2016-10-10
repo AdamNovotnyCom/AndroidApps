@@ -12,48 +12,12 @@
     </item>
     <item
         is-multidex="true"
-        jar="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/net.simonvt.schematic/schematic/0.6.3/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.1"
-        sha1="f6f5730f19d22f177096c8d134d4892b0fbd631d">
-        <dex dex="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/net.simonvt.schematic-schematic-0.6.3_f0e5236164a0c14554a980d72086db3dd194dfe4/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
         jumboMode="true"
         optimize="true"
         revision="23.0.2"
-        sha1="8056d1ae920d84dc6e0e4e2a4a54f07d1acc28d9">
+        sha1="b89136392dd3ec87975bcebcdc5e654870b83bcb">
         <dex dex="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_d7bd770a99deee6c27f56f252ecd47d1142f06e3/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/adamMac/.gradle/caches/modules-2/files-2.1/net.simonvt.schematic/schematic-annotations/0.6.3/4df5a4bbbacf9ea3c4aebf7d3c61465afb648e36/schematic-annotations-0.6.3.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.1"
-        sha1="4df5a4bbbacf9ea3c4aebf7d3c61465afb648e36">
-        <dex dex="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/schematic-annotations-0.6.3_7ae385e20c149f262c969ce1b925c3bfeb47a826/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/adamMac/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp/okhttp/2.5.0/4de2b4ed3445c37ec1720a7d214712e845a24636/okhttp-2.5.0.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.1"
-        sha1="4de2b4ed3445c37ec1720a7d214712e845a24636">
-        <dex dex="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/okhttp-2.5.0_add514b186299ee46e2684f3e9e5b655300f2045/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.2.1/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.1"
-        sha1="3469cb457f10f74c28cbc05f069b6c894f6cbdd0">
-        <dex dex="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-animated-vector-drawable-23.2.1_333a6f2929e8dfca3bd2d01a3a33ce6be87d3bce/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -66,66 +30,12 @@
     </item>
     <item
         is-multidex="true"
-        jar="/Users/adamMac/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/23.2.1/support-annotations-23.2.1.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.1"
-        sha1="ccb693bc0774fcb637246f7360de25b4af7df318">
-        <dex dex="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-23.2.1_1c993e3e96196b20a241f01c0ceffc33beeed450/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/me.zhanghai.android.materialprogressbar/library/1.1.5/jars/classes.jar"
         jumboMode="true"
         optimize="true"
         revision="23.0.2"
         sha1="4a9f97c742d058ca55948643c06f447895a9af76">
         <dex dex="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/me.zhanghai.android.materialprogressbar-library-1.1.5_9a051e0b22a3cf2d1993a6faaaf6e3cbbaf4d8ff/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.2.1/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.1"
-        sha1="e3885783ff8926ed9e2fdcd16816c2e1e73e7aee">
-        <dex dex="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-recyclerview-v7-23.2.1_985b36075aa04ce0d15177ddb3f901ba1692a541/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.2.1/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.1"
-        sha1="3be474b1b21b31cf2fa93fe6bd641ae108d96452">
-        <dex dex="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-v4-23.2.1_e89fb26211f9f30f89a659a4f714d97da36d5173/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/adamMac/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio/1.6.0/98476622f10715998eacf9240d6b479f12c66143/okio-1.6.0.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.1"
-        sha1="98476622f10715998eacf9240d6b479f12c66143">
-        <dex dex="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/okio-1.6.0_703adba1f8399433e78c627ad2238e9d37bbd73e/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.melnykov/floatingactionbutton/1.2.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.1"
-        sha1="65620ba5e576dcec2c86efa440b00d042a27383b">
-        <dex dex="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.melnykov-floatingactionbutton-1.2.0_c66ca67c54c90d8801c26bd6e79560a29cf30f69/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-gcm/8.4.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.1"
-        sha1="2d7fe76982677315c4dc4edfb459c8ca718a9d4c">
-        <dex dex="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-gcm-8.4.0_394933d25cb962cd647871e608d48ca4a01ff27c/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -138,30 +48,12 @@
     </item>
     <item
         is-multidex="true"
-        jar="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.github.afollestad.material-dialogs/core/0.8.5.7/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.1"
-        sha1="a94e3ac390a37f149a235f7f5e1b49b65151c0bf">
-        <dex dex="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.github.afollestad.material-dialogs-core-0.8.5.7_26f77022e927672112835cc6b0c9cf79bfac0f57/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.2.1/jars/classes.jar"
         jumboMode="true"
         optimize="true"
         revision="23.0.2"
         sha1="673d77a5bbddd766037f088e775df525c46407f0">
         <dex dex="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-vector-drawable-23.2.1_bf74d003358373d7681c9fc4bd8cf05a304fac81/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.4.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.1"
-        sha1="8e673cdfadd8f2d98fdb2fda2285c30f6e449782">
-        <dex dex="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-basement-8.4.0_f620bae300fab0dcc5eba7b60a4ef7abe01f6809/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -187,7 +79,7 @@
         jumboMode="true"
         optimize="true"
         revision="23.0.2"
-        sha1="fd0c02a0f3e2e8c9f1a48bed9b33288fea774ff8">
+        sha1="ad52a85fc97f1bf3e815267f72295789799548a0">
         <dex dex="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_08d228601c7a568e59520b636d3abaac4b873388/classes.dex" />
     </item>
     <item
@@ -210,39 +102,12 @@
     </item>
     <item
         is-multidex="true"
-        jar="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.2.1/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.1"
-        sha1="e4d0cbb0b999604b349062f0214a0a228a7fd151">
-        <dex dex="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-appcompat-v7-23.2.1_d2c6f7079d43204590a71eda1bb07a52aff0fbf9/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/me.zhanghai.android.materialprogressbar/library/1.1.5/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.1"
-        sha1="4a9f97c742d058ca55948643c06f447895a9af76">
-        <dex dex="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/me.zhanghai.android.materialprogressbar-library-1.1.5_9a051e0b22a3cf2d1993a6faaaf6e3cbbaf4d8ff/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/Users/adamMac/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/23.2.1/support-annotations-23.2.1.jar"
         jumboMode="true"
         optimize="true"
         revision="23.0.2"
         sha1="ccb693bc0774fcb637246f7360de25b4af7df318">
         <dex dex="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-23.2.1_1c993e3e96196b20a241f01c0ceffc33beeed450/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.android.support/design/23.1.1/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.1"
-        sha1="379471b2bd17d9737c050345c08e8c7d16589784">
-        <dex dex="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-design-23.1.1_6ada27f2bd4e019872455a2c6018b88828ec64bd/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -273,42 +138,6 @@
     </item>
     <item
         is-multidex="true"
-        jar="/Users/adamMac/.gradle/caches/modules-2/files-2.1/com.nineoldandroids/library/2.4.0/e9b63380f3a242dbdbf103a2355ad7e43bad17cb/library-2.4.0.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.1"
-        sha1="e9b63380f3a242dbdbf103a2355ad7e43bad17cb">
-        <dex dex="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/library-2.4.0_c5c2a3dfe23bdbf48da73eeaa0edb7d9aa0b0540/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.1"
-        sha1="c827566bf45e5d38aaf1627e9c1c2aa0af9f210d">
-        <dex dex="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_d7bd770a99deee6c27f56f252ecd47d1142f06e3/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.2.1/jars/libs/internal_impl-23.2.1.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.1"
-        sha1="607a3d0b8013b4ccbfeb0b7cb293351994e021fb">
-        <dex dex="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-23.2.1_4fa78c11aede207a3bc7e92406aeeec9bee3795d/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.1"
-        sha1="613298b7aa012f121ce542881c0a599ebd8078f2">
-        <dex dex="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-measurement-8.4.0_8656a2129731261f6bc88ee97a4908efbacbec68/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.github.afollestad.material-dialogs/core/0.8.5.7/jars/classes.jar"
         jumboMode="true"
         optimize="true"
@@ -336,15 +165,6 @@
     </item>
     <item
         is-multidex="true"
-        jar="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.1"
-        sha1="fef2b3e4b6b1b0e5fe7b69fa137a5fa55a3182ab">
-        <dex dex="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-base-8.4.0_ca1e8832bf450958235469ff973178c2b9957f5a/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.2.1/jars/classes.jar"
         jumboMode="true"
         optimize="true"
@@ -354,30 +174,12 @@
     </item>
     <item
         is-multidex="true"
-        jar="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.1"
-        sha1="540db6cd9559c6e2ddbdb01f7521e6ca4ec84b88">
-        <dex dex="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_08d228601c7a568e59520b636d3abaac4b873388/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.2.1/jars/classes.jar"
         jumboMode="true"
         optimize="true"
         revision="23.0.2"
         sha1="e3885783ff8926ed9e2fdcd16816c2e1e73e7aee">
         <dex dex="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-recyclerview-v7-23.2.1_985b36075aa04ce0d15177ddb3f901ba1692a541/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.2.1/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.1"
-        sha1="673d77a5bbddd766037f088e775df525c46407f0">
-        <dex dex="/Users/adamMac/Dropbox/courses/Android/Nanodegree/AndroidApps/StockHawk/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-vector-drawable-23.2.1_bf74d003358373d7681c9fc4bd8cf05a304fac81/classes.dex" />
     </item>
     <item
         is-multidex="true"
