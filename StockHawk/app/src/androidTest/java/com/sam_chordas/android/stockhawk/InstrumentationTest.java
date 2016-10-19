@@ -38,12 +38,17 @@ public class InstrumentationTest extends ActivityInstrumentationTestCase2 {
     @Test
     public void testInsert() {
         ContentResolver resolver = getActivity().getContentResolver();
-        // TODO insert
+        // insert TODO
+        //String testId = "123";
+        //ContentValues values = new ContentValues();
+        //values.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, testId);
+        //Uri uri = resolver.insert(MovieContract.MovieEntry.CONTENT_URI, values);
+        // query
         Cursor c = resolver.query(
                 QuoteProvider.Quotes.CONTENT_URI,
                 new String[] { QuoteColumns.SYMBOL },
                 QuoteColumns.SYMBOL + "= ?",
-                new String[] { "fb" },
+                new String[] { "GOOG" },
                 null);
         assertEquals(true, c.getCount() > 0);
     }
