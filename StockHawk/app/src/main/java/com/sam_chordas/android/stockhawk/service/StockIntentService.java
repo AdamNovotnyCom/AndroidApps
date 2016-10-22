@@ -4,12 +4,14 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+
 import com.google.android.gms.gcm.TaskParams;
 
 /**
  * Created by sam_chordas on 10/1/15.
  */
 public class StockIntentService extends IntentService {
+    final String LOG_TAG = StockIntentService.class.getSimpleName();
 
   public StockIntentService(){
     super(StockIntentService.class.getName());
@@ -28,6 +30,10 @@ public class StockIntentService extends IntentService {
     }
     // We can call OnRunTask from the intent service to force it to run immediately instead of
     // scheduling a task.
-    stockTaskService.onRunTask(new TaskParams(intent.getStringExtra("tag"), args));
+    Integer result = stockTaskService.onRunTask(new TaskParams(intent.getStringExtra("tag"), args));
+    if (result == 2) {
+        Log.i(LOG_TAG, "Ticker not valid"); //////////////////////////////
+    }
   }
+
 }
