@@ -1,8 +1,10 @@
 package com.sam_chordas.android.stockhawk;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.ActivityInstrumentationTestCase2;
 
@@ -38,19 +40,38 @@ public class InstrumentationTest extends ActivityInstrumentationTestCase2 {
     @Test
     public void testInsert() {
         ContentResolver resolver = getActivity().getContentResolver();
-        // insert TODO
-        //String testId = "123";
-        //ContentValues values = new ContentValues();
-        //values.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, testId);
-        //Uri uri = resolver.insert(MovieContract.MovieEntry.CONTENT_URI, values);
+        // insert
+        ContentValues values = new ContentValues();
+        values.put(QuoteColumns.SYMBOL, "testSym");
+        values.put(QuoteColumns.BIDPRICE, 10);
+        values.put(QuoteColumns.CHANGE, 1);
+        values.put(QuoteColumns.PERCENT_CHANGE, 0.1);
+        values.put(QuoteColumns.ISUP, 1);
+        values.put(QuoteColumns.ISCURRENT, 1);
+        Uri uri = resolver.insert(QuoteProvider.Quotes.CONTENT_URI, values);
+
         // query
         Cursor c = resolver.query(
                 QuoteProvider.Quotes.CONTENT_URI,
                 new String[] { QuoteColumns.SYMBOL },
                 QuoteColumns.SYMBOL + "= ?",
-                new String[] { "GOOG" },
+                new String[] { "testSym" },
                 null);
         assertEquals(true, c.getCount() > 0);
+
+        // delete
+        String where = QuoteColumns.SYMBOL + "=?";
+        String[] args = new String[] { "testSym" };
+        resolver.delete( QuoteProvider.Quotes.CONTENT_URI, where, args );
+
+        // query
+        c = resolver.query(
+                QuoteProvider.Quotes.CONTENT_URI,
+                new String[] { QuoteColumns.SYMBOL },
+                QuoteColumns.SYMBOL + "= ?",
+                new String[] { "testSym" },
+                null);
+        assertEquals(true, c.getCount() == 0);
     }
 
 
