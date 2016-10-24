@@ -69,6 +69,7 @@ public class MyStocksActivity extends AppCompatActivity
     // The intent service is for executing immediate pulls from the Yahoo API
     // GCMTaskService can only schedule tasks, they cannot execute immediately
     mServiceIntent = new Intent(this, StockIntentService.class);
+
     if (savedInstanceState == null){
       // Run the initialize task service so that some stocks appear upon an empty database
       mServiceIntent.putExtra("tag", "init");
@@ -117,10 +118,31 @@ public class MyStocksActivity extends AppCompatActivity
                     toast.show();
                     return;
                   } else {
-                    // Add the stock to DB
-                    mServiceIntent.putExtra("tag", "add");
-                    mServiceIntent.putExtra("symbol", inputStr);
-                    startService(mServiceIntent);
+                      // Add the stock to DB
+                      mServiceIntent.putExtra("tag", "add");
+                      mServiceIntent.putExtra("symbol", inputStr);
+                      startService(mServiceIntent);
+                      /*
+                      StockIntentService.observable.subscribe(new Subscriber<String>() {
+                          @Override
+                          public void onCompleted() {
+                          }
+
+                          @Override
+                          public void onError(Throwable e) {}
+
+                          @Override
+                          public void onNext(String value) {
+                              if (value.equals("invalidTicker")) {
+                                  Toast toast = Toast.makeText(
+                                          MyStocksActivity.this, "Invalid Stock Symbol",
+                                          Toast.LENGTH_SHORT);
+                                  toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
+                                  toast.show();
+                              }
+                          }
+                      });
+                      */
                   }
                 }
               })
