@@ -15,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +37,8 @@ import com.sam_chordas.android.stockhawk.service.StockIntentService;
 import com.sam_chordas.android.stockhawk.service.StockTaskService;
 import com.sam_chordas.android.stockhawk.touch_helper.SimpleItemTouchHelperCallback;
 
+import rx.Observer;
+
 public class MyStocksActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -54,11 +57,34 @@ public class MyStocksActivity extends AppCompatActivity
     private Context mContext;
     private Cursor mCursor;
     boolean isConnected;
+    public static Observer<String> stringObserver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     mContext = this;
+    // observer used by services to update UI
+    stringObserver = new Observer<String>() {
+        @Override
+        public void onNext(String value) {
+            if (value.equals("invalidTicker")) {
+                Toast toast = Toast.makeText(
+                        mContext, "Invalid Stock Symbol", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
+                toast.show();
+            }
+        }
+        @Override
+        public void onCompleted() {
+            //Log.i("stringObserver", "onCompleted");
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            Log.d("stringObserver", "onError", e);
+        }
+    };
+
     ConnectivityManager cm =
         (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -122,27 +148,6 @@ public class MyStocksActivity extends AppCompatActivity
                       mServiceIntent.putExtra("tag", "add");
                       mServiceIntent.putExtra("symbol", inputStr);
                       startService(mServiceIntent);
-                      /*
-                      StockIntentService.observable.subscribe(new Subscriber<String>() {
-                          @Override
-                          public void onCompleted() {
-                          }
-
-                          @Override
-                          public void onError(Throwable e) {}
-
-                          @Override
-                          public void onNext(String value) {
-                              if (value.equals("invalidTicker")) {
-                                  Toast toast = Toast.makeText(
-                                          MyStocksActivity.this, "Invalid Stock Symbol",
-                                          Toast.LENGTH_SHORT);
-                                  toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
-                                  toast.show();
-                              }
-                          }
-                      });
-                      */
                   }
                 }
               })
@@ -150,7 +155,6 @@ public class MyStocksActivity extends AppCompatActivity
         } else {
           networkToast();
         }
-
       }
     });
 
