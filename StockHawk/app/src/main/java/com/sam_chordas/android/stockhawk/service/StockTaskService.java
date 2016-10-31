@@ -48,7 +48,6 @@ public class StockTaskService extends GcmTaskService{
         .build();
 
     Response response = client.newCall(request).execute();
-    Log.i(LOG_TAG + " aaa", response.toString());
     return response.body().string();
   }
 

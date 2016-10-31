@@ -44,7 +44,7 @@ public class StockIntentService extends IntentService {
                         @Override
                         public void call(Subscriber subscriber) {
                             subscriber.onNext("invalidTicker");
-                            //subscriber.onCompleted();
+                            subscriber.onCompleted();
                         }
                     })
                     .subscribeOn(Schedulers.io()) // subscribeOn the I/O thread

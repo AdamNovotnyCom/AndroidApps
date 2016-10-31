@@ -49,6 +49,7 @@ public class MyStocksActivity extends AppCompatActivity
     /**
     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
     */
+    private String LOG_TAG = MyStocksActivity.class.getSimpleName();
     private CharSequence mTitle;
     private Intent mServiceIntent;
     private ItemTouchHelper mItemTouchHelper;
@@ -104,8 +105,10 @@ public class MyStocksActivity extends AppCompatActivity
         recyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(this,
                 new RecyclerViewItemClickListener.OnItemClickListener() {
                   @Override public void onItemClick(View v, int position) {
-                    //TODO:
-                    // do something on item click
+                      //
+                      Intent intent = new Intent(mContext, StockDetailActivity.class);
+                      intent.putExtra("position", position);
+                      startActivity(intent);
                   }
                 }));
         recyclerView.setAdapter(mCursorAdapter);
