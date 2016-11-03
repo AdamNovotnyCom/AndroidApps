@@ -16,17 +16,32 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:text="@string/price_chart_title"
+            android:textSize="16sp"/>
+
         <Button
             android:id="@+id/delete_stock_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/delete_stock"/>
+            android:layout_weight="2"
+            android:text="@string/delete_stock"
+            android:textSize="14sp"/>
 
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World"/>
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/stock_chart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <!--
+    <lecho.lib.hellocharts.view.LineChartView
+        android:id="@+id/stock_chart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />-->
 
 </LinearLayout>
