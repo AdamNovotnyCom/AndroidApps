@@ -21,27 +21,26 @@ android {
 }
 
 repositories {
-  maven { url "https://jitpack.io" }
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
 
-  compile 'com.google.android.gms:play-services-gcm:8.4.0'
-  compile 'com.squareup.okhttp:okhttp:2.5.0'
-  apt 'net.simonvt.schematic:schematic-compiler:0.6.3'
-  compile 'net.simonvt.schematic:schematic:0.6.3'
-  compile 'com.melnykov:floatingactionbutton:1.2.0'
-  compile 'com.android.support:design:23.1.1'
-  compile('com.github.afollestad.material-dialogs:core:0.8.5.7@aar') {
-    transitive = true
-  }
+    compile 'com.google.android.gms:play-services-gcm:8.4.0'
+    compile 'com.squareup.okhttp:okhttp:2.5.0'
+    apt 'net.simonvt.schematic:schematic-compiler:0.6.3'
+    compile 'net.simonvt.schematic:schematic:0.6.3'
+    compile 'com.melnykov:floatingactionbutton:1.2.0'
+    compile 'com.android.support:design:23.1.1'
+    compile('com.github.afollestad.material-dialogs:core:0.8.5.7@aar') {
+        transitive = true
+    }
     compile 'io.reactivex:rxandroid:1.2.1'
-    // Because RxAndroid releases are few and far between, it is recommended you also
-    // explicitly depend on RxJava's latest version for bug fixes and new features.
     compile 'io.reactivex:rxjava:1.1.6'
+    compile 'com.squareup.retrofit:retrofit:1.9.+'
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.0'
     androidTestCompile 'junit:junit:4.12'
     androidTestCompile('com.android.support.test:runner:0.5') {
-    exclude group: 'com.android.support'
-  }
+        exclude group: 'com.android.support'
+    }
 }

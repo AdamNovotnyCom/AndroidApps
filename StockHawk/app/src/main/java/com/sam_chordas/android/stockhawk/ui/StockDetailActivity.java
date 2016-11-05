@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -22,14 +23,21 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
+import com.sam_chordas.android.stockhawk.data.TestData;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class StockDetailActivity extends AppCompatActivity {
-    String symbol;
+    final String LOG_TAG = StockDetailActivity.class.getSimpleName();
     ContentResolver resolver;
     Context mContext;
+    String symbol;
+    String pricesJson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +45,7 @@ public class StockDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_stock_detail);
         mContext = this;
 
-        // get symbol from position
+        // get symbol from position in MyStocksActivity
         int position = getIntent().getExtras().getInt("position");
         resolver = this.getContentResolver();
         Cursor c = resolver.query(
@@ -61,10 +69,8 @@ public class StockDetailActivity extends AppCompatActivity {
             }
         }
 
-        // listeners
         setupListeners();
         getData();
-        generatePriceChart ();
     }
 
 
@@ -85,30 +91,45 @@ public class StockDetailActivity extends AppCompatActivity {
         });
     }
 
-    private void generatePriceChart () {
+    private void getData() {
+        // https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?date.gte=20150101&ticker=TSLA&qopts.columns=date,close&api_key=[TBU]
+        // TODO call to quandl
+        pricesJson = TestData.tslaPrices; ////// remove
+        ArrayList<ArrayList<String>> pricesAL = parseJson(pricesJson);
+        generatePriceChart(pricesAL);
+    }
+
+    private ArrayList<ArrayList<String>> parseJson(String pricesJson) {
+        // inner ArrayList formatted as {date, price}
+        ArrayList<ArrayList<String>> pricesAL = new ArrayList<ArrayList<String>>();
+        if (pricesJson != null) {
+            try {
+                JSONObject jsonObj = new JSONObject(pricesJson);
+                JSONObject datatable = jsonObj.getJSONObject("datatable");
+                JSONArray data = datatable.getJSONArray("data");
+                for (int i = 0; i < data.length(); i++) {
+                    String date = data.getJSONArray(i).getString(0);
+                    String price = data.getJSONArray(i).getString(1);
+                    ArrayList<String> day = new ArrayList<>();
+                    day.add(date);
+                    day.add(price);
+                    pricesAL.add(day);
+                }
+            }
+            catch (final JSONException e) {
+                Log.e(LOG_TAG, "Json parsing error: " + e.getMessage());
+            }
+        }
+        return pricesAL;
+    }
+
+    /**
+     * Uses https://github.com/PhilJay/MPAndroidChart
+     * @param pricesAL ArrayList<String>[date, price]
+     */
+    private void generatePriceChart(ArrayList<ArrayList<String>> pricesAL) {
         //https://github.com/lecho/hellocharts-android
-        /*
-        LineChartView chart = (LineChartView) findViewById(R.id.stock_chart);
-
-        List<PointValue> values = new ArrayList<PointValue>();
-        values.add(new PointValue(0, 2));
-        values.add(new PointValue(1, 4));
-        values.add(new PointValue(2, 3));
-        values.add(new PointValue(3, 4));
-
-        //In most cased you can call data model methods in builder-pattern-like manner.
-        Line line = new Line(values).setColor(Color.BLUE).setCubic(true);
-        List<Line> lines = new ArrayList<Line>();
-        lines.add(line);
-
-        LineChartData data = new LineChartData();
-        data.setLines(lines);
-        chart.setLineChartData(data);
-
-        */
-
-
-        // style
+        // chart style
         LineChart chart = (LineChart) findViewById(R.id.stock_chart);
         int baseColor = ColorTemplate.LIBERTY_COLORS[0];
         chart.getLegend().setTextColor(baseColor);
@@ -127,33 +148,38 @@ public class StockDetailActivity extends AppCompatActivity {
         x1.setTextColor(baseColor);
         x1.setAxisLineColor(baseColor);
         x1.setPosition(XAxis.XAxisPosition.BOTTOM);
+        x1.setGranularity((Integer) pricesAL.size() / 3);
         // add data
         List<String> xlabels = new ArrayList<String>();
         List<Entry> entries = new ArrayList<Entry>();
-        for (Integer i = 0; i < 100; i++) {
-            entries.add(new Entry(i, i*i));
-            xlabels.add(i.toString());
+        for (Integer i = 0; i < pricesAL.size(); i++) {
+            Double priceD = Double.parseDouble(pricesAL.get(i).get(1));
+            Integer priceI = priceD.intValue();
+            entries.add(new Entry(i, priceI));
+            xlabels.add(pricesAL.get(i).get(0));
         }
-        LineDataSet dataSet = new LineDataSet(entries, "Price ($)");
+        // data style
+        LineDataSet dataSet = new LineDataSet(entries, "Price " + symbol + " ($)");
         dataSet.setColor(ColorTemplate.VORDIPLOM_COLORS[0]);
         dataSet.setCircleColor(ColorTemplate.VORDIPLOM_COLORS[0]);
         dataSet.setValueTextColor(ColorTemplate.VORDIPLOM_COLORS[0]);
+        dataSet.setDrawCircles(false);
         LineData lineData = new LineData(dataSet);
-
+        // format x-axis
         String[] labelsArr = new String[xlabels.size()];
         labelsArr = xlabels.toArray(labelsArr);
         x1.setValueFormatter(new MyXAxisValueFormatter(labelsArr));
-
+        // draw chart
         chart.setData(lineData);
         chart.invalidate(); // refresh
 
     }
-
-    private void getData() {
-        // https://www.quandl.com/api/v3/datasets/WIKI/HLF.json
-    }
 }
 
+
+/**
+ * Helper class to format hellocharts x-axis
+ */
 class MyXAxisValueFormatter implements IAxisValueFormatter {
 
     private String[] mValues;
@@ -165,8 +191,7 @@ class MyXAxisValueFormatter implements IAxisValueFormatter {
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
         // "value" represents the position of the label on the axis (x or y)
-        //return mValues[(int) value] + 'b';
-        return "a";
+        return mValues[(int) value];
     }
 
     /** this is only needed if numbers are returned, else return 0 */
