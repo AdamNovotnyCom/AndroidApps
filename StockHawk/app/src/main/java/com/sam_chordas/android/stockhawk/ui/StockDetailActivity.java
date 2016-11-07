@@ -7,37 +7,54 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
-import com.sam_chordas.android.stockhawk.data.TestData;
+import com.sam_chordas.android.stockhawk.rest.AppKeys;
+import com.sam_chordas.android.stockhawk.rest.MyXAxisValueFormatter;
+import com.sam_chordas.android.stockhawk.service.QuandlDeserializer;
+import com.sam_chordas.android.stockhawk.service.QuandlModel;
+import com.sam_chordas.android.stockhawk.service.StockPricesService;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import rx.Observable;
+import rx.Observer;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class StockDetailActivity extends AppCompatActivity {
     final String LOG_TAG = StockDetailActivity.class.getSimpleName();
     ContentResolver resolver;
     Context mContext;
     String symbol;
-    String pricesJson;
+    String yearSince = "2015";
+    String dateSince = yearSince + "0101";
+    ArrayList<String> datesAL;
+    ArrayList<Integer> pricesAL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +87,6 @@ public class StockDetailActivity extends AppCompatActivity {
         }
 
         setupListeners();
-        getData();
     }
 
 
@@ -79,8 +95,8 @@ public class StockDetailActivity extends AppCompatActivity {
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String where = QuoteColumns.SYMBOL + "=?";
-                String[] args = new String[] {symbol};
-                resolver.delete( QuoteProvider.Quotes.CONTENT_URI, where, args );
+                String[] args = new String[]{symbol};
+                resolver.delete(QuoteProvider.Quotes.CONTENT_URI, where, args);
 
                 Toast.makeText(mContext,
                         "Deleted symbol: " + symbol,
@@ -89,46 +105,95 @@ public class StockDetailActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // spinner
+        final Spinner spinner = (Spinner) findViewById(R.id.year_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.years_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                yearSince = spinner.getSelectedItem().toString();
+                dateSince = yearSince + "0101";
+                Toast.makeText(mContext,
+                        "Chart start year: " + yearSince,
+                        Toast.LENGTH_LONG).show();
+                retroQuandlCall();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+        });
     }
 
-    private void getData() {
-        // https://www.quandl.com/api/v3/datatables/WIKI/PRICES.json?date.gte=20150101&ticker=TSLA&qopts.columns=date,close&api_key=[TBU]
-        // TODO call to quandl
-        pricesJson = TestData.tslaPrices; ////// remove
-        ArrayList<ArrayList<String>> pricesAL = parseJson(pricesJson);
-        generatePriceChart(pricesAL);
-    }
-
-    private ArrayList<ArrayList<String>> parseJson(String pricesJson) {
-        // inner ArrayList formatted as {date, price}
-        ArrayList<ArrayList<String>> pricesAL = new ArrayList<ArrayList<String>>();
-        if (pricesJson != null) {
-            try {
-                JSONObject jsonObj = new JSONObject(pricesJson);
-                JSONObject datatable = jsonObj.getJSONObject("datatable");
-                JSONArray data = datatable.getJSONArray("data");
-                for (int i = 0; i < data.length(); i++) {
-                    String date = data.getJSONArray(i).getString(0);
-                    String price = data.getJSONArray(i).getString(1);
-                    ArrayList<String> day = new ArrayList<>();
-                    day.add(date);
-                    day.add(price);
-                    pricesAL.add(day);
+    private void retroQuandlCall() {
+        Observer<String> stringObserver;
+        stringObserver = new Observer<String>() {
+            @Override
+            public void onNext(String value) {
+                if (value.equals("OK")) {
+                    generatePriceChart();
                 }
             }
-            catch (final JSONException e) {
-                Log.e(LOG_TAG, "Json parsing error: " + e.getMessage());
+            @Override
+            public void onCompleted() {}
+            @Override
+            public void onError(Throwable e) {
+                Log.d("stringObserver", "onError", e);
             }
-        }
-        return pricesAL;
+        };
+
+        Observable observable = Observable.create(
+                new Observable.OnSubscribe<String>() {
+                    @Override
+                    public void call(Subscriber subscriber) {
+                        Gson gson = new GsonBuilder().registerTypeAdapter(
+                                QuandlModel.class, new QuandlDeserializer()).create();
+                        Retrofit retrofit = new Retrofit.Builder()
+                                .baseUrl("https://www.quandl.com")
+                                .addConverterFactory(GsonConverterFactory.create(gson))
+                                .build();
+                        StockPricesService priceService = retrofit.create(
+                                StockPricesService.class);
+                        Call<QuandlModel> call = priceService.getStockPrices(
+                                dateSince,
+                                symbol,
+                                "date,close",
+                                AppKeys.quandlKey
+                        );
+                        try {
+                            QuandlModel pricesData = call.execute().body();
+                            datesAL = pricesData.getDates();
+                            pricesAL = pricesData.getPrices();
+                            subscriber.onNext("OK");
+                            subscriber.onCompleted();
+                        }
+                        catch (IOException e) {
+                            Log.e(LOG_TAG, e.toString());
+                        }
+
+                    }
+                })
+                .subscribeOn(Schedulers.io()) // subscribeOn the I/O thread
+                .observeOn(AndroidSchedulers.mainThread()); // observeOn the UI Thread
+        observable.subscribe(stringObserver);
     }
 
     /**
      * Uses https://github.com/PhilJay/MPAndroidChart
-     * @param pricesAL ArrayList<String>[date, price]
      */
-    private void generatePriceChart(ArrayList<ArrayList<String>> pricesAL) {
-        //https://github.com/lecho/hellocharts-android
+    private void generatePriceChart() {
+        Log.i(LOG_TAG, dateSince);
+        if (datesAL.size() == 0) {
+            Toast toast = Toast.makeText(
+                    mContext, "No price data available", Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
+            toast.show();
+            return;
+        }
         // chart style
         LineChart chart = (LineChart) findViewById(R.id.stock_chart);
         int baseColor = ColorTemplate.LIBERTY_COLORS[0];
@@ -150,13 +215,10 @@ public class StockDetailActivity extends AppCompatActivity {
         x1.setPosition(XAxis.XAxisPosition.BOTTOM);
         x1.setGranularity((Integer) pricesAL.size() / 3);
         // add data
-        List<String> xlabels = new ArrayList<String>();
+        List<String> xlabels = datesAL;
         List<Entry> entries = new ArrayList<Entry>();
         for (Integer i = 0; i < pricesAL.size(); i++) {
-            Double priceD = Double.parseDouble(pricesAL.get(i).get(1));
-            Integer priceI = priceD.intValue();
-            entries.add(new Entry(i, priceI));
-            xlabels.add(pricesAL.get(i).get(0));
+            entries.add(new Entry(i, pricesAL.get(i)));
         }
         // data style
         LineDataSet dataSet = new LineDataSet(entries, "Price " + symbol + " ($)");
@@ -172,29 +234,5 @@ public class StockDetailActivity extends AppCompatActivity {
         // draw chart
         chart.setData(lineData);
         chart.invalidate(); // refresh
-
     }
-}
-
-
-/**
- * Helper class to format hellocharts x-axis
- */
-class MyXAxisValueFormatter implements IAxisValueFormatter {
-
-    private String[] mValues;
-
-    public MyXAxisValueFormatter(String[] values) {
-        this.mValues = values;
-    }
-
-    @Override
-    public String getFormattedValue(float value, AxisBase axis) {
-        // "value" represents the position of the label on the axis (x or y)
-        return mValues[(int) value];
-    }
-
-    /** this is only needed if numbers are returned, else return 0 */
-    @Override
-    public int getDecimalDigits() { return 0; }
 }
