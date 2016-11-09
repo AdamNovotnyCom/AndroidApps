@@ -50,6 +50,7 @@ public class StockDetailActivity extends AppCompatActivity {
     final String LOG_TAG = StockDetailActivity.class.getSimpleName();
     ContentResolver resolver;
     Context mContext;
+    int mRefreshCount = 0; // refresh api if > 0
     String symbol;
     String yearSince = "2015";
     String dateSince = yearSince + "0101";
@@ -59,6 +60,13 @@ public class StockDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null && savedInstanceState.containsKey("symbol")) {
+            symbol = savedInstanceState.getString("symbol");
+            dateSince = savedInstanceState.getString("dateSince");
+            datesAL = savedInstanceState.getStringArrayList("dates");
+            pricesAL = savedInstanceState.getIntegerArrayList("prices");
+            mRefreshCount = 2;
+        }
         setContentView(R.layout.activity_stock_detail);
         mContext = this;
 
@@ -87,6 +95,19 @@ public class StockDetailActivity extends AppCompatActivity {
         }
 
         setupListeners();
+    }
+
+    /**
+     * @param outState is generated when app is closed.
+     * data is restored using savedInstanceState in onCreate()
+     */
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("symbol", symbol);
+        outState.putString("dateSince", dateSince);
+        outState.putStringArrayList("dates", datesAL);
+        outState.putIntegerArrayList("prices", pricesAL);
     }
 
 
@@ -124,69 +145,76 @@ public class StockDetailActivity extends AppCompatActivity {
             }
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                // your code here
+                // do nothing
             }
         });
     }
 
     private void retroQuandlCall() {
-        Observer<String> stringObserver;
-        stringObserver = new Observer<String>() {
-            @Override
-            public void onNext(String value) {
-                if (value.equals("OK")) {
-                    generatePriceChart();
-                }
-            }
-            @Override
-            public void onCompleted() {}
-            @Override
-            public void onError(Throwable e) {
-                Log.d("stringObserver", "onError", e);
-            }
-        };
-
-        Observable observable = Observable.create(
-                new Observable.OnSubscribe<String>() {
-                    @Override
-                    public void call(Subscriber subscriber) {
-                        Gson gson = new GsonBuilder().registerTypeAdapter(
-                                QuandlModel.class, new QuandlDeserializer()).create();
-                        Retrofit retrofit = new Retrofit.Builder()
-                                .baseUrl("https://www.quandl.com")
-                                .addConverterFactory(GsonConverterFactory.create(gson))
-                                .build();
-                        StockPricesService priceService = retrofit.create(
-                                StockPricesService.class);
-                        Call<QuandlModel> call = priceService.getStockPrices(
-                                dateSince,
-                                symbol,
-                                "date,close",
-                                AppKeys.quandlKey
-                        );
-                        try {
-                            QuandlModel pricesData = call.execute().body();
-                            datesAL = pricesData.getDates();
-                            pricesAL = pricesData.getPrices();
-                            subscriber.onNext("OK");
-                            subscriber.onCompleted();
-                        }
-                        catch (IOException e) {
-                            Log.e(LOG_TAG, e.toString());
-                        }
-
+        if (mRefreshCount > 0) {
+            generatePriceChart();
+            mRefreshCount--;
+        }
+        else {
+            Observer<String> stringObserver;
+            stringObserver = new Observer<String>() {
+                @Override
+                public void onNext(String value) {
+                    if (value.equals("OK")) {
+                        generatePriceChart();
                     }
-                })
-                .subscribeOn(Schedulers.io()) // subscribeOn the I/O thread
-                .observeOn(AndroidSchedulers.mainThread()); // observeOn the UI Thread
-        observable.subscribe(stringObserver);
+                }
+
+                @Override
+                public void onCompleted() {
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    Log.d("stringObserver", "onError", e);
+                }
+            };
+            Observable observable = Observable.create(
+                    new Observable.OnSubscribe<String>() {
+                        @Override
+                        public void call(Subscriber subscriber) {
+                            Gson gson = new GsonBuilder().registerTypeAdapter(
+                                    QuandlModel.class, new QuandlDeserializer()).create();
+                            Retrofit retrofit = new Retrofit.Builder()
+                                    .baseUrl("https://www.quandl.com")
+                                    .addConverterFactory(GsonConverterFactory.create(gson))
+                                    .build();
+                            StockPricesService priceService = retrofit.create(
+                                    StockPricesService.class);
+                            Call<QuandlModel> call = priceService.getStockPrices(
+                                    dateSince,
+                                    symbol,
+                                    "date,close",
+                                    AppKeys.quandlKey
+                            );
+                            try {
+                                QuandlModel pricesData = call.execute().body();
+                                datesAL = pricesData.getDates();
+                                pricesAL = pricesData.getPrices();
+                                Log.i(LOG_TAG, "Prices fetched from Api");
+                                subscriber.onNext("OK");
+                                subscriber.onCompleted();
+                            } catch (IOException e) {
+                                Log.e(LOG_TAG, e.toString());
+                            }
+
+                        }
+                    })
+                    .subscribeOn(Schedulers.io()) // subscribeOn the I/O thread
+                    .observeOn(AndroidSchedulers.mainThread()); // observeOn the UI Thread
+            observable.subscribe(stringObserver);
+        }
     }
 
     /**
      * Uses https://github.com/PhilJay/MPAndroidChart
      */
     private void generatePriceChart() {
-        Log.i(LOG_TAG, dateSince);
         if (datesAL.size() == 0) {
             Toast toast = Toast.makeText(
                     mContext, "No price data available", Toast.LENGTH_SHORT);
