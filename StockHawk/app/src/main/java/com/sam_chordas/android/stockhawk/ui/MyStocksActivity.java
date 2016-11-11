@@ -115,6 +115,7 @@ public class MyStocksActivity extends AppCompatActivity
 
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setContentDescription("Press to add stock to list");
         fab.attachToRecyclerView(recyclerView);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
@@ -122,7 +123,7 @@ public class MyStocksActivity extends AppCompatActivity
                     networkToast();
                 }
                 else {
-                    launchInternetComponents();
+                    //launchInternetComponents();
                     new MaterialDialog.Builder(mContext).title(R.string.symbol_search)
                             .content(R.string.content_test)
                             .inputType(InputType.TYPE_CLASS_TEXT)
@@ -144,6 +145,7 @@ public class MyStocksActivity extends AppCompatActivity
                                         return;
                                     } else {
                                         // Add the stock to DB
+                                        Log.i(LOG_TAG, "NOW !!");
                                         mServiceIntent.putExtra("tag", "add");
                                         mServiceIntent.putExtra("symbol", inputStr);
                                         startService(mServiceIntent);
