@@ -130,7 +130,6 @@ public class StockTaskService extends GcmTaskService {
                         mContext.getContentResolver().update(QuoteProvider.Quotes.CONTENT_URI, contentValues,
                                 null, null);
                     }
-                    Log.i("LOGTAG", getResponse.toString());
                     ArrayList<ContentProviderOperation> dbReady =
                             Utils.quoteJsonToContentVals(getResponse);
                     if (dbReady.size() > 0) {
