@@ -11,7 +11,7 @@
     <string name="input_prefill"></string>
     <string name="invalid_stock_warning">Invalid Stock Symbol</string>
     <string name="already_saved_stock">This stock is already saved!</string>
-    <string name="chart_start_toast">Chart start year: </string>
+    <string name="chart_start_toast">Chart start year</string>
     <string name="no_price_data_toast">"No price data available"</string>
     <string name="price_word">"Price"</string>
     <string name="network_toast">This app requires an internet connection. Quotes are out of date</string>

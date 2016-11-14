@@ -42,6 +42,7 @@ public class Utils {
           if (resultsArray != null && resultsArray.length() != 0){
             for (int i = 0; i < resultsArray.length(); i++){
               jsonObject = resultsArray.getJSONObject(i);
+              Log.i(LOG_TAG, jsonObject.toString());
               batchOperations.add(buildBatchOperation(jsonObject));
             }
           }

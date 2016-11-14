@@ -138,8 +138,8 @@ public class StockDetailActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 yearSince = spinner.getSelectedItem().toString();
                 dateSince = yearSince + "0101";
-                Toast.makeText(mContext,
-                        R.string.chart_start_toast + yearSince,
+                String message = getResources().getString(R.string.chart_start_toast) + " " + yearSince;
+                Toast.makeText(mContext, message,
                         Toast.LENGTH_LONG).show();
                 retroQuandlCall();
             }
@@ -217,7 +217,8 @@ public class StockDetailActivity extends AppCompatActivity {
     private void generatePriceChart() {
         if (datesAL.size() == 0) {
             Toast toast = Toast.makeText(
-                    mContext, R.string.no_price_data_toast, Toast.LENGTH_SHORT);
+                    mContext,
+                    getResources().getString(R.string.no_price_data_toast), Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
             toast.show();
             return;
@@ -249,7 +250,8 @@ public class StockDetailActivity extends AppCompatActivity {
             entries.add(new Entry(i, pricesAL.get(i)));
         }
         // data style
-        LineDataSet dataSet = new LineDataSet(entries, R.string.price_word + " " + symbol);
+        LineDataSet dataSet = new LineDataSet(entries,
+                getResources().getString(R.string.price_word) + " " + symbol);
         dataSet.setColor(ColorTemplate.VORDIPLOM_COLORS[0]);
         dataSet.setCircleColor(ColorTemplate.VORDIPLOM_COLORS[0]);
         dataSet.setValueTextColor(ColorTemplate.VORDIPLOM_COLORS[0]);
