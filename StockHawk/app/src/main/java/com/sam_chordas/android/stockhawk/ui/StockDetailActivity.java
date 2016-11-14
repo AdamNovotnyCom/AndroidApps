@@ -139,7 +139,7 @@ public class StockDetailActivity extends AppCompatActivity {
                 yearSince = spinner.getSelectedItem().toString();
                 dateSince = yearSince + "0101";
                 Toast.makeText(mContext,
-                        "Chart start year: " + yearSince,
+                        R.string.chart_start_toast + yearSince,
                         Toast.LENGTH_LONG).show();
                 retroQuandlCall();
             }
@@ -217,7 +217,7 @@ public class StockDetailActivity extends AppCompatActivity {
     private void generatePriceChart() {
         if (datesAL.size() == 0) {
             Toast toast = Toast.makeText(
-                    mContext, "No price data available", Toast.LENGTH_SHORT);
+                    mContext, R.string.no_price_data_toast, Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
             toast.show();
             return;
@@ -249,7 +249,7 @@ public class StockDetailActivity extends AppCompatActivity {
             entries.add(new Entry(i, pricesAL.get(i)));
         }
         // data style
-        LineDataSet dataSet = new LineDataSet(entries, "Price " + symbol + " ($)");
+        LineDataSet dataSet = new LineDataSet(entries, R.string.price_word + " " + symbol);
         dataSet.setColor(ColorTemplate.VORDIPLOM_COLORS[0]);
         dataSet.setCircleColor(ColorTemplate.VORDIPLOM_COLORS[0]);
         dataSet.setValueTextColor(ColorTemplate.VORDIPLOM_COLORS[0]);

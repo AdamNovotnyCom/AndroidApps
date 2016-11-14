@@ -72,7 +72,7 @@ public class MyStocksActivity extends AppCompatActivity
             public void onNext(String value) {
                 if (value.equals("invalidTicker")) {
                     Toast toast = Toast.makeText(
-                            mContext, "Invalid Stock Symbol", Toast.LENGTH_SHORT);
+                            mContext, R.string.invalid_stock_warning, Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
                     toast.show();
                 }
@@ -115,7 +115,6 @@ public class MyStocksActivity extends AppCompatActivity
 
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setContentDescription("Press to add stock to list");
         fab.attachToRecyclerView(recyclerView);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
@@ -138,14 +137,13 @@ public class MyStocksActivity extends AppCompatActivity
                                             new String[]{inputStr}, null);
                                     if (c.getCount() != 0) {
                                         Toast toast =
-                                                Toast.makeText(MyStocksActivity.this, "This stock is already saved!",
+                                                Toast.makeText(MyStocksActivity.this, R.string.already_saved_stock,
                                                         Toast.LENGTH_LONG);
                                         toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
                                         toast.show();
                                         return;
                                     } else {
                                         // Add the stock to DB
-                                        Log.i(LOG_TAG, "NOW !!");
                                         mServiceIntent.putExtra("tag", "add");
                                         mServiceIntent.putExtra("symbol", inputStr);
                                         startService(mServiceIntent);

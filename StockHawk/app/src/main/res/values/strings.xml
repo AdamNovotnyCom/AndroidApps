@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="http://schemas.android.com/tools">
     <string name="app_name">Stock Hawk</string>
 
     <string name="action_settings">Settings</string>
@@ -7,8 +7,13 @@
     <string name="symbol_search">Symbol Search</string>
     <string name="content_test">Search for a Stock Symbol</string>
     <string name="price_chart_title">Price since</string>
-    <string name="input_hint">FB</string>
+    <string name="input_hint"><xliff:g>FB</xliff:g></string>
     <string name="input_prefill"></string>
+    <string name="invalid_stock_warning">Invalid Stock Symbol</string>
+    <string name="already_saved_stock">This stock is already saved!</string>
+    <string name="chart_start_toast">Chart start year: </string>
+    <string name="no_price_data_toast">"No price data available"</string>
+    <string name="price_word">"Price"</string>
     <string name="network_toast">This app requires an internet connection. Quotes are out of date</string>
 
     <string-array name="years_array">
