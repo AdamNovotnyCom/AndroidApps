@@ -4,6 +4,8 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -141,7 +143,13 @@ public class StockDetailActivity extends AppCompatActivity {
                 String message = getResources().getString(R.string.chart_start_toast) + " " + yearSince;
                 Toast.makeText(mContext, message,
                         Toast.LENGTH_LONG).show();
-                retroQuandlCall();
+                if (isConnected()) {
+                    retroQuandlCall();
+                }
+                else {
+                    String e = getResources().getString(R.string.network_toast);
+                    Toast.makeText(mContext, e, Toast.LENGTH_LONG).show();
+                }
             }
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
@@ -264,5 +272,19 @@ public class StockDetailActivity extends AppCompatActivity {
         // draw chart
         chart.setData(lineData);
         chart.invalidate(); // refresh
+    }
+
+    /**
+     * Checks if internet connection is available
+     */
+    public boolean isConnected() {
+        boolean connection = false;
+        ConnectivityManager cm =
+                (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (activeNetwork != null && activeNetwork.isConnectedOrConnecting()) {
+            connection = true;
+        }
+        return connection;
     }
 }
