@@ -1,3 +1,10 @@
+/**
+ * Copyright (C) 2016 Adam Novotny
+ * Source: https://github.com/udacity/StockHawk
+ * Attribution: all project code utilizes code examples and concepts
+ * from Udacity courses.
+ */
+
 package com.sam_chordas.android.stockhawk.ui;
 
 import android.app.LoaderManager;
