@@ -15,6 +15,7 @@
     <string name="no_price_data_toast">"No price data available"</string>
     <string name="price_word">"Price"</string>
     <string name="network_toast">This app requires an internet connection. Quotes are out of date</string>
+    <string name="launch_stock_hawk">"Launch Stock Hawk"</string>
 
     <string-array name="years_array">
         <item>2015</item>

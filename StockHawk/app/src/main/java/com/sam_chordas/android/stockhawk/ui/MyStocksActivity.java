@@ -274,7 +274,7 @@ public class MyStocksActivity extends AppCompatActivity
                         .setRequiredNetwork(Task.NETWORK_STATE_CONNECTED)
                         .setRequiresCharging(false)
                         .build();
-                // Schedule task with tag "periodic." This ensure that only the stocks present in the DB
+                // Schedule task with tag "periodic." This  ensure that only the stocks present in the DB
                 // are updated.
                 GcmNetworkManager.getInstance(this).schedule(periodicTask);
                 servicesLauched = true;
