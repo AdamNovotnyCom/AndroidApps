@@ -28,3 +28,27 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.0.0'
     compile 'com.google.android.gms:play-services-ads:9.8.0'
 }
+
+// example tasks
+task secondTask {
+    dependsOn 'firstTask'
+    doLast {
+        println 'second task run'
+    }
+}
+
+task firstTask {
+    doLast {
+        println 'first task run'
+    }
+}
+
+// custom task
+class MyTask extends DefaultTask {
+    @TaskAction
+    void doAction() {
+        println 'action run'
+    }
+}
+
+task runMyTask(type: MyTask)
