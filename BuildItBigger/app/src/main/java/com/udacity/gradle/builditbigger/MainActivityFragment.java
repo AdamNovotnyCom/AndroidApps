@@ -5,7 +5,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.example.jokes.JokesMain;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
@@ -31,6 +33,13 @@ public class MainActivityFragment extends Fragment {
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                 .build();
         mAdView.loadAd(adRequest);
+
+        // set joke text
+        JokesMain jokesmain = new JokesMain();
+        String jokeStr = jokesmain.getJoke();
+        TextView jokeTV = (TextView) root.findViewById(R.id.joke_text_view);
+        jokeTV.setText(jokeStr);
+
         return root;
     }
 }
