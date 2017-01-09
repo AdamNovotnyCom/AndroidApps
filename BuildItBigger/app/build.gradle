@@ -17,6 +17,18 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            debuggable false
+        }
+    }
+
+    productFlavors {
+        free {
+            applicationId "com.udacity.gradle.builditbigger.free"
+        }
+        paid {
+            applicationId "com.udacity.gradle.builditbigger.paid"
+        }
     }
 }
 
