@@ -5,7 +5,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.jokes.JokesMain;
 import com.google.android.gms.ads.AdRequest;
@@ -34,6 +36,9 @@ public class MainActivityFragment extends Fragment {
                 .build();
         mAdView.loadAd(adRequest);
 
+        setJokeBtn(root);
+
+        // REMOVE
         // set joke text
         JokesMain jokesmain = new JokesMain();
         String jokeStr = jokesmain.getJoke();
@@ -41,5 +46,21 @@ public class MainActivityFragment extends Fragment {
         jokeTV.setText(jokeStr);
 
         return root;
+    }
+
+    public void tellJoke(View view) {
+        Toast.makeText(getContext(), "derp", Toast.LENGTH_SHORT).show();
+    }
+
+    // Set up for Favorite button
+    private void setJokeBtn(View mainView) {
+        Button jokeBtn =
+                (Button) mainView.findViewById(R.id.joke_btn);
+        jokeBtn.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "derp 2", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
