@@ -1,14 +1,15 @@
 package com.udacity.gradle.builditbigger;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import com.adamnovotny.showjokes.MainShowJokes;
 import com.example.jokes.JokesMain;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -38,18 +39,7 @@ public class MainActivityFragment extends Fragment {
 
         setJokeBtn(root);
 
-        // REMOVE
-        // set joke text
-        JokesMain jokesmain = new JokesMain();
-        String jokeStr = jokesmain.getJoke();
-        TextView jokeTV = (TextView) root.findViewById(R.id.joke_text_view);
-        jokeTV.setText(jokeStr);
-
         return root;
-    }
-
-    public void tellJoke(View view) {
-        Toast.makeText(getContext(), "derp", Toast.LENGTH_SHORT).show();
     }
 
     // Set up for Favorite button
@@ -59,7 +49,17 @@ public class MainActivityFragment extends Fragment {
         jokeBtn.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "derp 2", Toast.LENGTH_SHORT).show();
+
+                // TODO get joke from java library
+                JokesMain jokesmain = new JokesMain();
+                String jokeStr = jokesmain.getJoke();
+                Log.d("MainFragment", "Message from java lib: " + jokeStr);
+
+                // TODO pass joke to Android library to show
+                Intent intent = new Intent(getContext(), MainShowJokes.class);
+                intent.putExtra("joke", jokeStr);
+                startActivity(intent);
+
             }
         });
     }

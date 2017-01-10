@@ -1,9 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'adam-novotny-nanodegree'
+            keyPassword 'password'
+            storeFile file('keystore.jks')
+            storePassword 'password'
+        }
+    }
     compileSdkVersion 25
     buildToolsVersion "24.0.3"
-
     defaultConfig {
         applicationId "com.udacity.gradle.builditbigger"
         minSdkVersion 16
@@ -16,12 +23,12 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
         debug {
             debuggable false
         }
     }
-
     productFlavors {
         free {
             applicationId "com.udacity.gradle.builditbigger.free"
@@ -33,13 +40,14 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.0.0'
     compile 'com.google.android.gms:play-services-ads:9.8.0'
     compile project(':jokeslib2')
+    compile project(':showjokes')
 }
 
 // example tasks
