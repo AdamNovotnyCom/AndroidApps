@@ -23,4 +23,9 @@ public class ExampleInstrumentedTest {
 
         assertEquals("com.adamnovotny.showjokes.test", appContext.getPackageName());
     }
+
+    @Test
+    public void createDb() throws Exception {
+
+    }
 }

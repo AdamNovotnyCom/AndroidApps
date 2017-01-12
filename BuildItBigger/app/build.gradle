@@ -46,6 +46,10 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.0.0'
     compile 'com.google.android.gms:play-services-ads:9.8.0'
+    testCompile 'junit:junit:4.12'
+    testCompile('com.android.support.test:runner:0.5') {
+        exclude group: 'com.android.support'
+    }
     compile project(':jokeslib2')
     compile project(':showjokes')
 }
