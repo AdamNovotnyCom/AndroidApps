@@ -20,7 +20,7 @@ public class unitTests {
     @Test
     public void testJoke1() {
         JokesMain jm = new JokesMain();
-        assert !jm.getJoke().equals("a");
+        assert jm.getJoke().equals("a");
     }
 
     @Test
