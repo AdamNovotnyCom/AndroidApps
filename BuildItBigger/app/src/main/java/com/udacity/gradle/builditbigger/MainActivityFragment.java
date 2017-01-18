@@ -14,11 +14,24 @@ import com.example.jokes.JokesMain;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
+import java.io.IOException;
+import java.util.List;
+
+import retrofit2.Call;
+import rx.Observable;
+import rx.Observer;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
+import static com.udacity.gradle.builditbigger.ApiService.retrofit;
+
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends Fragment {
+    String LOG_TAG = MainActivityFragment.class.getSimpleName();
 
     public MainActivityFragment() {
     }
@@ -49,6 +62,8 @@ public class MainActivityFragment extends Fragment {
         jokeBtn.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // TODO REMOVE test
+                callApi();
 
                 // TODO get joke from java library
                 JokesMain jokesmain = new JokesMain();
@@ -62,5 +77,45 @@ public class MainActivityFragment extends Fragment {
 
             }
         });
+    }
+
+    private void callApi() {
+        Observer<String> stringObserver;
+        stringObserver = new Observer<String>() {
+            @Override
+            public void onNext(String value) {
+                // TODO value is the joke -> start activity showJoke
+            }
+
+            @Override
+            public void onCompleted() {
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d("stringObserver", "onError", e);
+            }
+        };
+        Observable observable = Observable.create(
+                new Observable.OnSubscribe<String>() {
+                    @Override
+                    public void call(Subscriber subscriber) {
+                        ApiService jokeService = retrofit.create(ApiService.class);
+                        Call<List<Joke>> call = jokeService.getJoke("albums");
+                        try {
+                            List<Joke> result = call.execute().body();
+                            Log.d(LOG_TAG, "Results fetched from Api: " +
+                            result.get(0).getTitle());
+                            subscriber.onNext("OK");
+                            subscriber.onCompleted();
+                        } catch (IOException e) {
+                            Log.e(LOG_TAG, e.toString());
+                        }
+
+                    }
+                })
+                .subscribeOn(Schedulers.io()) // subscribeOn the I/O thread, not computationally intensive
+                .observeOn(AndroidSchedulers.mainThread()); // observeOn the UI Thread
+        observable.subscribe(stringObserver);
     }
 }
