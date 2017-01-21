@@ -10,21 +10,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.adamnovotny.showjokes.MainShowJokes;
+import com.adamnovotny.showjokes.backend.myApi.MyApi;
 import com.example.jokes.JokesMain;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 
 import java.io.IOException;
-import java.util.List;
 
-import retrofit2.Call;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-
-import static com.udacity.gradle.builditbigger.ApiService.retrofit;
 
 
 /**
@@ -100,14 +99,36 @@ public class MainActivityFragment extends Fragment {
                 new Observable.OnSubscribe<String>() {
                     @Override
                     public void call(Subscriber subscriber) {
+                        /* EXAMPLE retrofit call
                         ApiService jokeService = retrofit.create(ApiService.class);
                         Call<List<Joke>> call = jokeService.getJoke("albums");
                         try {
                             List<Joke> result = call.execute().body();
                             Log.d(LOG_TAG, "Results fetched from Api: " +
-                            result.get(0).getTitle());
+                                result.get(0).getTitle());
                             subscriber.onNext("OK");
                             subscriber.onCompleted();
+                        } catch (IOException e) {
+                            Log.e(LOG_TAG, e.toString());
+                        }
+                        */
+                        MyApi myApiService;
+                        MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
+                                new AndroidJsonFactory(), null)
+                                .setRootUrl("https://builtibig3.appspot.com/_ah/api/");
+                                /* LOCAL only
+                                .setRootUrl("http://10.0.2.2:8080/_ah/api/")
+                                .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
+                                    @Override
+                                    public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
+                                        abstractGoogleClientRequest.setDisableGZipContent(true);
+                                    }
+                                });
+                                */
+                        myApiService = builder.build();
+                        try {
+                            String result = myApiService.sayHi("Steve").execute().getData();
+                            Log.d(LOG_TAG, "Results fetched from Api: " + result);
                         } catch (IOException e) {
                             Log.e(LOG_TAG, e.toString());
                         }
