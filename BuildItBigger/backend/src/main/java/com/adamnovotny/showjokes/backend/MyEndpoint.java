@@ -6,11 +6,14 @@
 
 package com.adamnovotny.showjokes.backend;
 
+
+import com.example.jokes.JokesMain;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 
 import javax.inject.Named;
+
 
 /**
  * An endpoint class we are exposing
@@ -32,9 +35,10 @@ public class MyEndpoint {
     @ApiMethod(name = "sayHi")
     public MyBean sayHi(@Named("name") String name) {
         MyBean response = new MyBean();
-        response.setData("Hi, " + name);
-
+        // get joke from java library
+        JokesMain jokesmain = new JokesMain();
+        String jokeStr = jokesmain.getJoke();
+        response.setData(jokeStr);
         return response;
     }
-
 }

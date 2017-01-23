@@ -16,6 +16,8 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
+import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
+import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 
 import java.io.IOException;
 
@@ -99,36 +101,30 @@ public class MainActivityFragment extends Fragment {
                 new Observable.OnSubscribe<String>() {
                     @Override
                     public void call(Subscriber subscriber) {
-                        /* EXAMPLE retrofit call
-                        ApiService jokeService = retrofit.create(ApiService.class);
-                        Call<List<Joke>> call = jokeService.getJoke("albums");
-                        try {
-                            List<Joke> result = call.execute().body();
-                            Log.d(LOG_TAG, "Results fetched from Api: " +
-                                result.get(0).getTitle());
-                            subscriber.onNext("OK");
-                            subscriber.onCompleted();
-                        } catch (IOException e) {
-                            Log.e(LOG_TAG, e.toString());
-                        }
-                        */
+                        Boolean productionBE = false;
                         MyApi myApiService;
-                        MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
-                                new AndroidJsonFactory(), null)
-                                .setRootUrl("https://builtibig3.appspot.com/_ah/api/");
-                                /* LOCAL only
-                                .setRootUrl("http://10.0.2.2:8080/_ah/api/")
-                                .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
-                                    @Override
-                                    public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
-                                        abstractGoogleClientRequest.setDisableGZipContent(true);
-                                    }
-                                });
-                                */
-                        myApiService = builder.build();
+                        if (productionBE) {
+                            MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
+                                    new AndroidJsonFactory(), null)
+                                    .setRootUrl("https://builtibig3.appspot.com/_ah/api/");
+                            myApiService = builder.build();
+                        }
+                        else {
+                            MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
+                                    new AndroidJsonFactory(), null)
+                                    .setRootUrl("http://10.0.2.2:8080/_ah/api/")
+                                    .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
+                                        @Override
+                                        public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
+                                            abstractGoogleClientRequest.setDisableGZipContent(true);
+                                        }
+                                    });
+                            myApiService = builder.build();
+                        }
                         try {
-                            String result = myApiService.sayHi("Steve").execute().getData();
-                            Log.d(LOG_TAG, "Results fetched from Api: " + result);
+                            String result = myApiService.sayHi("someName").execute().getData();
+                            Log.d(LOG_TAG, "Results fetched from Api (prod version = " +
+                                    productionBE + ") : " + result);
                         } catch (IOException e) {
                             Log.e(LOG_TAG, e.toString());
                         }
