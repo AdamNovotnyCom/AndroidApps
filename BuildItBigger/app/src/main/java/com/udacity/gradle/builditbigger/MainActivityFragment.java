@@ -101,9 +101,9 @@ public class MainActivityFragment extends Fragment {
                 new Observable.OnSubscribe<String>() {
                     @Override
                     public void call(Subscriber subscriber) {
-                        Boolean productionBE = false;
+                        Boolean productionBackend = false;
                         MyApi myApiService;
-                        if (productionBE) {
+                        if (productionBackend) {
                             MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
                                     new AndroidJsonFactory(), null)
                                     .setRootUrl("https://builtibig3.appspot.com/_ah/api/");
@@ -124,7 +124,7 @@ public class MainActivityFragment extends Fragment {
                         try {
                             String result = myApiService.sayHi("someName").execute().getData();
                             Log.d(LOG_TAG, "Results fetched from Api (prod version = " +
-                                    productionBE + ") : " + result);
+                                    productionBackend + ") : " + result);
                         } catch (IOException e) {
                             Log.e(LOG_TAG, e.toString());
                         }
