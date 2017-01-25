@@ -11,7 +11,6 @@ import android.widget.Button;
 
 import com.adamnovotny.showjokes.MainShowJokes;
 import com.adamnovotny.showjokes.backend.myApi.MyApi;
-import com.example.jokes.JokesMain;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -63,29 +62,20 @@ public class MainActivityFragment extends Fragment {
         jokeBtn.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO REMOVE test
                 callApi();
-
-                // TODO get joke from java library
-                JokesMain jokesmain = new JokesMain();
-                String jokeStr = jokesmain.getJoke();
-                Log.d("MainFragment", "Message from java lib: " + jokeStr);
-
-                // TODO pass joke to Android library to show
-                Intent intent = new Intent(getContext(), MainShowJokes.class);
-                intent.putExtra("joke", jokeStr);
-                startActivity(intent);
-
             }
         });
     }
 
     private void callApi() {
+        // Async call using rx
         Observer<String> stringObserver;
         stringObserver = new Observer<String>() {
             @Override
-            public void onNext(String value) {
-                // TODO value is the joke -> start activity showJoke
+            public void onNext(String joke) {
+                Intent intent = new Intent(getContext(), MainShowJokes.class);
+                intent.putExtra("joke", joke);
+                startActivity(intent);
             }
 
             @Override
@@ -101,7 +91,7 @@ public class MainActivityFragment extends Fragment {
                 new Observable.OnSubscribe<String>() {
                     @Override
                     public void call(Subscriber subscriber) {
-                        Boolean productionBackend = false;
+                        Boolean productionBackend = true;
                         MyApi myApiService;
                         if (productionBackend) {
                             MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
@@ -125,6 +115,8 @@ public class MainActivityFragment extends Fragment {
                             String result = myApiService.sayHi("someName").execute().getData();
                             Log.d(LOG_TAG, "Results fetched from Api (prod version = " +
                                     productionBackend + ") : " + result);
+                            subscriber.onNext(result);
+                            subscriber.onCompleted();
                         } catch (IOException e) {
                             Log.e(LOG_TAG, e.toString());
                         }
