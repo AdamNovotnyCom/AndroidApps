@@ -41,15 +41,13 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':jokeslib2')
-    compile project(':showjokes')
     compile 'com.android.support:appcompat-v7:25.1.0'
-    compile 'com.google.android.gms:play-services-ads:10.0.1'
     compile 'com.google.code.findbugs:jsr305:2.0.1'
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'io.reactivex:rxjava:1.1.6'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    freeCompile 'com.google.android.gms:play-services-ads:10.0.1'
     testCompile 'junit:junit:4.12'
     testCompile('com.android.support.test:runner:0.5') {
         exclude group: 'com.android.support'
@@ -57,29 +55,8 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
+    compile project(':jokeslib2')
+    compile project(':showjokes')
     compile project(path: ':backend', configuration: 'android-endpoints')
 }
-
-// example tasks
-task secondTask {
-    dependsOn 'firstTask'
-    doLast {
-        println 'second task run'
-    }
-}
-
-task firstTask {
-    doLast {
-        println 'first task run'
-    }
-}
-
-// custom task
-class MyTask extends DefaultTask {
-    @TaskAction
-    void doAction() {
-        println 'action run'
-    }
-}
-
-task runMyTask(type: MyTask)
