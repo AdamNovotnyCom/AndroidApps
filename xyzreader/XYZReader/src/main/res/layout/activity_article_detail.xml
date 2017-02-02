@@ -5,21 +5,27 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="@color/black"/>
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/up_container"
-        android:background="@android:color/transparent"
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize">
+        android:layout_height="@dimen/up_container_height"
+        android:layout_marginLeft="@dimen/list_toolbar_side_margin"
+        android:layout_marginRight="@dimen/list_toolbar_side_margin"
+        android:background="@color/transparent"
+        android:orientation="horizontal">
 
         <ImageButton
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             android:id="@+id/action_up"
-            android:layout_width="56dp"
-            android:layout_height="?actionBarSize"
-            android:background="?selectableItemBackgroundBorderless"
+            android:layout_width="@dimen/up_container_height"
+            android:layout_height="match_parent"
+            android:background="@color/transparent"
             android:contentDescription="@string/up"
-            android:src="@drawable/ic_arrow_back" />
-    </FrameLayout>
+            android:src="@drawable/ic_arrow_back"
+            android:theme="@style/ThemeOverlay.AppCompat.Light" />
+
+    </LinearLayout>
+
 </FrameLayout>
