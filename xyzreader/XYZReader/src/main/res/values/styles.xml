@@ -24,5 +24,8 @@
     <style name="Theme.Bacon.Detail">
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
+    
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
+    </style>
 
 </resources>
