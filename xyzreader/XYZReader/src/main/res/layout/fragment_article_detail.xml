@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <com.example.xyzreader.ui.DrawInsetsFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/draw_insets_frame_layout"
@@ -99,6 +100,5 @@
         app:fabSize="normal"
         app:elevation="6dp"
         app:pressedTranslationZ="12dp"/>
-
 
 </com.example.xyzreader.ui.DrawInsetsFrameLayout>
