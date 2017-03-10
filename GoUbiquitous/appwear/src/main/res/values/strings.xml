@@ -1,5 +1,4 @@
 <resources>
     <string name="app_name">Sunshine</string>
-    <string name="hello_round">Hello Round World! 2</string>
-    <string name="hello_square">Hello Square World!</string>
+    <string name="hello_text">Hello general txtView</string>
 </resources>
