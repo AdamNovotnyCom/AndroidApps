@@ -1,13 +1,22 @@
 package com.adamnovotny.myapplication;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.wearable.view.WatchViewStub;
 import android.widget.TextView;
 
-public class MainActivity extends Activity {
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.wearable.Wearable;
+
+public class MainActivity extends Activity implements
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     private TextView mTextView;
+    private GoogleApiClient mGoogleApiClient;
+    private String LOG_TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,5 +29,30 @@ public class MainActivity extends Activity {
                 mTextView = (TextView) stub.findViewById(R.id.text);
             }
         });
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Wearable.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+        mGoogleApiClient.connect();
+
+        //WearableListenerService wls = new WearableService();
+        Intent iService = new Intent(getApplicationContext(), WearableService.class);
+        startService(iService);
+    }
+
+    // TODO move to WearableListenerService
+
+    @Override
+    public void onConnected(Bundle bundle) {
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
     }
 }

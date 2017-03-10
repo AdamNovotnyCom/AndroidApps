@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -35,10 +36,19 @@ import android.widget.ProgressBar;
 import com.example.android.sunshine.data.SunshinePreferences;
 import com.example.android.sunshine.data.WeatherContract;
 import com.example.android.sunshine.sync.SunshineSyncUtils;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.wearable.MessageApi;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.NodeApi;
+import com.google.android.gms.wearable.Wearable;
 
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>,
-        ForecastAdapter.ForecastAdapterOnClickHandler {
+        ForecastAdapter.ForecastAdapterOnClickHandler,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     private final String TAG = MainActivity.class.getSimpleName();
 
@@ -78,6 +88,8 @@ public class MainActivity extends AppCompatActivity implements
     private int mPosition = RecyclerView.NO_POSITION;
 
     private ProgressBar mLoadingIndicator;
+
+    private GoogleApiClient mGoogleApiClient;
 
 
     @Override
@@ -154,6 +166,12 @@ public class MainActivity extends AppCompatActivity implements
 
         SunshineSyncUtils.initialize(this);
 
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Wearable.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+        mGoogleApiClient.connect();
     }
 
     /**
@@ -265,6 +283,9 @@ public class MainActivity extends AppCompatActivity implements
      */
     @Override
     public void onClick(long date) {
+        // TODO remove below
+        sendWeatherMessageToWear();
+        // TODO remove above
         Intent weatherDetailIntent = new Intent(MainActivity.this, DetailActivity.class);
         Uri uriForDateClicked = WeatherContract.WeatherEntry.buildWeatherUriWithDate(date);
         weatherDetailIntent.setData(uriForDateClicked);
@@ -342,5 +363,41 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    // TODO move below to service
+
+    @Override
+    public void onConnected(Bundle bundle) {
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+    }
+
+    private void sendWeatherMessageToWear() {
+        // TODO move to non-UI thread
+        NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi
+                .getConnectedNodes(mGoogleApiClient).await();
+
+        for (Node node : nodes.getNodes()) {
+            Wearable.MessageApi.sendMessage(
+                    mGoogleApiClient, node.getId(), "/update-weather", new byte[0])
+                    .setResultCallback(
+                            new ResultCallback<MessageApi.SendMessageResult>() {
+                                @Override
+                                public void onResult(@NonNull MessageApi.SendMessageResult sendMessageResult) {
+                                    if (!sendMessageResult.getStatus().isSuccess()) {
+                                        Log.d(TAG, "Failed to send message");
+                                    }
+                                }
+                            }
+                    );
+        }
+
     }
 }
