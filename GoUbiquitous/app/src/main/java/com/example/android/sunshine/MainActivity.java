@@ -44,13 +44,17 @@ import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 
+import rx.Observable;
+import rx.Observer;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>,
         ForecastAdapter.ForecastAdapterOnClickHandler,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
-
-    private final String TAG = MainActivity.class.getSimpleName();
 
     /*
      * The columns of data that we are interested in displaying within our MainActivity's list of
@@ -62,7 +66,6 @@ public class MainActivity extends AppCompatActivity implements
             WeatherContract.WeatherEntry.COLUMN_MIN_TEMP,
             WeatherContract.WeatherEntry.COLUMN_WEATHER_ID,
     };
-
     /*
      * We store the indices of the values in the array of Strings above to more quickly be able to
      * access the data from our query. If the order of the Strings above changes, these indices
@@ -72,8 +75,6 @@ public class MainActivity extends AppCompatActivity implements
     public static final int INDEX_WEATHER_MAX_TEMP = 1;
     public static final int INDEX_WEATHER_MIN_TEMP = 2;
     public static final int INDEX_WEATHER_CONDITION_ID = 3;
-
-
     /*
      * This ID will be used to identify the Loader responsible for loading our weather forecast. In
      * some cases, one Activity can deal with many Loaders. However, in our case, there is only one.
@@ -82,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements
      * it is unique and consistent.
      */
     private static final int ID_FORECAST_LOADER = 44;
-
+    private final String TAG = MainActivity.class.getSimpleName();
     private ForecastAdapter mForecastAdapter;
     private RecyclerView mRecyclerView;
     private int mPosition = RecyclerView.NO_POSITION;
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements
     private ProgressBar mLoadingIndicator;
 
     private GoogleApiClient mGoogleApiClient;
+    private NodeApi.GetConnectedNodesResult ApiNodes;
 
 
     @Override
@@ -165,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements
         getSupportLoaderManager().initLoader(ID_FORECAST_LOADER, null, this);
 
         SunshineSyncUtils.initialize(this);
-
+        // Wearable connection
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Wearable.API)
                 .addConnectionCallbacks(this)
@@ -241,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements
 
     /**
      * Called when a Loader has finished loading its data.
-     *
+     * <p>
      * NOTE: There is one small bug in this code. If no data is present in the cursor do to an
      * initial load being performed with no access to internet, the loading indicator will show
      * indefinitely, until data is present from the ContentProvider. This will be fixed in a
@@ -324,10 +326,8 @@ public class MainActivity extends AppCompatActivity implements
      * This is where we inflate and set up the menu for this Activity.
      *
      * @param menu The options menu in which you place your items.
-     *
      * @return You must return true for the menu to be displayed;
-     *         if you return false it will not be shown.
-     *
+     * if you return false it will not be shown.
      * @see #onPrepareOptionsMenu
      * @see #onOptionsItemSelected
      */
@@ -345,7 +345,6 @@ public class MainActivity extends AppCompatActivity implements
      * Callback invoked when a menu item was selected from this Activity's menu.
      *
      * @param item The menu item that was selected by the user
-     *
      * @return true if you handle the menu click here, false otherwise
      */
     @Override
@@ -369,35 +368,65 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onConnected(Bundle bundle) {
+        Log.d(TAG, "mConnected to api");
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.d(TAG, "mConnected failed" + connectionResult);
     }
 
     @Override
     public void onConnectionSuspended(int i) {
+        Log.d(TAG, "mConnected suspended");
     }
 
     private void sendWeatherMessageToWear() {
-        // TODO move to non-UI thread
-        NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi
-                .getConnectedNodes(mGoogleApiClient).await();
+        Observer<String> stringObserver;
+        stringObserver = new Observer<String>() {
+            @Override
+            public void onNext(String value) {
+                if (value.equals("Complete")) {
+                    for (Node node : ApiNodes.getNodes()) {
+                        Wearable.MessageApi.sendMessage(
+                                mGoogleApiClient, node.getId(), "/update-weather", new byte[0])
+                                .setResultCallback(
+                                        new ResultCallback<MessageApi.SendMessageResult>() {
+                                            @Override
+                                            public void onResult(@NonNull MessageApi.SendMessageResult sendMessageResult) {
+                                                if (!sendMessageResult.getStatus().isSuccess()) {
+                                                    Log.d(TAG, "Failed to send message");
+                                                }
+                                            }
+                                        }
+                                );
+                        Log.d(TAG, "Message sent: " + node.getId());
+                    }
+                }
+            }
 
-        for (Node node : nodes.getNodes()) {
-            Wearable.MessageApi.sendMessage(
-                    mGoogleApiClient, node.getId(), "/update-weather", new byte[0])
-                    .setResultCallback(
-                            new ResultCallback<MessageApi.SendMessageResult>() {
-                                @Override
-                                public void onResult(@NonNull MessageApi.SendMessageResult sendMessageResult) {
-                                    if (!sendMessageResult.getStatus().isSuccess()) {
-                                        Log.d(TAG, "Failed to send message");
-                                    }
-                                }
-                            }
-                    );
-        }
+            @Override
+            public void onCompleted() {
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d("stringObserver", "onError", e);
+            }
+        };
+        Observable observable = Observable.create(
+                new Observable.OnSubscribe<String>() {
+                    @Override
+                    public void call(Subscriber subscriber) {
+                        ApiNodes = Wearable.NodeApi
+                                .getConnectedNodes(mGoogleApiClient).await();
+                        subscriber.onNext("Complete");
+                        subscriber.onCompleted();
+                    }
+                })
+                .subscribeOn(Schedulers.io()) // subscribeOn the I/O thread
+                .observeOn(AndroidSchedulers.mainThread()); // observeOn the UI Thread
+        observable.subscribe(stringObserver);
 
     }
 }

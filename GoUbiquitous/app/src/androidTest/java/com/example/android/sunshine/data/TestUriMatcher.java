@@ -26,8 +26,6 @@ import org.junit.runner.RunWith;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import static com.example.android.sunshine.data.TestUtilities.getStaticIntegerField;
-import static com.example.android.sunshine.data.TestUtilities.studentReadableNoSuchField;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.fail;
 
@@ -53,16 +51,16 @@ public class TestUriMatcher {
             Method buildUriMatcher = WeatherProvider.class.getDeclaredMethod("buildUriMatcher");
             testMatcher = (UriMatcher) buildUriMatcher.invoke(WeatherProvider.class);
 
-            REFLECTED_WEATHER_CODE = getStaticIntegerField(
+            REFLECTED_WEATHER_CODE = TestUtilities.getStaticIntegerField(
                     WeatherProvider.class,
                     weatherCodeVariableName);
 
-            REFLECTED_WEATHER_WITH_DATE_CODE = getStaticIntegerField(
+            REFLECTED_WEATHER_WITH_DATE_CODE = TestUtilities.getStaticIntegerField(
                     WeatherProvider.class,
                     weatherCodeWithDateVariableName);
 
         } catch (NoSuchFieldException e) {
-            fail(studentReadableNoSuchField(e));
+            fail(TestUtilities.studentReadableNoSuchField(e));
         } catch (IllegalAccessException e) {
             fail(e.getMessage());
         } catch (NoSuchMethodException e) {

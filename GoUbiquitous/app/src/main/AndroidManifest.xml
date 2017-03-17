@@ -74,8 +74,8 @@
         </service>
         <service
             android:name=".sync.SunshineGoogleApiClient"
-            android:enabled="true"
-            android:exported="true"></service>
+            android:exported="false">
+        </service>
     </application>
 
 </manifest>
