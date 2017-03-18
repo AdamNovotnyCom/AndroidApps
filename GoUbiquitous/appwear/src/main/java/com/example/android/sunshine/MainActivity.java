@@ -24,6 +24,8 @@ public class MainActivity extends Activity {
         });
 
         Intent iService = new Intent(getApplicationContext(), WearableService.class);
+        //stopService(new Intent(this, WearableService.class));
+        //startService(new Intent(this, WearableService.class));
         startService(iService);
     }
 }

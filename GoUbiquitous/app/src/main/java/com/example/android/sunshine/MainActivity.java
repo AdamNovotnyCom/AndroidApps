@@ -389,7 +389,7 @@ public class MainActivity extends AppCompatActivity implements
                 if (value.equals("Complete")) {
                     for (Node node : ApiNodes.getNodes()) {
                         Wearable.MessageApi.sendMessage(
-                                mGoogleApiClient, node.getId(), "/update-weather", new byte[0])
+                                mGoogleApiClient, node.getId(), "/weather-update", "Some message".getBytes())
                                 .setResultCallback(
                                         new ResultCallback<MessageApi.SendMessageResult>() {
                                             @Override
