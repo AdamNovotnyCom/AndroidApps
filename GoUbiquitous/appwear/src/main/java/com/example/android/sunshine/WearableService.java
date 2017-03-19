@@ -11,6 +11,9 @@ import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+
 public class WearableService extends WearableListenerService implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -49,11 +52,19 @@ public class WearableService extends WearableListenerService implements
 
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
-        Log.d(LOG_TAG, "Message Received 2");
-        Log.d(LOG_TAG, "Path: " + messageEvent.getPath());
+        Log.d(LOG_TAG, "Message Received ->>");
         if (messageEvent.getPath().equals("/weather-update")) {
-            final String message = new String(messageEvent.getData());
-            Log.d(LOG_TAG, "Message Received: " + message);
+            ByteArrayInputStream bais = new ByteArrayInputStream(messageEvent.getData());
+            DataInputStream in = new DataInputStream(bais);
+            try {
+                while (in.available() > 0) {
+                    String element = in.readUTF();
+                    Log.d(LOG_TAG, "Message element received: " + element);
+                }
+            }
+            catch (Exception e) {
+                Log.d(LOG_TAG, e.toString());
+            }
         }
 
     }

@@ -44,6 +44,11 @@ import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.util.ArrayList;
+import java.util.List;
+
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
@@ -386,10 +391,32 @@ public class MainActivity extends AppCompatActivity implements
         stringObserver = new Observer<String>() {
             @Override
             public void onNext(String value) {
+                // weather data to be sent when observable
+                // locates wear devices
+                List<String> list = new ArrayList<String>();
+                list.add("time");
+                list.add("date");
+                list.add("image");
+                list.add("high");
+                list.add("low");
+
+                // write to byte array
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                DataOutputStream out = new DataOutputStream(baos);
+                for (String element : list) {
+                    try {
+                        out.writeUTF(element);
+                    }
+                    catch (Exception e) {
+                        Log.d(TAG, e.toString());
+                    }
+                }
+                byte[] bytes = baos.toByteArray();
+
                 if (value.equals("Complete")) {
                     for (Node node : ApiNodes.getNodes()) {
                         Wearable.MessageApi.sendMessage(
-                                mGoogleApiClient, node.getId(), "/weather-update", "Some message".getBytes())
+                                mGoogleApiClient, node.getId(), "/weather-update", bytes)
                                 .setResultCallback(
                                         new ResultCallback<MessageApi.SendMessageResult>() {
                                             @Override
