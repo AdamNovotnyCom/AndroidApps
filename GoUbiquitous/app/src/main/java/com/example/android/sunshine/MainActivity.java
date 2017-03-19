@@ -369,7 +369,7 @@ public class MainActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-    // TODO move below to service
+    // TODO move to separate class
 
     @Override
     public void onConnected(Bundle bundle) {
@@ -394,9 +394,9 @@ public class MainActivity extends AppCompatActivity implements
                 // weather data to be sent when observable
                 // locates wear devices
                 List<String> list = new ArrayList<String>();
-                list.add("time");
+                list.add("time 2");
                 list.add("date");
-                list.add("image");
+                list.add("art_storm");
                 list.add("high");
                 list.add("low");
 
