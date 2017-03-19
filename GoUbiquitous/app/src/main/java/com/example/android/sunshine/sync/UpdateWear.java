@@ -1,10 +1,13 @@
 package com.example.android.sunshine.sync;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.example.android.sunshine.data.WeatherContract;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -37,9 +40,13 @@ public class UpdateWear implements
         GoogleApiClient.OnConnectionFailedListener {
 
     private final String TAG = "UpdateWear";
-    private Calendar calendar;
-    private Context mContext;
     private NodeApi.GetConnectedNodesResult ApiNodes;
+    private Calendar calendar;
+    private Cursor cursor;
+    private String weatherImage;
+    private String weatherHigh;
+    private String weatherLow;
+    private Context mContext;
     private GoogleApiClient mGoogleApiClient;
 
     public UpdateWear(Context mC) {
@@ -78,9 +85,9 @@ public class UpdateWear implements
                 List<String> list = new ArrayList<String>();
                 list.add(getTime());
                 list.add(getDate());
-                list.add("art_storm");
-                list.add("high");
-                list.add("low");
+                list.add(weatherImage);
+                list.add(weatherHigh);
+                list.add(weatherLow);
 
                 // write to byte array
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -129,6 +136,7 @@ public class UpdateWear implements
                     public void call(Subscriber subscriber) {
                         ApiNodes = Wearable.NodeApi
                                 .getConnectedNodes(mGoogleApiClient).await();
+                        getWeatherCursor();
                         subscriber.onNext("Complete");
                         subscriber.onCompleted();
                     }
@@ -153,5 +161,66 @@ public class UpdateWear implements
         SimpleDateFormat format1 = new SimpleDateFormat("EEE, MMM dd yyyy");
         String formatted_date = format1.format(calendar.getTime());
         return formatted_date;
+    }
+
+    private void getWeatherCursor() {
+        ContentResolver resolver = mContext.getContentResolver();
+        cursor = resolver.query(
+                WeatherContract.WeatherEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                null);
+        cursor.moveToFirst();
+        weatherImage = getWeatherImage();
+        weatherHigh = getTemperatureHigh();
+        weatherLow = getTemperatureLow();
+    }
+
+    private String getWeatherImage() {
+        int weatherIdCol = cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_WEATHER_ID);
+        Integer weatherId = Integer.parseInt(cursor.getString(weatherIdCol));
+        if (weatherId >= 200 && weatherId <= 232) {
+            return "art_storm";
+        } else if (weatherId >= 300 && weatherId <= 321) {
+            return "art_light_rain";
+        } else if (weatherId >= 500 && weatherId <= 504) {
+            return "art_rain";
+        } else if (weatherId == 511) {
+            return "art_snow";
+        } else if (weatherId >= 520 && weatherId <= 531) {
+            return "art_rain";
+        } else if (weatherId >= 600 && weatherId <= 622) {
+            return "art_snow";
+        } else if (weatherId >= 701 && weatherId <= 761) {
+            return "art_fog";
+        } else if (weatherId == 761 || weatherId == 771 || weatherId == 781) {
+            return "art_storm";
+        } else if (weatherId == 800) {
+            return "art_clear";
+        } else if (weatherId == 801) {
+            return "art_light_clouds";
+        } else if (weatherId >= 802 && weatherId <= 804) {
+            return "art_clouds";
+        } else if (weatherId >= 900 && weatherId <= 906) {
+            return "art_storm";
+        } else if (weatherId >= 958 && weatherId <= 962) {
+            return "art_storm";
+        } else if (weatherId >= 951 && weatherId <= 957) {
+            return "art_clear";
+        }
+        return "art_clear";
+    }
+
+    private String getTemperatureHigh() {
+        int maxTempIdCol = cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_MAX_TEMP);
+        Long temp = Math.round(Double.parseDouble(cursor.getString(maxTempIdCol)));
+        return temp.toString();
+    }
+
+    private String getTemperatureLow() {
+        int minTempIdCol = cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_MIN_TEMP);
+        Long temp = Math.round(Double.parseDouble(cursor.getString(minTempIdCol)));
+        return temp.toString();
     }
 }
