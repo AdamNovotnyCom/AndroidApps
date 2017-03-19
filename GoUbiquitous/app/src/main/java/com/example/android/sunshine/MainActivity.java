@@ -19,7 +19,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -36,30 +35,11 @@ import android.widget.ProgressBar;
 import com.example.android.sunshine.data.SunshinePreferences;
 import com.example.android.sunshine.data.WeatherContract;
 import com.example.android.sunshine.sync.SunshineSyncUtils;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.wearable.MessageApi;
-import com.google.android.gms.wearable.Node;
-import com.google.android.gms.wearable.NodeApi;
-import com.google.android.gms.wearable.Wearable;
-
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.util.ArrayList;
-import java.util.List;
-
-import rx.Observable;
-import rx.Observer;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import com.example.android.sunshine.sync.UpdateWear;
 
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>,
-        ForecastAdapter.ForecastAdapterOnClickHandler,
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        ForecastAdapter.ForecastAdapterOnClickHandler {
 
     /*
      * The columns of data that we are interested in displaying within our MainActivity's list of
@@ -94,10 +74,6 @@ public class MainActivity extends AppCompatActivity implements
     private int mPosition = RecyclerView.NO_POSITION;
 
     private ProgressBar mLoadingIndicator;
-
-    private GoogleApiClient mGoogleApiClient;
-    private NodeApi.GetConnectedNodesResult ApiNodes;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,13 +148,6 @@ public class MainActivity extends AppCompatActivity implements
         getSupportLoaderManager().initLoader(ID_FORECAST_LOADER, null, this);
 
         SunshineSyncUtils.initialize(this);
-        // Wearable connection
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Wearable.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-        mGoogleApiClient.connect();
     }
 
     /**
@@ -291,7 +260,8 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onClick(long date) {
         // TODO remove below
-        sendWeatherMessageToWear();
+        UpdateWear uw = new UpdateWear(this);
+        uw.sendWeatherMessageToWear();
         // TODO remove above
         Intent weatherDetailIntent = new Intent(MainActivity.this, DetailActivity.class);
         Uri uriForDateClicked = WeatherContract.WeatherEntry.buildWeatherUriWithDate(date);
@@ -367,93 +337,5 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    // TODO move to separate class
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        Log.d(TAG, "mConnected to api");
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.d(TAG, "mConnected failed" + connectionResult);
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.d(TAG, "mConnected suspended");
-    }
-
-    private void sendWeatherMessageToWear() {
-        Observer<String> stringObserver;
-        stringObserver = new Observer<String>() {
-            @Override
-            public void onNext(String value) {
-                // weather data to be sent when observable
-                // locates wear devices
-                List<String> list = new ArrayList<String>();
-                list.add("time 2");
-                list.add("date");
-                list.add("art_storm");
-                list.add("high");
-                list.add("low");
-
-                // write to byte array
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                DataOutputStream out = new DataOutputStream(baos);
-                for (String element : list) {
-                    try {
-                        out.writeUTF(element);
-                    }
-                    catch (Exception e) {
-                        Log.d(TAG, e.toString());
-                    }
-                }
-                byte[] bytes = baos.toByteArray();
-
-                if (value.equals("Complete")) {
-                    for (Node node : ApiNodes.getNodes()) {
-                        Wearable.MessageApi.sendMessage(
-                                mGoogleApiClient, node.getId(), "/weather-update", bytes)
-                                .setResultCallback(
-                                        new ResultCallback<MessageApi.SendMessageResult>() {
-                                            @Override
-                                            public void onResult(@NonNull MessageApi.SendMessageResult sendMessageResult) {
-                                                if (!sendMessageResult.getStatus().isSuccess()) {
-                                                    Log.d(TAG, "Failed to send message");
-                                                }
-                                            }
-                                        }
-                                );
-                        Log.d(TAG, "Message sent: " + node.getId());
-                    }
-                }
-            }
-
-            @Override
-            public void onCompleted() {
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.d("stringObserver", "onError", e);
-            }
-        };
-        Observable observable = Observable.create(
-                new Observable.OnSubscribe<String>() {
-                    @Override
-                    public void call(Subscriber subscriber) {
-                        ApiNodes = Wearable.NodeApi
-                                .getConnectedNodes(mGoogleApiClient).await();
-                        subscriber.onNext("Complete");
-                        subscriber.onCompleted();
-                    }
-                })
-                .subscribeOn(Schedulers.io()) // subscribeOn the I/O thread
-                .observeOn(AndroidSchedulers.mainThread()); // observeOn the UI Thread
-        observable.subscribe(stringObserver);
-
     }
 }

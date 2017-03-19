@@ -9,56 +9,49 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.wearable.view.WatchViewStub;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.TimeZone;
 
 public class MainActivity extends Activity {
 
     private String LOG_TAG = MainActivity.class.getSimpleName();
+    private Calendar calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(com.example.android.sunshine.R.layout.activity_main);
-        final WatchViewStub stub = (WatchViewStub) findViewById(com.example.android.sunshine.R.id.watch_view_stub);
-        /*
-        stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
-            @Override
-            public void onLayoutInflated(WatchViewStub stub) {
-                TextView mTextView = (TextView) stub.findViewById(com.example.android.sunshine.R.id.text);
-            }
-        });
-        */
 
         Intent iService = new Intent(getApplicationContext(), WearableService.class);
         startService(iService);
 
+        // receive weather update pushed from phone to WearableService
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
                         ArrayList<String> weatherAl = intent.getStringArrayListExtra(
                                 WearableService.WEATHER_BROADCAST_ARRAY_LIST);
-                        ArrayList<Integer> weatherViews = new ArrayList<Integer>();
-                        weatherViews.add(R.id.time_tv);
-                        weatherViews.add(R.id.date_tv);
-                        weatherViews.add(R.id.weather_icon);
-                        weatherViews.add(R.id.high_temperature);
-                        weatherViews.add(R.id.low_temperature);
-                        for (int i = 0; i < weatherAl.size(); i++) {
-                            Log.d(LOG_TAG, "Received broadcast " + i + ":" + weatherAl.get(i));
-                            // update text views
-                            if (i != 2) {
-                                TextView mTextView = (TextView) findViewById(weatherViews.get(i));
-                                mTextView.setText(weatherAl.get(i));
-                            }
-                        }
+                        /*
+                        weatherAl.get(0) = phone time, not necessary if wear setDateAndTime is used
+                        weatherAl.get(1) = phone date, not necessary if wear setDateAndTime is used
+                        */
+                        // update high
+                        TextView mTextView = (TextView) findViewById(R.id.high_temperature);
+                        mTextView.setText(weatherAl.get(3));
+                        // update low
+                        mTextView = (TextView) findViewById(R.id.low_temperature);
+                        mTextView.setText(weatherAl.get(4));
+
                         // update image view
-                        ImageView mImageView = (ImageView) findViewById(weatherViews.get(2));
+                        ImageView mImageView = (ImageView) findViewById(R.id.weather_icon);
 
                         HashMap<String, Integer> hm = new HashMap();
                         hm.put("art_clear", R.drawable.art_clear);
@@ -77,5 +70,38 @@ public class MainActivity extends Activity {
                     }
                 }, new IntentFilter(WearableService.WEATHER_BROADCAST_URI)
         );
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setContentView(com.example.android.sunshine.R.layout.activity_main);
+        final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
+        stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
+            @Override
+            public void onLayoutInflated(WatchViewStub stub) {
+                setDateAndTime();
+            }
+        });
+    }
+
+    private void setDateAndTime() {
+        calendar = new GregorianCalendar(TimeZone.getDefault());
+        TextView mTimeTextView = (TextView) findViewById(R.id.time_tv);
+        TextView mDateTextView = (TextView) findViewById(R.id.date_tv);
+        mTimeTextView.setText(getTime());
+        mDateTextView.setText(getDate());
+    }
+
+    private String getTime() {
+        String hour = ((Integer) calendar.get(Calendar.HOUR_OF_DAY)).toString();
+        String minute = ((Integer) calendar.get(Calendar.MINUTE)).toString();
+        return hour + ":" + minute;
+    }
+
+    private String getDate() {
+        SimpleDateFormat format1 = new SimpleDateFormat("EEE, MMM dd yyyy");
+        String formatted_date = format1.format(calendar.getTime());
+        return formatted_date;
     }
 }
