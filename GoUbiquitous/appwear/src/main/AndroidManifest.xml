@@ -3,9 +3,15 @@
     package="com.example.android.sunshine">
 
     <!-- This permission is necessary in order for Sunshine to perform network access. -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="com.yotadevices.framework.permission.ACCESS_BACKSCREEN" />
-
+    <uses-permission
+        android:name="android.permission.INTERNET" />
+    <uses-permission
+        android:name="com.yotadevices.framework.permission.ACCESS_BACKSCREEN" />
+    <uses-permission
+        android:name="android.permission.WAKE_LOCK" />
+    <!-- Required for complications to receive complication data and open the provider chooser. -->
+    <uses-permission
+        android:name="com.google.android.wearable.permission.RECEIVE_COMPLICATION_DATA"/>
     <uses-feature android:name="android.hardware.type.watch" />
 
     <application
@@ -33,6 +39,30 @@
                 <data
                     android:host="*"
                     android:scheme="wear" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".DigitalWatchFaceService"
+            android:label="Sunshine Watch Face"
+            android:permission="android.permission.BIND_WALLPAPER">
+            <meta-data
+                android:name="android.service.wallpaper"
+                android:resource="@xml/watch_face"/>
+            <meta-data
+                android:name="com.google.android.wearable.watchface.preview"
+                android:resource="@drawable/preview_digital"/>
+            <meta-data
+                android:name="com.google.android.wearable.watchface.companionConfigurationAction"
+                android:value="com.example.android.wearable.watchface.CONFIG_DIGITAL"/>
+            <meta-data
+                android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
+                android:value="com.example.android.wearable.watchface.CONFIG_DIGITAL"/>
+
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService"/>
+
+                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE"/>
             </intent-filter>
         </service>
     </application>

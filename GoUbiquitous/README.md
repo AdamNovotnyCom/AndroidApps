@@ -1,4 +1,6 @@
-# GoUbiquitous
+# GoUbiquitous - wearable app and watch face
+Note: Watch face utilizes Android Sample code DigitalWatchFaceService
+
 
 ### Screenshots
 #### Phone

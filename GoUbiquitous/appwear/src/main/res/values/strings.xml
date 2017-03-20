@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Sunshine</string>
-    <string name="hello_text">Hello general txtView</string>
+    <string name="digital_am">AM</string>
+    <string name="digital_pm">PM</string>
 </resources>
