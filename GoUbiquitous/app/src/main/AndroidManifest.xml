@@ -76,6 +76,17 @@
             android:name=".sync.SunshineGoogleApiClient"
             android:exported="false">
         </service>
+        <service
+            android:name=".sync.UpdateWearService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+
+                <data
+                    android:host="*"
+                    android:scheme="wear" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

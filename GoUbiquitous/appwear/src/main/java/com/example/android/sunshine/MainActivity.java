@@ -12,6 +12,9 @@ import android.support.wearable.view.WatchViewStub;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.wearable.NodeApi;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -19,10 +22,15 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.TimeZone;
 
+import static com.example.android.sunshine.WearableService.WEATHER_BROADCAST_ARRAY_LIST;
+import static com.example.android.sunshine.WearableService.WEATHER_BROADCAST_URI;
+
 public class MainActivity extends Activity {
 
     private String LOG_TAG = MainActivity.class.getSimpleName();
+    private NodeApi.GetConnectedNodesResult ApiNodes;
     private Calendar calendar;
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +46,7 @@ public class MainActivity extends Activity {
                     @Override
                     public void onReceive(Context context, Intent intent) {
                         ArrayList<String> weatherAl = intent.getStringArrayListExtra(
-                                WearableService.WEATHER_BROADCAST_ARRAY_LIST);
+                                WEATHER_BROADCAST_ARRAY_LIST);
                         /*
                         weatherAl.get(0) = phone time, not necessary if wear setDateAndTime is used
                         weatherAl.get(1) = phone date, not necessary if wear setDateAndTime is used
@@ -68,7 +76,7 @@ public class MainActivity extends Activity {
                         );
 
                     }
-                }, new IntentFilter(WearableService.WEATHER_BROADCAST_URI)
+                }, new IntentFilter(WEATHER_BROADCAST_URI)
         );
     }
 
@@ -83,6 +91,13 @@ public class MainActivity extends Activity {
                 setDateAndTime();
             }
         });
+        requestWeatherData();
+    }
+
+    private void requestWeatherData() {
+        Intent intent = new Intent(WearableService.WEATHER_REQUEST_BROADCAST_URI);
+        intent.putExtra("DataRequest", "DataRequestMessage");
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
     private void setDateAndTime() {
@@ -96,6 +111,9 @@ public class MainActivity extends Activity {
     private String getTime() {
         String hour = ((Integer) calendar.get(Calendar.HOUR_OF_DAY)).toString();
         String minute = ((Integer) calendar.get(Calendar.MINUTE)).toString();
+        if (Integer.parseInt(minute) < 10) {
+            minute = "0" + minute;
+        }
         return hour + ":" + minute;
     }
 

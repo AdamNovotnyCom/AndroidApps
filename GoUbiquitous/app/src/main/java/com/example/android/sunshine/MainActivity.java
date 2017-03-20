@@ -35,7 +35,7 @@ import android.widget.ProgressBar;
 import com.example.android.sunshine.data.SunshinePreferences;
 import com.example.android.sunshine.data.WeatherContract;
 import com.example.android.sunshine.sync.SunshineSyncUtils;
-import com.example.android.sunshine.sync.UpdateWear;
+import com.example.android.sunshine.sync.UpdateWearService;
 
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>,
@@ -148,6 +148,10 @@ public class MainActivity extends AppCompatActivity implements
         getSupportLoaderManager().initLoader(ID_FORECAST_LOADER, null, this);
 
         SunshineSyncUtils.initialize(this);
+
+        // Service to listening to wear messages
+        Intent iService = new Intent(getApplicationContext(), UpdateWearService.class);
+        startService(iService);
     }
 
     /**
@@ -259,10 +263,6 @@ public class MainActivity extends AppCompatActivity implements
      */
     @Override
     public void onClick(long date) {
-        // TODO remove below
-        UpdateWear uw = new UpdateWear(this);
-        uw.sendWeatherMessageToWear();
-        // TODO remove above
         Intent weatherDetailIntent = new Intent(MainActivity.this, DetailActivity.class);
         Uri uriForDateClicked = WeatherContract.WeatherEntry.buildWeatherUriWithDate(date);
         weatherDetailIntent.setData(uriForDateClicked);

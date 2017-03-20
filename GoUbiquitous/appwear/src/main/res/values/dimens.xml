@@ -44,4 +44,7 @@
     <dimen name="list_item_date_left_margin">16dp</dimen>
     <dimen name="list_item_date_start_margin">@dimen/list_item_date_left_margin</dimen>
 
+    // custom
+    <dimen name="title_size">42sp</dimen>
+    <dimen name="date_text_size">16sp</dimen>
 </resources>

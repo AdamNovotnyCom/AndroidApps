@@ -116,7 +116,6 @@ public class UpdateWear implements
                                             }
                                         }
                                 );
-                        Log.d(TAG, "Message sent: " + node.getId());
                     }
                 }
             }

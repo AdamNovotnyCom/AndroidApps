@@ -13,8 +13,8 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp">
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp">
 
         <TextView
             android:id="@+id/time_tv"
@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
             android:textColor="@color/white"
-            android:textSize="48sp"
+            android:textSize="@dimen/title_size"
             android:layout_margin="0dp"
             android:text="15:50"/>
 
@@ -33,16 +33,14 @@
             android:layout_margin="0dp"
             android:fontFamily="sans-serif"
             android:textColor="@color/colorPrimaryLight"
-            android:textSize="20sp"
+            android:textSize="@dimen/date_text_size"
             android:text="Today, April 03"/>
 
         <View
-            android:layout_width="match_parent"
+            android:layout_width="72dp"
             android:layout_height="1dp"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="42dp"
-            android:layout_marginRight="42dp"
             android:background="@android:color/darker_gray"/>
 
         <LinearLayout
