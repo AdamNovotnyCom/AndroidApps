@@ -53,10 +53,10 @@ public class MainActivity extends Activity {
                         */
                         // update high
                         TextView mTextView = (TextView) findViewById(R.id.high_temperature);
-                        mTextView.setText(weatherAl.get(3));
+                        mTextView.setText(weatherAl.get(3) + "\u00b0");
                         // update low
                         mTextView = (TextView) findViewById(R.id.low_temperature);
-                        mTextView.setText(weatherAl.get(4));
+                        mTextView.setText(weatherAl.get(4) + "\u00b0");
 
                         // update image view
                         ImageView mImageView = (ImageView) findViewById(R.id.weather_icon);
