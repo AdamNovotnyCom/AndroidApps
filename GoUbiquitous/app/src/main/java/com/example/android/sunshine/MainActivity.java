@@ -35,6 +35,7 @@ import android.widget.ProgressBar;
 import com.example.android.sunshine.data.SunshinePreferences;
 import com.example.android.sunshine.data.WeatherContract;
 import com.example.android.sunshine.sync.SunshineSyncUtils;
+import com.example.android.sunshine.sync.UpdateWear;
 import com.example.android.sunshine.sync.UpdateWearService;
 
 public class MainActivity extends AppCompatActivity implements
@@ -263,6 +264,10 @@ public class MainActivity extends AppCompatActivity implements
      */
     @Override
     public void onClick(long date) {
+        // TODO remove below
+        UpdateWear uw = new UpdateWear(getApplicationContext());
+        uw.sendWeatherMessageToWear();
+        // TODO remove above
         Intent weatherDetailIntent = new Intent(MainActivity.this, DetailActivity.class);
         Uri uriForDateClicked = WeatherContract.WeatherEntry.buildWeatherUriWithDate(date);
         weatherDetailIntent.setData(uriForDateClicked);

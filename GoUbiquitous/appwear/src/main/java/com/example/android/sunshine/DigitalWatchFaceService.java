@@ -22,9 +22,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -449,11 +451,11 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
 
         @Override
         public void onDraw(Canvas canvas, Rect bounds) {
+            float screenWidth = bounds.width();
+            float screenHeight = bounds.height();
             long now = System.currentTimeMillis();
             mCalendar.setTimeInMillis(now);
             mDate.setTime(now);
-            boolean is24Hour = DateFormat.is24HourFormat(DigitalWatchFaceService.this);
-            float centerX = bounds.width() / 2;
 
             // Show colons for the first half of each second so the colons blink on when the time
             // updates.
@@ -470,49 +472,19 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
 
             // Draw the hours.
             float x = mXOffset;
-            String hourString;
-            if (is24Hour) {
-                hourString = formatTwoDigitNumber(mCalendar.get(Calendar.HOUR_OF_DAY));
-            } else {
-                int hour = mCalendar.get(Calendar.HOUR);
-                if (hour == 0) {
-                    hour = 12;
-                }
-                hourString = String.valueOf(hour);
-            }
+            String hourString = formatTwoDigitNumber(mCalendar.get(Calendar.HOUR_OF_DAY));
+
             // TODO center text
+            float centerX = bounds.width() / 2;
             float widthHour = mHourPaint.measureText(hourString);
             canvas.drawText(hourString, x, mYOffset, mHourPaint);
             x += mHourPaint.measureText(hourString);
 
-            // In ambient and mute modes, always draw the first colon. Otherwise, draw the
-            // first colon for the first half of each second.
-            if (isInAmbientMode() || mMute || mShouldDrawColons) {
-                canvas.drawText(COLON_STRING, x, mYOffset, mColonPaint);
-            }
             x += mColonWidth;
 
             // Draw the minutes.
             String minuteString = formatTwoDigitNumber(mCalendar.get(Calendar.MINUTE));
             canvas.drawText(minuteString, x, mYOffset, mMinutePaint);
-            x += mMinutePaint.measureText(minuteString);
-
-            // In unmuted interactive mode, draw a second blinking colon followed by the seconds.
-            // Otherwise, if we're in 12-hour mode, draw AM/PM
-            /*
-            if (!isInAmbientMode() && !mMute) {
-                if (mShouldDrawColons) {
-                    canvas.drawText(COLON_STRING, x, mYOffset, mColonPaint);
-                }
-                x += mColonWidth;
-                canvas.drawText(formatTwoDigitNumber(
-                        mCalendar.get(Calendar.SECOND)), x, mYOffset, mSecondPaint);
-            } else if (!is24Hour) {
-                x += mColonWidth;
-                canvas.drawText(getAmPmString(
-                        mCalendar.get(Calendar.AM_PM)), x, mYOffset, mAmPmPaint);
-            }
-            */
 
             // Only render the day of week and date if there is no peek card, so they do not bleed
             // into each other in ambient mode.
@@ -521,13 +493,33 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
                 canvas.drawText(
                         mDayOfWeekFormat.format(mDate),
                         mXOffset, mYOffset + mLineHeight, mDatePaint);
-                // Date
-                /* All date details drawn on one line in mDayOfWeekFormat
-                canvas.drawText(
-                        mDateFormat.format(mDate),
-                        mXOffset, mYOffset + mLineHeight * 2, mDatePaint);
-                */
             }
+
+            // Draw row separator
+            float top = mYOffset + 2 * mLineHeight;
+            float right = screenWidth/4 + screenWidth/2;
+            float bottom = top + 5;
+            canvas.drawRect(mXOffset, top, right, bottom, mDatePaint);
+
+            // Draw weather image
+            int imageWeather = R.drawable.art_clear;
+            Drawable drawableImage = getResources().getDrawable(imageWeather);
+            top = mYOffset + 2 * mLineHeight;
+            float sizeImage = 44 * getResources().getDisplayMetrics().density;
+            drawableImage.setBounds((int) mXOffset, (int) top,
+                    (int) (mXOffset + sizeImage), (int) (top + sizeImage));
+            drawableImage.draw(canvas);
+
+            // Draw weather
+            String highTemperature = "15\u00b0";
+            String lowTemperature = "10\u00b0";
+            top = mYOffset + 3 * mLineHeight;
+            Paint weatherPaint = new Paint();
+            weatherPaint.setColor(Color.WHITE);
+            weatherPaint.setStyle(Paint.Style.FILL);
+            weatherPaint.setTextSize(24 * getResources().getDisplayMetrics().density);
+            weatherPaint.setAntiAlias(true);
+            canvas.drawText(highTemperature + " " + lowTemperature, 2 * mXOffset, top, weatherPaint);
         }
 
         /**
@@ -647,6 +639,8 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
             }
             return true;
         }
+
+        // TODO add complications
 
         @Override  // GoogleApiClient.ConnectionCallbacks
         public void onConnected(Bundle connectionHint) {
