@@ -63,13 +63,6 @@ public final class DigitalWatchFaceUtil {
     public static final String PATH_WITH_FEATURE = "/watch_face_config/Digital";
 
     /**
-     * Name of the default interactive mode background color and the ambient mode background color.
-     */
-    public static final String COLOR_NAME_DEFAULT_AND_AMBIENT_BACKGROUND = "Red";
-    public static final int COLOR_VALUE_DEFAULT_AND_AMBIENT_BACKGROUND =
-            parseColor(COLOR_NAME_DEFAULT_AND_AMBIENT_BACKGROUND);
-
-    /**
      * Name of the default interactive mode hour digits color and the ambient mode hour digits
      * color.
      */

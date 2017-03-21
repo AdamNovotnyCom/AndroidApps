@@ -145,6 +145,7 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
          */
         boolean mRegisteredReceiver = false;
 
+        int mBackGroundColor = getResources().getColor(R.color.colorPrimary);
         Paint mBackgroundPaint;
         Paint mDatePaint;
         Paint mHourPaint;
@@ -166,8 +167,7 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
         float mLineHeight;
         String mAmString;
         String mPmString;
-        int mInteractiveBackgroundColor =
-                DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_BACKGROUND;
+        int mInteractiveBackgroundColor = mBackGroundColor;
         int mInteractiveHourDigitsColor =
                 DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_HOUR_DIGITS;
         int mInteractiveMinuteDigitsColor =
@@ -200,9 +200,10 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
             mPmString = resources.getString(R.string.digital_pm);
 
             mBackgroundPaint = new Paint();
-            mBackgroundPaint.setColor(mInteractiveBackgroundColor);
+            mBackgroundPaint.setStyle(Paint.Style.FILL);
+            mBackgroundPaint.setColor(mBackGroundColor);
             mDatePaint = createTextPaint(
-                    ContextCompat.getColor(getApplicationContext(), R.color.digital_date));
+                    ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryLight));
             mHourPaint = createTextPaint(mInteractiveHourDigitsColor, BOLD_TYPEFACE);
             mMinutePaint = createTextPaint(mInteractiveMinuteDigitsColor);
             mSecondPaint = createTextPaint(mInteractiveSecondDigitsColor);
@@ -346,7 +347,7 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
                 Log.d(TAG, "onAmbientModeChanged: " + inAmbientMode);
             }
             adjustPaintColorToCurrentMode(mBackgroundPaint, mInteractiveBackgroundColor,
-                    DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_BACKGROUND);
+                    mBackGroundColor);
             adjustPaintColorToCurrentMode(mHourPaint, mInteractiveHourDigitsColor,
                     DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_HOUR_DIGITS);
             adjustPaintColorToCurrentMode(mMinutePaint, mInteractiveMinuteDigitsColor,
@@ -452,6 +453,7 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
             mCalendar.setTimeInMillis(now);
             mDate.setTime(now);
             boolean is24Hour = DateFormat.is24HourFormat(DigitalWatchFaceService.this);
+            float centerX = bounds.width() / 2;
 
             // Show colons for the first half of each second so the colons blink on when the time
             // updates.
@@ -459,6 +461,12 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
 
             // Draw the background.
             canvas.drawRect(0, 0, bounds.width(), bounds.height(), mBackgroundPaint);
+
+            // Draw sunshine background
+            Paint paint = new Paint();
+            paint.setStyle(Paint.Style.FILL);
+            paint.setColor(mBackGroundColor);
+            canvas.drawRect(0, 0, bounds.width(), bounds.height(), paint);
 
             // Draw the hours.
             float x = mXOffset;
@@ -472,6 +480,8 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
                 }
                 hourString = String.valueOf(hour);
             }
+            // TODO center text
+            float widthHour = mHourPaint.measureText(hourString);
             canvas.drawText(hourString, x, mYOffset, mHourPaint);
             x += mHourPaint.measureText(hourString);
 
@@ -489,7 +499,6 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
 
             // In unmuted interactive mode, draw a second blinking colon followed by the seconds.
             // Otherwise, if we're in 12-hour mode, draw AM/PM
-            // uncomment below to include seconds
             /*
             if (!isInAmbientMode() && !mMute) {
                 if (mShouldDrawColons) {
@@ -561,7 +570,7 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
 
         private void setDefaultValuesForMissingConfigKeys(DataMap config) {
             addIntKeyIfMissing(config, DigitalWatchFaceUtil.KEY_BACKGROUND_COLOR,
-                    DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_BACKGROUND);
+                    mBackGroundColor);
             addIntKeyIfMissing(config, DigitalWatchFaceUtil.KEY_HOURS_COLOR,
                     DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_HOUR_DIGITS);
             addIntKeyIfMissing(config, DigitalWatchFaceUtil.KEY_MINUTES_COLOR,
