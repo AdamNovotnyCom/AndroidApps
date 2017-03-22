@@ -117,8 +117,6 @@ public class UpdateWear implements
                                             }
                                         }
                                 );
-                        // TODO remove log
-                        Log.d(TAG, "Message sent to " + node.getId());
                     }
                 }
             }

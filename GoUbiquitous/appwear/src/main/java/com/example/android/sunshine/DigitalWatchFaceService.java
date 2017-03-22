@@ -60,8 +60,8 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Sample digital watch face with blinking colons representing seconds and showing
- * Sunshine weather details.
+ * Digital watch face showing time, date, and Sunshine weather details.
+ * @see res/drawable/preview_digital.png
  */
 public class DigitalWatchFaceService extends CanvasWatchFaceService {
     private static final String TAG = "DigitalWatchFaceService";
@@ -186,7 +186,7 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
         /**
          * Weather details
          */
-        long UPDATE_WEATHER_EVERY_MINUTES = 1; // number of minutes between each weather update
+        long UPDATE_WEATHER_EVERY_MINUTES = 60; // number of minutes between each weather update
         long updateWeatherCount = 1;
         String weatherImage;
         String weatherHigh = "no connection";
@@ -200,7 +200,6 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
             super.onCreate(holder);
 
             Resources resources = DigitalWatchFaceService.this.getResources();
-            mYOffset = resources.getDimension(R.dimen.digital_y_offset);
             mLineHeight = resources.getDimension(R.dimen.digital_line_height);
             mAmString = resources.getString(R.string.digital_am);
             mPmString = resources.getString(R.string.digital_pm);
@@ -354,7 +353,6 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
             if (updateWeatherCount++ % UPDATE_WEATHER_EVERY_MINUTES == 0) {
                 runWeatherUpdate();
             }
-            Log.d(TAG, "Time tick. Count updated #: " + updateWeatherCount);
             invalidate();
         }
 
@@ -461,17 +459,13 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
             return String.format("%02d", hour);
         }
 
-        private String getAmPmString(int amPm) {
-            return amPm == Calendar.AM ? mAmString : mPmString;
-        }
-
         @Override
         public void onDraw(Canvas canvas, Rect bounds) {
-            float screenWidth = bounds.width();
-            float screenHeight = bounds.height();
             long now = System.currentTimeMillis();
             mCalendar.setTimeInMillis(now);
             mDate.setTime(now);
+            float centerX = bounds.width() / 2;
+            float mYOffset = bounds.height() / 3;
 
             // Show colons for the first half of each second so the colons blink on when the time
             // updates.
@@ -486,38 +480,42 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
             paint.setColor(mBackGroundColor);
             canvas.drawRect(0, 0, bounds.width(), bounds.height(), paint);
 
-            // Draw the hours.
-            float x = mXOffset;
+
+            // Draw hours and minutes
             String hourString = formatTwoDigitNumber(mCalendar.get(Calendar.HOUR_OF_DAY));
-
-            // TODO center text
-            float centerX = bounds.width() / 2;
-            float widthHour = mHourPaint.measureText(hourString);
-            canvas.drawText(hourString, x, mYOffset, mHourPaint);
-            x += mHourPaint.measureText(hourString);
-
-            x += mColonWidth;
-
-            // Draw the minutes.
             String minuteString = formatTwoDigitNumber(mCalendar.get(Calendar.MINUTE));
-            canvas.drawText(minuteString, x, mYOffset, mMinutePaint);
+            Paint mHourPaint2 = createTextPaint(mInteractiveHourDigitsColor, BOLD_TYPEFACE);
+            mHourPaint2.setTextSize(bounds.width() / 4);
+            float widthHour = mHourPaint2.measureText(hourString);
+            Paint mMinutePaint2 = createTextPaint(mInteractiveHourDigitsColor, NORMAL_TYPEFACE);
+            mMinutePaint2.setTextSize(bounds.width() / 4);
+            float widthMinute = mHourPaint.measureText(minuteString);
+            Float leftHour = centerX - (widthHour + mColonWidth + widthMinute)/2;
+            float top = mYOffset;
+            canvas.drawText(hourString, leftHour, top, mHourPaint2);
+            float leftMin = leftHour + mColonWidth + widthHour;
+            canvas.drawText(minuteString, leftMin, top, mMinutePaint2);
 
-            // Only render the day of week and date if there is no peek card, so they do not bleed
-            // into each other in ambient mode.
+            // Draw date. Only render the day of week and date if there is no peek card
             if (getPeekCardPosition().isEmpty()) {
-                canvas.drawText(
-                        mDateOutput.format(mDate),
-                        mXOffset, mYOffset + mLineHeight, mDatePaint);
+                String dateString = mDateOutput.format(mDate);
+                mDatePaint.setTextSize(bounds.width() / 13);
+                top = mYOffset + mLineHeight;
+                canvas.drawText(dateString, leftHour, top, mDatePaint);
             }
 
-            // Draw row separator
-            float top = mYOffset + 2 * mLineHeight;
-            float right = screenWidth/4 + screenWidth/2;
-            float bottom = top + 5;
-            canvas.drawRect(mXOffset, top, right, bottom, mDatePaint);
+            // Draw row separator. Only render the day of week and date if there is no peek card
+            if (getPeekCardPosition().isEmpty()) {
+                top += mLineHeight / 2;
+                float leftSep = centerX - centerX/2;
+                float right = centerX + centerX/2;
+                float bottom = top + 5;
+                canvas.drawRect(leftSep, top, right, bottom, mDatePaint);
+            }
 
-            // Draw weather image
-            if (weatherImage != null) {
+            // Draw weather image. Only render the day of week and date if there is no peek card
+            float sizeImage = bounds.width() / 4;
+            if (getPeekCardPosition().isEmpty() && weatherImage != null) {
                 HashMap<String, Integer> hm = new HashMap();
                 hm.put("art_clear", R.drawable.art_clear);
                 hm.put("art_clouds", R.drawable.art_clouds);
@@ -529,21 +527,23 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
                 hm.put("art_storm", R.drawable.art_storm);
                 Drawable drawableImage = ContextCompat.getDrawable(getApplicationContext(),
                         hm.get(weatherImage));
-                top = top + 10;
-                float sizeImage = 44 * getResources().getDisplayMetrics().density;
-                drawableImage.setBounds((int) mXOffset, (int) top,
-                        (int) (mXOffset + sizeImage), (int) (top + sizeImage));
+                float imageTop = top + mLineHeight / 2;
+                drawableImage.setBounds(Math.round(leftHour), (int) imageTop,
+                        (int) (leftHour + sizeImage), (int) (imageTop + sizeImage));
                 drawableImage.draw(canvas);
             }
 
-            // Draw weather temperature
-            top = top + mLineHeight + 7;
-            Paint weatherPaint = new Paint();
-            weatherPaint.setColor(Color.WHITE);
-            weatherPaint.setStyle(Paint.Style.FILL);
-            weatherPaint.setTextSize(24 * getResources().getDisplayMetrics().density);
-            weatherPaint.setAntiAlias(true);
-            canvas.drawText(weatherHigh + " " + weatherLow, 2 * mXOffset, top, weatherPaint);
+            // Draw weather temperature. Only render the day of week and date if there is no peek card
+            if (getPeekCardPosition().isEmpty()) {
+                Paint weatherPaint = new Paint();
+                weatherPaint.setColor(Color.WHITE);
+                weatherPaint.setStyle(Paint.Style.FILL);
+                weatherPaint.setTextSize(bounds.width() / 10);
+                weatherPaint.setAntiAlias(true);
+                top += mLineHeight + bounds.width() / 10;
+                float leftTemp = leftHour + sizeImage;
+                canvas.drawText(weatherHigh + " " + weatherLow, leftTemp, top, weatherPaint);
+            }
         }
 
         /**
@@ -702,7 +702,6 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
                             weatherImage =  weatherAl.get(2);
                             weatherHigh = weatherAl.get(3) + "\u00b0";
                             weatherLow =  weatherAl.get(4) + "\u00b0";
-                            Log.d(TAG, "Weather updated #: " + updateWeatherCount); // TODO delete
                         }
                     }, new IntentFilter(WearableService.WEATHER_BROADCAST_URI)
             );
