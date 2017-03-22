@@ -2,12 +2,13 @@
 Note: Watch face utilizes Android Sample code DigitalWatchFaceService
 
 
-### Screenshots
-#### Phone
-![Phone free screen](docs/mobile.png)
+### Watch Face Screenshots
 
 #### Wear - round
-![Wear - round](docs/wear-round.png)
+![Wear - round](docs/face_wear-round.png)
 
 #### Wear - square
-![Wear - square](docs/wear-square.png)
+![Wear - square](docs/face_wear-square.png)
+
+#### Phone
+![Phone free screen](docs/face_mobile.png)
