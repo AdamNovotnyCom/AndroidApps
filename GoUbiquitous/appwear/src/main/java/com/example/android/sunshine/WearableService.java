@@ -60,6 +60,7 @@ public class WearableService extends WearableListenerService implements
                 .addOnConnectionFailedListener(this)
                 .build();
         mGoogleApiClient.connect();
+        Log.d(LOG_TAG, "WearableService 3 started");
         receiveBroadcastInit();
         requestDataFromMobile();
     }

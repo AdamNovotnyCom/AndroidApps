@@ -31,6 +31,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.wearable.complications.ComplicationData;
 import android.support.wearable.watchface.CanvasWatchFaceService;
 import android.support.wearable.watchface.WatchFaceService;
 import android.support.wearable.watchface.WatchFaceStyle;
@@ -50,18 +52,17 @@ import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.Wearable;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Sample digital watch face with blinking colons and seconds. In ambient mode, the seconds are
- * replaced with an AM/PM indicator and the colons don't blink. On devices with low-bit ambient
- * mode, the text is drawn without anti-aliasing in ambient mode. On devices which require burn-in
- * protection, the hours are drawn in normal rather than bold. The time is drawn with less contrast
- * and without seconds in mute mode.
+ * Sample digital watch face with blinking colons representing seconds and showing
+ * Sunshine weather details.
  */
 public class DigitalWatchFaceService extends CanvasWatchFaceService {
     private static final String TAG = "DigitalWatchFaceService";
@@ -160,7 +161,7 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
 
         Calendar mCalendar;
         Date mDate;
-        SimpleDateFormat mDayOfWeekFormat;
+        SimpleDateFormat mDateOutput;
         java.text.DateFormat mDateFormat;
 
         boolean mShouldDrawColons;
@@ -183,6 +184,13 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
          */
         boolean mLowBitAmbient;
 
+        /**
+         * Weather details
+         */
+        String weatherImage;
+        String weatherHigh;
+        String weatherLow;
+
         @Override
         public void onCreate(SurfaceHolder holder) {
             if (Log.isLoggable(TAG, Log.DEBUG)) {
@@ -190,11 +198,6 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
             }
             super.onCreate(holder);
 
-            setWatchFaceStyle(new WatchFaceStyle.Builder(DigitalWatchFaceService.this)
-                    .setCardPeekMode(WatchFaceStyle.PEEK_MODE_VARIABLE)
-                    .setBackgroundVisibility(WatchFaceStyle.BACKGROUND_VISIBILITY_INTERRUPTIVE)
-                    .setShowSystemUiTime(false)
-                    .build());
             Resources resources = DigitalWatchFaceService.this.getResources();
             mYOffset = resources.getDimension(R.dimen.digital_y_offset);
             mLineHeight = resources.getDimension(R.dimen.digital_line_height);
@@ -216,7 +219,15 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
 
             mCalendar = Calendar.getInstance();
             mDate = new Date();
+
+            setWatchFaceStyle(new WatchFaceStyle.Builder(DigitalWatchFaceService.this)
+                    .setCardPeekMode(WatchFaceStyle.PEEK_MODE_VARIABLE)
+                    .setBackgroundVisibility(WatchFaceStyle.BACKGROUND_VISIBILITY_INTERRUPTIVE)
+                    .setShowSystemUiTime(false)
+                    .build());
             initFormats();
+
+            setUpWeatherListeners();
         }
 
         @Override
@@ -267,8 +278,8 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
         }
 
         private void initFormats() {
-            mDayOfWeekFormat = new SimpleDateFormat("EEE, MMM dd yyyy", Locale.getDefault());
-            mDayOfWeekFormat.setCalendar(mCalendar);
+            mDateOutput = new SimpleDateFormat("EEE, MMM dd yyyy", Locale.getDefault());
+            mDateOutput.setCalendar(mCalendar);
             mDateFormat = DateFormat.getDateFormat(DigitalWatchFaceService.this);
             mDateFormat.setCalendar(mCalendar);
         }
@@ -489,9 +500,8 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
             // Only render the day of week and date if there is no peek card, so they do not bleed
             // into each other in ambient mode.
             if (getPeekCardPosition().isEmpty()) {
-                // Day of week
                 canvas.drawText(
-                        mDayOfWeekFormat.format(mDate),
+                        mDateOutput.format(mDate),
                         mXOffset, mYOffset + mLineHeight, mDatePaint);
             }
 
@@ -502,24 +512,35 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
             canvas.drawRect(mXOffset, top, right, bottom, mDatePaint);
 
             // Draw weather image
-            int imageWeather = R.drawable.art_clear;
-            Drawable drawableImage = getResources().getDrawable(imageWeather);
-            top = mYOffset + 2 * mLineHeight;
-            float sizeImage = 44 * getResources().getDisplayMetrics().density;
-            drawableImage.setBounds((int) mXOffset, (int) top,
-                    (int) (mXOffset + sizeImage), (int) (top + sizeImage));
-            drawableImage.draw(canvas);
+            if (weatherImage != null) {
+                HashMap<String, Integer> hm = new HashMap();
+                hm.put("art_clear", R.drawable.art_clear);
+                hm.put("art_clouds", R.drawable.art_clouds);
+                hm.put("art_fog", R.drawable.art_fog);
+                hm.put("art_light_clouds", R.drawable.art_light_clouds);
+                hm.put("art_light_rain", R.drawable.art_light_rain);
+                hm.put("art_rain", R.drawable.art_rain);
+                hm.put("art_snow", R.drawable.art_snow);
+                hm.put("art_storm", R.drawable.art_storm);
+                Drawable drawableImage = ContextCompat.getDrawable(getApplicationContext(),
+                        hm.get(weatherImage));
+                top = top + 10;
+                float sizeImage = 44 * getResources().getDisplayMetrics().density;
+                drawableImage.setBounds((int) mXOffset, (int) top,
+                        (int) (mXOffset + sizeImage), (int) (top + sizeImage));
+                drawableImage.draw(canvas);
+            }
 
-            // Draw weather
-            String highTemperature = "15\u00b0";
-            String lowTemperature = "10\u00b0";
-            top = mYOffset + 3 * mLineHeight;
-            Paint weatherPaint = new Paint();
-            weatherPaint.setColor(Color.WHITE);
-            weatherPaint.setStyle(Paint.Style.FILL);
-            weatherPaint.setTextSize(24 * getResources().getDisplayMetrics().density);
-            weatherPaint.setAntiAlias(true);
-            canvas.drawText(highTemperature + " " + lowTemperature, 2 * mXOffset, top, weatherPaint);
+            // Draw weather temperature
+            if (weatherHigh != null && weatherLow != null) {
+                top = top + mLineHeight + 7;
+                Paint weatherPaint = new Paint();
+                weatherPaint.setColor(Color.WHITE);
+                weatherPaint.setStyle(Paint.Style.FILL);
+                weatherPaint.setTextSize(24 * getResources().getDisplayMetrics().density);
+                weatherPaint.setAntiAlias(true);
+                canvas.drawText(weatherHigh + " " + weatherLow, 2 * mXOffset, top, weatherPaint);
+            }
         }
 
         /**
@@ -640,7 +661,10 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
             return true;
         }
 
-        // TODO add complications
+        @Override
+        public void onComplicationDataUpdate(int watchFaceComplicationId, ComplicationData data) {
+            // TODO complication data management
+        }
 
         @Override  // GoogleApiClient.ConnectionCallbacks
         public void onConnected(Bundle connectionHint) {
@@ -663,6 +687,30 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
             if (Log.isLoggable(TAG, Log.DEBUG)) {
                 Log.d(TAG, "onConnectionFailed: " + result);
             }
+        }
+
+        private void setUpWeatherListeners() {
+            Intent iService = new Intent(getApplicationContext(), WearableService.class);
+            startService(iService);
+            // receive weather update pushed from phone to WearableService
+            LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(
+                    new BroadcastReceiver() {
+                        @Override
+                        public void onReceive(Context context, Intent intent) {
+                            ArrayList<String> weatherAl = intent.getStringArrayListExtra(
+                                    WearableService.WEATHER_BROADCAST_ARRAY_LIST);
+                            // weatherAl.get(0) = phone time, not necessary if wear time is used
+                            // weatherAl.get(1) = phone date, not necessary if wear date is used
+                            weatherImage =  weatherAl.get(2);
+                            weatherHigh = weatherAl.get(3) + "\u00b0";
+                            weatherLow =  weatherAl.get(4) + "\u00b0";
+                        }
+                    }, new IntentFilter(WearableService.WEATHER_BROADCAST_URI)
+            );
+            // request initial data
+            Intent intent = new Intent(WearableService.WEATHER_REQUEST_BROADCAST_URI);
+            intent.putExtra("DataRequest", "DataRequestMessage");
+            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
         }
     }
 }
