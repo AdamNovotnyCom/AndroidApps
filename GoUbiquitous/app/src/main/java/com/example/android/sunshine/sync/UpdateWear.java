@@ -21,8 +21,10 @@ import java.io.DataOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
 import rx.Observable;
@@ -42,7 +44,6 @@ public class UpdateWear implements
     private final String TAG = "UpdateWear";
     private NodeApi.GetConnectedNodesResult ApiNodes;
     private Calendar calendar;
-    private Cursor cursor;
     private String weatherImage;
     private String weatherHigh;
     private String weatherLow;
@@ -166,19 +167,36 @@ public class UpdateWear implements
 
     private void getWeatherCursor() {
         ContentResolver resolver = mContext.getContentResolver();
-        cursor = resolver.query(
+        Cursor cursor = resolver.query(
                 WeatherContract.WeatherEntry.CONTENT_URI,
                 null,
-                null,
+                "date = " + getTodayDate().toString(),
                 null,
                 null);
         cursor.moveToFirst();
-        weatherImage = getWeatherImage();
-        weatherHigh = getTemperatureHigh();
-        weatherLow = getTemperatureLow();
+        weatherImage = getWeatherImage(cursor);
+        weatherHigh = getTemperatureHigh(cursor);
+        weatherLow = getTemperatureLow(cursor);
     }
 
-    private String getWeatherImage() {
+    private Long getTodayDate() {
+        Long epoch = 0L;
+        GregorianCalendar cal = (GregorianCalendar) GregorianCalendar.getInstance(new SimpleTimeZone(0, "GMT"));
+        SimpleDateFormat format1 = new SimpleDateFormat("MMM dd yyyy");
+        format1.setTimeZone(new SimpleTimeZone(0, "GMT"));
+        String formattedDate = format1.format(cal.getTime());
+        try {
+            Date date = format1.parse(formattedDate);
+            epoch = date.getTime();
+            Log.d(TAG, "Date is format today: " + epoch);
+        }
+        catch (Exception e) {
+            Log.e(TAG, e.toString());
+        }
+        return epoch;
+    }
+
+    private String getWeatherImage(Cursor cursor) {
         int weatherIdCol = cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_WEATHER_ID);
         Integer weatherId = Integer.parseInt(cursor.getString(weatherIdCol));
         if (weatherId >= 200 && weatherId <= 232) {
@@ -213,13 +231,13 @@ public class UpdateWear implements
         return "art_clear";
     }
 
-    private String getTemperatureHigh() {
+    private String getTemperatureHigh(Cursor cursor) {
         int maxTempIdCol = cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_MAX_TEMP);
         Long temp = Math.round(Double.parseDouble(cursor.getString(maxTempIdCol)));
         return temp.toString();
     }
 
-    private String getTemperatureLow() {
+    private String getTemperatureLow(Cursor cursor) {
         int minTempIdCol = cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_MIN_TEMP);
         Long temp = Math.round(Double.parseDouble(cursor.getString(minTempIdCol)));
         return temp.toString();

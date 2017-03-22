@@ -32,7 +32,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.wearable.complications.ComplicationData;
 import android.support.wearable.watchface.CanvasWatchFaceService;
 import android.support.wearable.watchface.WatchFaceService;
 import android.support.wearable.watchface.WatchFaceStyle;
@@ -187,9 +186,11 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
         /**
          * Weather details
          */
+        long UPDATE_WEATHER_EVERY_MINUTES = 1; // number of minutes between each weather update
+        long updateWeatherCount = 1;
         String weatherImage;
-        String weatherHigh;
-        String weatherLow;
+        String weatherHigh = "no connection";
+        String weatherLow = "";
 
         @Override
         public void onCreate(SurfaceHolder holder) {
@@ -226,8 +227,8 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
                     .setShowSystemUiTime(false)
                     .build());
             initFormats();
-
             setUpWeatherListeners();
+            runWeatherUpdate();
         }
 
         @Override
@@ -350,6 +351,10 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
             if (Log.isLoggable(TAG, Log.DEBUG)) {
                 Log.d(TAG, "onTimeTick: ambient = " + isInAmbientMode());
             }
+            if (updateWeatherCount++ % UPDATE_WEATHER_EVERY_MINUTES == 0) {
+                runWeatherUpdate();
+            }
+            Log.d(TAG, "Time tick. Count updated #: " + updateWeatherCount);
             invalidate();
         }
 
@@ -532,15 +537,13 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
             }
 
             // Draw weather temperature
-            if (weatherHigh != null && weatherLow != null) {
-                top = top + mLineHeight + 7;
-                Paint weatherPaint = new Paint();
-                weatherPaint.setColor(Color.WHITE);
-                weatherPaint.setStyle(Paint.Style.FILL);
-                weatherPaint.setTextSize(24 * getResources().getDisplayMetrics().density);
-                weatherPaint.setAntiAlias(true);
-                canvas.drawText(weatherHigh + " " + weatherLow, 2 * mXOffset, top, weatherPaint);
-            }
+            top = top + mLineHeight + 7;
+            Paint weatherPaint = new Paint();
+            weatherPaint.setColor(Color.WHITE);
+            weatherPaint.setStyle(Paint.Style.FILL);
+            weatherPaint.setTextSize(24 * getResources().getDisplayMetrics().density);
+            weatherPaint.setAntiAlias(true);
+            canvas.drawText(weatherHigh + " " + weatherLow, 2 * mXOffset, top, weatherPaint);
         }
 
         /**
@@ -661,11 +664,6 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
             return true;
         }
 
-        @Override
-        public void onComplicationDataUpdate(int watchFaceComplicationId, ComplicationData data) {
-            // TODO complication data management
-        }
-
         @Override  // GoogleApiClient.ConnectionCallbacks
         public void onConnected(Bundle connectionHint) {
             if (Log.isLoggable(TAG, Log.DEBUG)) {
@@ -704,10 +702,13 @@ public class DigitalWatchFaceService extends CanvasWatchFaceService {
                             weatherImage =  weatherAl.get(2);
                             weatherHigh = weatherAl.get(3) + "\u00b0";
                             weatherLow =  weatherAl.get(4) + "\u00b0";
+                            Log.d(TAG, "Weather updated #: " + updateWeatherCount); // TODO delete
                         }
                     }, new IntentFilter(WearableService.WEATHER_BROADCAST_URI)
             );
-            // request initial data
+        }
+
+        private void runWeatherUpdate() {
             Intent intent = new Intent(WearableService.WEATHER_REQUEST_BROADCAST_URI);
             intent.putExtra("DataRequest", "DataRequestMessage");
             LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
